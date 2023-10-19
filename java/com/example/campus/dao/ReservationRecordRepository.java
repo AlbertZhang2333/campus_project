@@ -1,0 +1,13 @@
+package com.example.ooadgroupproject.dao;
+
+import com.example.ooadgroupproject.entity.Account;
+import com.example.ooadgroupproject.entity.ReservationRecord;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ReservationRecordRepository extends JpaRepository<ReservationRecord, Long> {
+    public List<ReservationRecord> findUserReservationRecord(String userMail);
+}
