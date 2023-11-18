@@ -1,7 +1,7 @@
-package com.example.ooadgroupproject.service;
+package com.example.campus.service;
 
-import com.example.ooadgroupproject.dao.RoomRepository;
-import com.example.ooadgroupproject.entity.Room;
+import com.example.campus.dao.RoomRepository;
+import com.example.campus.entity.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,14 +1,16 @@
 package com.example.campus.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.NotFound;
 
 import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-public class ReservationRecord {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -20,22 +22,19 @@ public class ReservationRecord {
     private String userMail;
 
     @NotNull
-    private String roomName;
+    private String Comment;
 
     @NotNull
-    private Time startTime;
+    private boolean vis;
 
     @NotNull
-    private Time endTime;
+    private Time time;
 
     @NotNull
     private Date date;
 
     @NotNull
-    private String location;
-
-    @NotNull
-    private ReservationState state;
+    private CommentManagementDepartment belongDepartment;
 
     public long getId() {
         return id;
@@ -43,14 +42,6 @@ public class ReservationRecord {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public ReservationState getState() {
-        return state;
-    }
-
-    public void setState(ReservationState state) {
-        this.state = state;
     }
 
     public String getUserName() {
@@ -69,28 +60,28 @@ public class ReservationRecord {
         this.userMail = userMail;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public String getComment() {
+        return Comment;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setComment(String comment) {
+        Comment = comment;
     }
 
-    public Time getStartTime() {
-        return startTime;
+    public boolean isVis() {
+        return vis;
     }
 
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
+    public void setVis(boolean vis) {
+        this.vis = vis;
     }
 
-    public Time getEndTime() {
-        return endTime;
+    public Time getTime() {
+        return time;
     }
 
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
+    public void setTime(Time time) {
+        this.time = time;
     }
 
     public Date getDate() {
@@ -101,11 +92,11 @@ public class ReservationRecord {
         this.date = date;
     }
 
-    public String getLocation() {
-        return location;
+    public CommentManagementDepartment getBelongDepartment() {
+        return belongDepartment;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setBelongDepartment(CommentManagementDepartment belongDepartment) {
+        this.belongDepartment = belongDepartment;
     }
 }
