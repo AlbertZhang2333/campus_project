@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.entity;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
+import com.example.ooadgroupproject.Encryption;
 
 
 @Entity
@@ -37,8 +38,10 @@ public class Account {
         return password;
     }
 
+
+    //对设定密码进行密码加密
     public void setPassword(String password) {
-        this.password = password;
+        this.password = Encryption.getSHA_256Str(password);
     }
 
     public boolean isInBlackList() {

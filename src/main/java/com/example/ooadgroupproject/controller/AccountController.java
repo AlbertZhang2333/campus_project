@@ -9,6 +9,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.IdentityLevel;
+import com.example.ooadgroupproject.Encryption;
 
 import java.util.List;
 
@@ -28,6 +29,12 @@ public class AccountController {
     @GetMapping("/test")
     public List<Account> findAll(){
         return accountService.findAll();
+    }
+    @PostMapping("/test")
+    public void deleteAll(){
+        for(int i=0;i<100;i++) {
+            accountService.deleteById(i);
+        }
     }
     @PutMapping("/register")
     public Account addNewAccount(@RequestParam String username,
@@ -77,18 +84,7 @@ public class AccountController {
             throw new ServiceException("账号不存在");
         }else {
             System.out.println(account);
-            Cookie cookieMail=new Cookie("userMail",account.getUserMail());
-            Cookie cookieName=new Cookie("username",account.getUsername());
-            Cookie cookiePassword=new Cookie("password",account.getPassword());
-            Cookie[] cookies=new Cookie[]{cookieMail,cookieName,cookiePassword};
-            for (Cookie cookie : cookies) {
-                cookie.setMaxAge(60 * 60);
-                cookie.setSecure(true);
-                cookie.setHttpOnly(true);
-                cookie.setPath("/");//用户信息的cookie应该全局可见
-                response.addCookie(cookie);
-            }
-            httpSession.setAttribute("userId",account.getId());
+            loginCookieAndSessionSet(httpSession,response,account,password);
             return account;
         }
     }
@@ -99,27 +95,32 @@ public class AccountController {
     public String autoLogin(@CookieValue(value ="userMail",required = false)String userMail,
                             @CookieValue(value = "username",required = false)String username,
                             @CookieValue(value = "password",required = false)String password,
-                            HttpSession httpSession){
+                            HttpSession httpSession,HttpServletResponse response){
         Account account=accountService.AccountLogin(userMail,username,password);
         if(account!=null){
             httpSession.setAttribute("userId",account.getId());
+            loginCookieAndSessionSet(httpSession,response,account,password);
             return "Auto login success!";
         }
-        return "Auto login failed";
+        return userMail+" "+username+" "+password;
+    }
+    public void loginCookieAndSessionSet(HttpSession httpSession,HttpServletResponse response,
+                                    Account account,String password){
+        Cookie cookieMail=new Cookie("userMail",account.getUserMail());
+        Cookie cookieName=new Cookie("username",account.getUsername());
+        Cookie cookiePassword=new Cookie("password",password);
+        Cookie[] cookies=new Cookie[]{cookieMail,cookieName,cookiePassword};
+        for (Cookie cookie : cookies) {
+            cookie.setMaxAge(24*7*60 * 60);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");//用户信息的cookie应该全局可见
+            response.addCookie(cookie);
+        }
+        httpSession.setAttribute("userId",account.getId());
     }
 
 
-//    private Long parseAutoLoginToken(String autoLoginToken){
-//        return Long.parseLong(autoLoginToken.replace("token_for_user_",""));
-//    }
-
-
-
-
-
-
-//10.11基础的登录所需的查询用户是否存在已经实现。现在需要考虑如何对网络页面做出相应的响应。
-    //考虑从HttpSession上入手
 
 
 

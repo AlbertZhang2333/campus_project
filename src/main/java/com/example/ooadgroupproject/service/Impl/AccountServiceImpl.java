@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.service.Impl;
 
+import com.example.ooadgroupproject.Encryption;
 import com.example.ooadgroupproject.dao.AccountRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
@@ -33,12 +34,20 @@ public class AccountServiceImpl implements AccountService {
     }
     @Override
     public Account AccountLogin(String userMail,String username,String password){
-        Optional<Account>account=accountRepository.findAccountByUserMailAndUsernameAndPassword(userMail,username,password);
+        String SHA_256Password=Encryption.getSHA_256Str(password);
+        if(SHA_256Password==null){
+            return null;
+        }
+        Optional<Account>account=accountRepository.findAccountByUserMailAndUsernameAndPassword(userMail,username,SHA_256Password);
         return account.orElse(null);
     }
     @Override
     public Account findByUserMailAndPassword(String userMail,String password){
-        Optional<Account>account=accountRepository.findByUserMailAndPassword(userMail,password);
+        String SHA_256Password=Encryption.getSHA_256Str(password);
+        if(SHA_256Password==null){
+            return null;
+        }
+        Optional<Account>account=accountRepository.findByUserMailAndPassword(userMail,SHA_256Password);
         return account.orElse(null);
     }
 
