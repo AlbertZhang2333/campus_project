@@ -4,6 +4,7 @@ import com.example.ooadgroupproject.Encryption;
 import com.example.ooadgroupproject.dao.AccountRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
+import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> findAll() {
         return accountRepository.findAll();
+    }
+
+    @Override
+    public Account findAccountByUserMail(String userMail) {
+       Optional<Account>optional=accountRepository.findAccountByUserMail(userMail);
+       return optional.orElse(null);
     }
 
 

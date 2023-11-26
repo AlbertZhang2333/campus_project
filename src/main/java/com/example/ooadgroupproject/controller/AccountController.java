@@ -2,6 +2,7 @@ package com.example.ooadgroupproject.controller;
 
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
+import com.example.ooadgroupproject.service.EmailService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -9,7 +10,6 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.IdentityLevel;
-import com.example.ooadgroupproject.Encryption;
 
 import java.util.List;
 
@@ -120,8 +120,22 @@ public class AccountController {
         httpSession.setAttribute("userId",account.getId());
     }
 
-
-
+    @Autowired private EmailService emailService;
+    @PostMapping("/forgetPassword")
+    public String sendVerificationMail(String userMail){
+        if(accountService.findAccountByUserMail(userMail)==null)return "不存在该账户";
+        return emailService.sendEmail(userMail);
+    }
+    @PostMapping("/verificationEmail")
+    public String verifyMailAndChangePassword(String code,String userMail,String password){
+        if(emailService.verifyCode(code)) {
+            Account account= accountService.findAccountByUserMail(userMail);
+            account.setPassword(password);
+            return password;
+        }else {
+            throw new Error("邮箱验证码输入错误");
+        }
+    }
 
 
 }
