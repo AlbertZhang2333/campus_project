@@ -57,6 +57,12 @@
             <version>3.1.4</version>
             <scope>test</scope>
         </dependency>
+        <!--引入邮件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
