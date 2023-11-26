@@ -1,12 +1,12 @@
-package com.example.campus.controller;
+package com.example.ooadgroupproject.controller;
 
-import com.example.campus.entity.Room;
-import com.example.campus.service.RoomService;
+import com.example.ooadgroupproject.entity.Room;
+import com.example.ooadgroupproject.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/exer")
+@RequestMapping("/Room")
 public class RoomController {
     @Autowired
     private RoomService roomService;

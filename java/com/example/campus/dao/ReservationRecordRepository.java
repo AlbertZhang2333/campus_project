@@ -1,7 +1,7 @@
-package com.example.campus.dao;
+package com.example.ooadgroupproject.dao;
 
-import com.example.campus.entity.Account;
-import com.example.campus.entity.ReservationRecord;
+import com.example.ooadgroupproject.entity.Account;
+import com.example.ooadgroupproject.entity.ReservationRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

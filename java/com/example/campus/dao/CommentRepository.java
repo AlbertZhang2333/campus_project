@@ -1,7 +1,7 @@
-package com.example.campus.dao;
+package com.example.ooadgroupproject.dao;
 
-import com.example.campus.entity.Comment;
-import com.example.campus.entity.CommentManagementDepartment;
+import com.example.ooadgroupproject.entity.Comment;
+import com.example.ooadgroupproject.entity.CommentManagementDepartment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

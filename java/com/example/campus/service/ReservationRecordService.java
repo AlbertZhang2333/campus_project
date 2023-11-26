@@ -1,7 +1,7 @@
-package com.example.campus.service;
+package com.example.ooadgroupproject.service;
 
-import com.example.campus.entity.Account;
-import com.example.campus.entity.ReservationRecord;
+import com.example.ooadgroupproject.entity.Account;
+import com.example.ooadgroupproject.entity.ReservationRecord;
 
 import java.util.List;
 import java.sql.Date;

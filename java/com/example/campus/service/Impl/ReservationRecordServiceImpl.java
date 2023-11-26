@@ -1,9 +1,10 @@
-package com.example.campus.service;
+package com.example.ooadgroupproject.service;
 
-import com.example.campus.dao.ReservationRecordRepository;
-import com.example.campus.entity.Account;
-import com.example.campus.entity.ReservationRecord;
+import com.example.ooadgroupproject.dao.ReservationRecordRepository;
+import com.example.ooadgroupproject.entity.Account;
+import com.example.ooadgroupproject.entity.ReservationRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;

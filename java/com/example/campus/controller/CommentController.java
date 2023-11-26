@@ -1,8 +1,10 @@
-package com.example.campus.controller;
+package com.example.ooadgroupproject.controller;
 
-import com.example.campus.entity.Comment;
-import com.example.campus.entity.CommentManagementDepartment;
-import com.example.campus.service.CommentService;
+import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.common.SplitPage;
+import com.example.ooadgroupproject.entity.Comment;
+import com.example.ooadgroupproject.entity.CommentManagementDepartment;
+import com.example.ooadgroupproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,10 +13,12 @@ import java.sql.Time;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exer")
+@RequestMapping("/Common")
 public class CommentController {
     @Autowired
     private CommentService commentService;
+
+    private final int PAGE_SIZE = 100;
 
     @PostMapping("/commentRecord")
     public Comment addOne(Comment comment) {
@@ -44,22 +48,34 @@ public class CommentController {
     }
 
     @GetMapping("/commentByUserMail")
-    public List<Comment> getCommentByUserMail(@RequestParam String userMail) {
-        return commentService.findCommentByUserMail(userMail);
+    public Result getCommentByUserMail(@RequestParam String userMail) {
+        List<Comment> list = commentService.findCommentByUserMail(userMail);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 
     @GetMapping("/commentByUserName")
-    public List<Comment> getCommentByUserName(@RequestParam String userName) {
-        return commentService.findCommentByUserName(userName);
+    public Result getCommentByUserName(@RequestParam String userName) {
+        List<Comment> list = commentService.findCommentByUserName(userName);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 
     @GetMapping("/commentByDate")
-    public List<Comment> getCommentByUserMail(@RequestParam Date date) {
-        return commentService.fineCommentByDate(date);
+    public Result getCommentByUserMail(@RequestParam Date date) {
+        List<Comment> list = commentService.fineCommentByDate(date);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 
     @GetMapping("/commentByDepartment")
-    public List<Comment> getCommentByUserMail(@RequestParam CommentManagementDepartment department) {
-        return commentService.findCommentByDepartment(department);
+    public Result getCommentByUserMail(@RequestParam CommentManagementDepartment department) {
+        List<Comment> list = commentService.findCommentByDepartment(department);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 }

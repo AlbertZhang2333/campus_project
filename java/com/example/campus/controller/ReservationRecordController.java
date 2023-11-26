@@ -1,26 +1,41 @@
-package com.example.campus.controller;
+package com.example.ooadgroupproject.controller;
 
-import com.example.campus.entity.ReservationRecord;
-import com.example.campus.entity.ReservationState;
-import com.example.campus.service.ReservationRecordService;
+import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.common.SplitPage;
+import com.example.ooadgroupproject.entity.ReservationRecord;
+import com.example.ooadgroupproject.entity.ReservationState;
+import com.example.ooadgroupproject.service.ReservationRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.*;
+import org.springframework.data.domain.Pageable;
+
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
-@RequestMapping("/exer")
+@RequestMapping("/Reservation")
 public class ReservationRecordController {
     @Autowired
     private ReservationRecordService reservationRecordService;
 
-    @PostMapping("/reservationRecord")
-    public ReservationRecord addOne(ReservationRecord reservationRecord) {
+    private final int PAGE_SIZE = 5;
+
+//    @GetMapping("/hello")
+//    public String hello() {
+//        return "hello";
+//    }
+
+    @PostMapping("/reservationAdd")
+    public ReservationRecord addOne(@RequestBody ReservationRecord reservationRecord) {
         return reservationRecordService.save(reservationRecord);
     }
 
-    @PutMapping("/reservationRecord")
+    @PutMapping("/reservationUpdate")
     public ReservationRecord update(@RequestParam long id,
                                     @RequestParam String userName,
                                     @RequestParam String userMail,
@@ -29,7 +44,7 @@ public class ReservationRecordController {
                                     @RequestParam Time endTime,
                                     @RequestParam Date date,
                                     @RequestParam String location,
-                                    @RequestParam ReservationState state) {
+                                    @RequestParam int state) {
         ReservationRecord reservationRecord = new ReservationRecord();
         reservationRecord.setId(id);
         reservationRecord.setUserName(userName);
@@ -39,32 +54,52 @@ public class ReservationRecordController {
         reservationRecord.setEndTime(endTime);
         reservationRecord.setDate(date);
         reservationRecord.setLocation(location);
-        reservationRecord.setState(state);
+        reservationRecord.setState(ReservationState.getByCode(state));
 
         return reservationRecordService.save(reservationRecord);
     }
 
+
     // 查询某个具体用户的预约记录
     @GetMapping("/reservationRecordsByUserMail")
-    public List<ReservationRecord> getRecordsByUserMail(@RequestParam String userMail) {
-        return reservationRecordService.findRecordsByUserMail(userMail);
+    public Result getRecordsByUserMail(@RequestParam String userMail) {
+//        System.out.println(userMail);
+        List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail);
+        Long tot = (long) list.size();
+//        System.out.println(userMail);
+
+        //        for (List<ReservationRecord> splitList : spiltLists) {
+//            System.out.println("Split List: " + splitList);
+//        }
+
+//        return reservationRecordService.findRecordsByUserMail(userMail);
+        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
     }
 
     // 查询某天的全部预约记录
     @GetMapping("/reservationRecordsByDate")
-    public List<ReservationRecord> getRecordsByDate(@RequestParam Date date) {
-        return reservationRecordService.findRecordsByDate(date);
+    public Result getRecordsByDate(@RequestParam Date date) {
+        List<ReservationRecord> list = reservationRecordService.findRecordsByDate(date);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 
     // 查询某栋建筑所有的预约记录
     @GetMapping("/reservationRecordsByLocation")
-    public List<ReservationRecord> getRecordsByLocation(@RequestParam String location) {
-        return reservationRecordService.findRecordsByLocation(location);
+    public Result getRecordsByLocation(@RequestParam String location) {
+        List<ReservationRecord> list = reservationRecordService.findRecordsByLocation(location);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 
     // 查询某个场地的所有预约记录
     @GetMapping("/reservationRecordsByRoomName")
-    public List<ReservationRecord> getRecordsByRoomName(@RequestParam String roomName) {
-        return reservationRecordService.findRecordsByRoomName(roomName);
+    public Result getRecordsByRoomName(@RequestParam String roomName) {
+        List<ReservationRecord> list = reservationRecordService.findRecordsByRoomName(roomName);
+        Long tot = (long) list.size();
+
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 }
