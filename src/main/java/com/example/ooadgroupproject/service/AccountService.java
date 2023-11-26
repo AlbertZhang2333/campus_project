@@ -2,6 +2,8 @@ package com.example.ooadgroupproject.service;
 
 import com.example.ooadgroupproject.entity.Account;
 
+import java.util.List;
+
 public interface AccountService {
  //返回所有用户的所有信息,10.11更新，我觉得该方法不必要存在
 // public List<Account> findAll();
@@ -16,6 +18,7 @@ public Account getUserById(long id);
 
  //首先判定管理人员的权限级别，然后依照提供的id找出目标修改的用户，然后决定将目标用户移入或移除黑名单
  public Account findByUserMailAndPassword(String userMail, String password);
+ public List<Account> findAll();
 }
 
 

@@ -6,6 +6,7 @@ import com.example.ooadgroupproject.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
     }
     @Override
     public Account AccountLogin(String userMail,String username,String password){
-        Optional<Account>account=accountRepository.findAccountByUsernameAndPasswordAndUserMail(userMail,username,password);
+        Optional<Account>account=accountRepository.findAccountByUserMailAndUsernameAndPassword(userMail,username,password);
         return account.orElse(null);
     }
     @Override
@@ -41,9 +42,10 @@ public class AccountServiceImpl implements AccountService {
         return account.orElse(null);
     }
 
-
-
-
+    @Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
 
 
 }
