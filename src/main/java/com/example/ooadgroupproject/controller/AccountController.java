@@ -10,7 +10,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.IdentityLevel;
-
+import com.example.ooadgroupproject.CS_Attribute;
 import java.util.List;
 
 @RestController
@@ -92,13 +92,13 @@ public class AccountController {
 
 
     @GetMapping("/auto-login")
-    public String autoLogin(@CookieValue(value ="userMail",required = false)String userMail,
-                            @CookieValue(value = "username",required = false)String username,
-                            @CookieValue(value = "password",required = false)String password,
+    public String autoLogin(@CookieValue(value =CS_Attribute.userMail,required = false)String userMail,
+                            @CookieValue(value = CS_Attribute.username,required = false)String username,
+                            @CookieValue(value = CS_Attribute.password,required = false)String password,
                             HttpSession httpSession,HttpServletResponse response){
         Account account=accountService.AccountLogin(userMail,username,password);
         if(account!=null){
-            httpSession.setAttribute("userId",account.getId());
+            httpSession.setAttribute(CS_Attribute.userId,account.getId());
             loginCookieAndSessionSet(httpSession,response,account,password);
             return "Auto login success!";
         }
@@ -106,9 +106,9 @@ public class AccountController {
     }
     public void loginCookieAndSessionSet(HttpSession httpSession,HttpServletResponse response,
                                     Account account,String password){
-        Cookie cookieMail=new Cookie("userMail",account.getUserMail());
-        Cookie cookieName=new Cookie("username",account.getUsername());
-        Cookie cookiePassword=new Cookie("password",password);
+        Cookie cookieMail=new Cookie(CS_Attribute.userMail,account.getUserMail());
+        Cookie cookieName=new Cookie(CS_Attribute.username,account.getUsername());
+        Cookie cookiePassword=new Cookie(CS_Attribute.password,password);
         Cookie[] cookies=new Cookie[]{cookieMail,cookieName,cookiePassword};
         for (Cookie cookie : cookies) {
             cookie.setMaxAge(24*7*60 * 60);
@@ -137,6 +137,4 @@ public class AccountController {
             throw new Error("邮箱验证码输入错误");
         }
     }
-
-
 }
