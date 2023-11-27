@@ -131,6 +131,7 @@ public class AccountController {
         if(emailService.verifyCode(code)) {
             Account account= accountService.findAccountByUserMail(userMail);
             account.setPassword(password);
+            accountService.save(account);
             return password;
         }else {
             throw new Error("邮箱验证码输入错误");

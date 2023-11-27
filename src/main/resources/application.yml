@@ -26,7 +26,7 @@ spring:
       mail:
         smtp:
           auth: true
-          port: 994 #设置端口465或者994
+          port: 465 #设置端口465或者994
           timeout: 10000
           display:
             sendmail: aaa #可以任意
