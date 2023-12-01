@@ -54,7 +54,7 @@ spring:
 
     utils-config:
       jwt:
-        header:sustechCampus
+        header:Authentication
         expire:6048000
         secret:zyazzyaz
 
