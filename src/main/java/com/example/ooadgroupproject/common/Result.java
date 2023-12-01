@@ -2,8 +2,10 @@ package com.example.ooadgroupproject.common;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Result {
+public class Result implements Serializable {
 
     private int code;//对应编码
     private String msg;//返回信息
@@ -23,7 +25,9 @@ public class Result {
     public static Result success(Object data) {
         return result(200, "Success", 0L, data);
     }
-
+    public static Result fail(Object data) {
+        return result(400, "Fail", 0L, data);
+    }
     public static Result success(Long total, Object data) {
         return result(200, "Success", total, data);
     }

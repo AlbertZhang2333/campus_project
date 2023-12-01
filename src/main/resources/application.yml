@@ -7,6 +7,18 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: yaz307165
+
+#  redis:
+#    host: 172.18.179.91
+#    port: 6379
+#    password: 307165
+#    lettuce:
+#      pool:
+#        max-activate: 8;
+#        max-idle: 8;
+#        min-idle: 0;
+#        max-wait: 100;
+#
   jpa:
     hibernate:
       ddl-auto: update
@@ -38,4 +50,12 @@ spring:
             ssl:
               enable: true #开启SSL
     default-encoding: utf-8
+
+
+    utils-config:
+      jwt:
+        header:sustechCampus
+        expire:6048000
+        secret:zyazzyaz
+
 

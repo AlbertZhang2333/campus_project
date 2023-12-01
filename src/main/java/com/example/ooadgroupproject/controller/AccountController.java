@@ -117,7 +117,7 @@ public class AccountController {
             cookie.setPath("/");//用户信息的cookie应该全局可见
             response.addCookie(cookie);
         }
-        httpSession.setAttribute("userId",account.getId());
+        httpSession.setAttribute(CS_Attribute.userId,account.getId());
     }
 
     @Autowired private EmailService emailService;
