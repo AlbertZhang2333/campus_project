@@ -4,12 +4,12 @@ import com.example.ooadgroupproject.Encryption;
 import com.example.ooadgroupproject.dao.AccountRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
-import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import com.example.ooadgroupproject.Utils.JwtUtils;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -34,12 +34,12 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteById(id);
     }
     @Override
-    public Account AccountLogin(String userMail,String username,String password){
+    public Account AccountExistCheck(String userMail, String password){
         String SHA_256Password=Encryption.getSHA_256Str(password);
         if(SHA_256Password==null){
             return null;
         }
-        Optional<Account>account=accountRepository.findAccountByUserMailAndUsernameAndPassword(userMail,username,SHA_256Password);
+        Optional<Account>account=accountRepository.findAccountByUserMailAndPassword(userMail,SHA_256Password);
         return account.orElse(null);
     }
     @Override

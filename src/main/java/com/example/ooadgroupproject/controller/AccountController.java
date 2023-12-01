@@ -1,5 +1,7 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.Utils.JwtUtils;
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
 import com.example.ooadgroupproject.service.EmailService;
@@ -21,11 +23,8 @@ public class AccountController {
     //jpa会自动依照规范的命名确定出所需求的简单功能，并直接将之实现和实例化
     private AccountService accountService;//=new AccountServiceImpl();new部分可写可不写
 
-    //该条后期应当归入到其他对应的模块当中
-//    @PostMapping("/register")
-//    public Account addOne(Account account){
-//        return accountService.save(account);
-//    }
+    @Autowired
+    JwtUtils jwtUtils;
     @GetMapping("/test")
     public List<Account> findAll(){
         return accountService.findAll();
@@ -75,50 +74,50 @@ public class AccountController {
     //向网页请求信息，并完成用户的登录
     //11.26添加cookie与seesion
     @PostMapping("/loginCheck")
-    public Account AccountLogin(@RequestParam String userMail,
-                                @RequestParam String username,
-                                @RequestParam String password, HttpSession httpSession, HttpServletResponse response){
-        Account account=accountService.AccountLogin(userMail,username,password);
+    public Result AccountLogin(@RequestParam String userMail,
+                               @RequestParam String password){
+        Account account=accountService.AccountExistCheck(userMail,password);
+        Result result;
         if(account==null){
-            System.out.println("400 尝试登录的用户信息不存在");
-            throw new ServiceException("账号不存在");
+            result=Result.fail("账号邮箱/密码错误");
+            return result;
         }else {
-            System.out.println(account);
-            loginCookieAndSessionSet(httpSession,response,account,password);
-            return account;
+            String token=jwtUtils.generateToken(account.getId());
+//            loginCookieAndSessionSet(httpSession,response,account,password);
+            result=Result.success(token);
+            return result;
         }
     }
 
 
 
-    @GetMapping("/auto-login")
-    public String autoLogin(@CookieValue(value =CS_Attribute.userMail,required = false)String userMail,
-                            @CookieValue(value = CS_Attribute.username,required = false)String username,
-                            @CookieValue(value = CS_Attribute.password,required = false)String password,
-                            HttpSession httpSession,HttpServletResponse response){
-        Account account=accountService.AccountLogin(userMail,username,password);
-        if(account!=null){
-            httpSession.setAttribute(CS_Attribute.userId,account.getId());
-            loginCookieAndSessionSet(httpSession,response,account,password);
-            return "Auto login success!";
-        }
-        return userMail+" "+username+" "+password;
-    }
-    public void loginCookieAndSessionSet(HttpSession httpSession,HttpServletResponse response,
-                                    Account account,String password){
-        Cookie cookieMail=new Cookie(CS_Attribute.userMail,account.getUserMail());
-        Cookie cookieName=new Cookie(CS_Attribute.username,account.getUsername());
-        Cookie cookiePassword=new Cookie(CS_Attribute.password,password);
-        Cookie[] cookies=new Cookie[]{cookieMail,cookieName,cookiePassword};
-        for (Cookie cookie : cookies) {
-            cookie.setMaxAge(24*7*60 * 60);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");//用户信息的cookie应该全局可见
-            response.addCookie(cookie);
-        }
-        httpSession.setAttribute(CS_Attribute.userId,account.getId());
-    }
+//    @GetMapping("/auto-login")
+//    public String autoLogin(@CookieValue(value =CS_Attribute.userMail,required = false)String userMail,
+//                            @CookieValue(value = CS_Attribute.password,required = false)String password,
+//                            HttpSession httpSession,HttpServletResponse response){
+//        Account account=accountService.AccountExistCheck(userMail,password);
+//        if(account!=null){
+//            httpSession.setAttribute(CS_Attribute.userId,account.getId());
+//            loginCookieAndSessionSet(httpSession,response,account,password);
+//            return "Auto login success!";
+//        }
+//        return userMail+" "+password;
+//    }
+//    public void loginCookieAndSessionSet(HttpSession httpSession,HttpServletResponse response,
+//                                    Account account,String password){
+//        Cookie cookieMail=new Cookie(CS_Attribute.userMail,account.getUserMail());
+//        Cookie cookieName=new Cookie(CS_Attribute.username,account.getUsername());
+//        Cookie cookiePassword=new Cookie(CS_Attribute.password,password);
+//        Cookie[] cookies=new Cookie[]{cookieMail,cookieName,cookiePassword};
+//        for (Cookie cookie : cookies) {
+//            cookie.setMaxAge(24*7*60 * 60);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
+//            cookie.setPath("/");//用户信息的cookie应该全局可见
+//            response.addCookie(cookie);
+//        }
+//        httpSession.setAttribute(CS_Attribute.userId,account.getId());
+//    }
 
     @Autowired private EmailService emailService;
     @PostMapping("/forgetPassword")
