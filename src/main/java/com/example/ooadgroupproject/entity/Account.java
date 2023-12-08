@@ -1,11 +1,14 @@
 package com.example.ooadgroupproject.entity;
+import com.example.ooadgroupproject.IdentityLevel;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import com.example.ooadgroupproject.Encryption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Entity
@@ -60,7 +63,14 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if(this.identity== IdentityLevel.NORMAL_USER){
+            return new ArrayList<>();
+        }else if(this.identity==IdentityLevel.ACCOUNT_ADMIN){
+            return new ArrayList<>();
+        }else {
+            return null;
+        }
+
     }
 
     public String getPassword() {

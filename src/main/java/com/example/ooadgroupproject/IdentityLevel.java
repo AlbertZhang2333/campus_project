@@ -15,6 +15,6 @@ public class IdentityLevel {
     }
     public static final int VISITOR=0;
     public static final int NORMAL_USER=1;
-    public static final int ACCOUNT_ADMIN=2;
+    public static final int ACCOUNT_ADMIN =2;
 
 }

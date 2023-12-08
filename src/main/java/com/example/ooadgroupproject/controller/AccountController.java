@@ -10,6 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.IdentityLevel;
 import com.example.ooadgroupproject.CS_Attribute;
@@ -25,16 +29,7 @@ public class AccountController {
 
     @Autowired
     JwtUtils jwtUtils;
-    @GetMapping("/test")
-    public List<Account> findAll(){
-        return accountService.findAll();
-    }
-    @PostMapping("/test")
-    public void deleteAll(){
-        for(int i=0;i<100;i++) {
-            accountService.deleteById(i);
-        }
-    }
+
     @PutMapping("/register")
     public Account addNewAccount(@RequestParam String username,
                                  @RequestParam String userMail,
@@ -46,7 +41,6 @@ public class AccountController {
         account.setUsername(username);
         account.setInBlackList(false);
         return accountService.save(account);
-
     }
 
     @PutMapping("/ModifyingInformation")
@@ -73,50 +67,20 @@ public class AccountController {
 
     //向网页请求信息，并完成用户的登录
     //11.26添加cookie与seesion
-    @PostMapping("/loginCheck")
-    public Result AccountLogin(@RequestParam String userMail,
-                               @RequestParam String password){
-        Account account=accountService.AccountExistCheck(userMail,password);
-        Result result;
-        if(account==null){
-            result=Result.fail("账号邮箱/密码错误");
-            return result;
-        }else {
-            String token=jwtUtils.generateToken(account.getId());
-//            loginCookieAndSessionSet(httpSession,response,account,password);
-            result=Result.success(token);
-            return result;
-        }
-    }
-
-
-
-//    @GetMapping("/auto-login")
-//    public String autoLogin(@CookieValue(value =CS_Attribute.userMail,required = false)String userMail,
-//                            @CookieValue(value = CS_Attribute.password,required = false)String password,
-//                            HttpSession httpSession,HttpServletResponse response){
-//        Account account=accountService.AccountExistCheck(userMail,password);
-//        if(account!=null){
-//            httpSession.setAttribute(CS_Attribute.userId,account.getId());
-//            loginCookieAndSessionSet(httpSession,response,account,password);
-//            return "Auto login success!";
-//        }
-//        return userMail+" "+password;
-//    }
-//    public void loginCookieAndSessionSet(HttpSession httpSession,HttpServletResponse response,
-//                                    Account account,String password){
-//        Cookie cookieMail=new Cookie(CS_Attribute.userMail,account.getUserMail());
-//        Cookie cookieName=new Cookie(CS_Attribute.username,account.getUsername());
-//        Cookie cookiePassword=new Cookie(CS_Attribute.password,password);
-//        Cookie[] cookies=new Cookie[]{cookieMail,cookieName,cookiePassword};
-//        for (Cookie cookie : cookies) {
-//            cookie.setMaxAge(24*7*60 * 60);
-//            cookie.setSecure(true);
-//            cookie.setHttpOnly(true);
-//            cookie.setPath("/");//用户信息的cookie应该全局可见
-//            response.addCookie(cookie);
-//        }
-//        httpSession.setAttribute(CS_Attribute.userId,account.getId());
+//    @PostMapping("/loginCheck")
+//    public Result AccountLogin(@RequestParam String userMail,
+//                               @RequestParam String password){
+////        Account account=accountService.AccountExistCheck(userMail,password);
+////        Result result;
+////        if(account==null){
+////            result=Result.fail("账号邮箱/密码错误");
+////        }else {
+////            UsernamePasswordAuthenticationToken token =
+////                    new UsernamePasswordAuthenticationToken(userMail, null, account.getAuthorities());
+////            SecurityContextHolder.getContext().setAuthentication(token);
+////            result=Result.success("登陆成功！欢迎你"+account.getUsername());
+////        }
+////        return result;
 //    }
 
     @Autowired private EmailService emailService;

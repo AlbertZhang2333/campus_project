@@ -52,10 +52,5 @@ spring:
     default-encoding: utf-8
 
 
-    utils-config:
-      jwt:
-        header:Authentication
-        expire:6048000
-        secret:zyazzyaz
 
 

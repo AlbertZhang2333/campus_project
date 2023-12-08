@@ -5,6 +5,9 @@ import com.example.ooadgroupproject.dao.AccountRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +15,7 @@ import java.util.Optional;
 import com.example.ooadgroupproject.Utils.JwtUtils;
 
 @Service
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Autowired
     private AccountRepository accountRepository;
 
@@ -64,4 +67,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
+
+    //由于在项目实际内容中，我们的username不具备唯一性，因此，该方法实际要求填入的为userMail
+    @Override
+    public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException,NumberFormatException {
+        return accountRepository.findAccountByUserMail(userMail).orElse(null);
+    }
 }
