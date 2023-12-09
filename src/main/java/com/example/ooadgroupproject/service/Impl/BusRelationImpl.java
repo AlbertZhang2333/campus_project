@@ -29,7 +29,7 @@ public class BusRelationImpl implements BusRelationService {
     }
     
     @Override
-    public BusRelation findByStartEnd(Integer startStop, Integer endStop){
+    public List<BusRelation> findByStartEnd(Integer startStop, Integer endStop){
         return busRelationRepository.findByStartEnd(startStop, endStop);
     }
 }

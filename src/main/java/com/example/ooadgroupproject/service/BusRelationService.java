@@ -8,5 +8,5 @@ public interface BusRelationService {
     public List<BusRelation> findAll();
     public BusRelation save(BusRelation BusRelation);
     public void deleteById(Integer id);
-    public BusRelation findByStartEnd(Integer startStop, Integer endStop);
+    public List<BusRelation> findByStartEnd(Integer startStop, Integer endStop);
 }

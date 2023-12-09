@@ -31,48 +31,23 @@ public class BusStopImpl implements BusStopService {
     }
 
     @Override
-    public List<BusStop> findByLine(Integer lineId){
-        return busStopRepository.findByLine(lineId);
-    }
-
-    @Override
     public BusStop findByName(String name){return busStopRepository.findByName(name);}
 
     @Override
-    public List<BusStop> findNearBusStop(Integer lat, Integer lng){
+    public BusStop findNearBusStop(Double lat, Double lng){
         List<BusStop> busStopList = busStopRepository.findAll();
-        PriorityQueue<Distance> pq = new PriorityQueue<>(2);
         int len = busStopList.size();
+        double minDistance = Double.MAX_VALUE;
+        BusStop stop = null;
         for(int i = 0; i < len; i++){
             BusStop curBusStop = busStopList.get(i);
             double distance = Math.sqrt(Math.pow(curBusStop.getLat() - lat, 2) + Math.pow(curBusStop.getLng() - lng, 2));
-            Distance curDistance = new Distance(curBusStop.getId(), distance);
-            if(pq.size() < 2){
-                pq.add(curDistance);
-            }else{
-                pq.poll();
-                pq.add(curDistance);
+            if(distance < minDistance) {
+                minDistance = distance;
+                stop = curBusStop;
             }
         }
-        List<BusStop> res = new ArrayList<>();
-        int l = Math.min(2, pq.size());
-        for(int i = 0; i < l; i++){
-            Distance cur = pq.poll();
-            if(busStopRepository.findById(cur.id).isPresent()){
-                BusStop curBusStop = busStopRepository.findById(cur.id).get();
-                res.add(curBusStop);
-            }
-        }
-        return res;
+        return stop;
     }
 
-
-    private class Distance{
-        int id;
-        double distance;
-        public Distance(int id, double distance){
-            this.id = id;
-            this.distance = distance;
-        }
-    }
 }

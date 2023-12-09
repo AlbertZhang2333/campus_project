@@ -7,10 +7,11 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
 
 @Data
 @Entity
-public class BusStop {
+public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,6 +19,19 @@ public class BusStop {
     private Double lat;
     @NotNull(message = "经度不能为空")
     private Double lng;
-    @NotNull(message = "站点名称不能为空")
+    @NotNull(message = "建筑名称不能为空")
     private String name;
+    @NotNull(message = "建筑描述不能为空")
+    private String description;
+    private String busStop;
+    @Override
+    public String toString() {
+        return "Building{" +
+                "id=" + id +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

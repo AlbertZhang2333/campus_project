@@ -1,8 +1,11 @@
 package com.example.ooadgroupproject.dao;
 
 import com.example.ooadgroupproject.entity.BusLine;
+import com.example.ooadgroupproject.entity.BusStop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface BusLineRepository extends JpaRepository<BusLine, Integer> {
     @Query("select busLine.id from BusLine busLine where busLine.id = ?1")

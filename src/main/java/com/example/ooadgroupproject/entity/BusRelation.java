@@ -1,9 +1,6 @@
 package com.example.ooadgroupproject.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -13,12 +10,14 @@ import lombok.Data;
 public class BusRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
     @NotNull
-    Integer startStop; //起始站的id
+    private Integer startStop; //起始站的id
     @NotNull
-    Integer endStop;
+    private Integer endStop;
     @NotNull
-    Integer time; //分钟数
+    private Integer time; //分钟数
+    @NotNull
+    private Integer lineId;
 
 }
