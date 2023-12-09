@@ -21,6 +21,8 @@ public Account getUserById(long id);
  public Account findByUserMailAndPassword(String userMail, String password);
  public List<Account> findAll();
  public Account findAccountByUserMail(String userMail);
+
+
 }
 
 

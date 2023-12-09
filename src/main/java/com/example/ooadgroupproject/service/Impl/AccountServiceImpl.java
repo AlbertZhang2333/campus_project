@@ -67,7 +67,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
 
-
     //由于在项目实际内容中，我们的username不具备唯一性，因此，该方法实际要求填入的为userMail
     @Override
     public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException,NumberFormatException {

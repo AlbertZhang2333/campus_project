@@ -31,16 +31,12 @@ public class AccountController {
     JwtUtils jwtUtils;
 
     @PutMapping("/register")
-    public Account addNewAccount(@RequestParam String username,
+    public Result addNewAccount(@RequestParam String username,
                                  @RequestParam String userMail,
                                  @RequestParam String password){
-        Account account=new Account();
-        account.setIdentity(IdentityLevel.VISITOR);
-        account.setPassword(password);
-        account.setUserMail(userMail);
-        account.setUsername(username);
-        account.setInBlackList(false);
-        return accountService.save(account);
+        Account account=new Account(username,userMail,password,IdentityLevel.NORMAL_USER);
+        accountService.save(account);
+        return Result.success("用户创建成功，欢迎您！"+username);
     }
 
     @PutMapping("/ModifyingInformation")
@@ -90,13 +86,13 @@ public class AccountController {
         return emailService.sendEmail(userMail);
     }
     @PostMapping("/verificationEmail")
-    public String verifyMailAndChangePassword(String code,String userMail,String password){
-        if(emailService.verifyCode(code)) {
-            Account account= accountService.findAccountByUserMail(userMail);
+    public String verifyMailAndChangePassword(String code,String userMail,String password) {
+        if (emailService.verifyCode(code)) {
+            Account account = accountService.findAccountByUserMail(userMail);
             account.setPassword(password);
             accountService.save(account);
             return password;
-        }else {
+        } else {
             throw new Error("邮箱验证码输入错误");
         }
     }
