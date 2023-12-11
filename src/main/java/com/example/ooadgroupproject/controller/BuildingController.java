@@ -24,12 +24,18 @@ public class BuildingController {
     public Building update(Integer id,
                            Double lat,
                            Double lng,
-                           String name){
+                           String name,
+                           String description,
+                           String photoPath,
+                           String busStop){
         Building building = new Building();
         building.setId(id);
         building.setLat(lat);
         building.setLng(lng);
         building.setName(name);
+        building.setDescription(description);
+        building.setPhotoPath(photoPath);
+        building.setBusStop(busStop);
         return buildingService.save(building);
     }
 
