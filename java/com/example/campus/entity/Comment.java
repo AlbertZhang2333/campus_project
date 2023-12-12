@@ -1,4 +1,4 @@
-package com.example.campus.entity;
+package com.example.ooadgroupproject.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +22,7 @@ public class Comment {
     private String userMail;
 
     @NotNull
-    private String Comment;
+    private String comment;
 
     @NotNull
     private boolean vis;
@@ -61,11 +61,11 @@ public class Comment {
     }
 
     public String getComment() {
-        return Comment;
+        return comment;
     }
 
     public void setComment(String comment) {
-        Comment = comment;
+        this.comment = comment;
     }
 
     public boolean isVis() {
@@ -98,5 +98,19 @@ public class Comment {
 
     public void setBelongDepartment(CommentManagementDepartment belongDepartment) {
         this.belongDepartment = belongDepartment;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", userMail='" + userMail + '\'' +
+                ", comment='" + comment + '\'' +
+                ", vis=" + vis +
+                ", time=" + time +
+                ", date=" + date +
+                ", belongDepartment=" + belongDepartment +
+                '}';
     }
 }

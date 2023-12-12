@@ -12,7 +12,7 @@ public class RoomController {
     private RoomService roomService;
 
     @PostMapping("/room")
-    public Room addOne(Room room) {
+    public Room addOne(@RequestBody Room room) {
         return roomService.save(room);
     }
 

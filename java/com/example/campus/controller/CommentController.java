@@ -13,15 +13,14 @@ import java.sql.Time;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Common")
+@RequestMapping("/Comment")
 public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    private final int PAGE_SIZE = 100;
-
     @PostMapping("/commentRecord")
-    public Comment addOne(Comment comment) {
+    public Comment addOne(@RequestBody Comment comment) {
+        System.out.println(comment.toString());
         return commentService.save(comment);
     }
 
@@ -46,36 +45,49 @@ public class CommentController {
 
         return commentService.save(comment);
     }
+    @PostMapping("/allComments")
+    public Result getComments(@RequestParam int pageSize, @RequestParam int currentPage) {
+        List<Comment> list = commentService.findAllComment();
+        Long tot = (long) list.size();
+
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+    }
 
     @GetMapping("/commentByUserMail")
-    public Result getCommentByUserMail(@RequestParam String userMail) {
+    public Result getCommentByUserMail(@RequestParam String userMail, @RequestParam int pageSize, @RequestParam int currentPage) {
         List<Comment> list = commentService.findCommentByUserMail(userMail);
         Long tot = (long) list.size();
 
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
     }
 
     @GetMapping("/commentByUserName")
-    public Result getCommentByUserName(@RequestParam String userName) {
+    public Result getCommentByUserName(@RequestParam String userName, @RequestParam int pageSize, @RequestParam int currentPage) {
         List<Comment> list = commentService.findCommentByUserName(userName);
         Long tot = (long) list.size();
 
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
     }
 
     @GetMapping("/commentByDate")
-    public Result getCommentByUserMail(@RequestParam Date date) {
-        List<Comment> list = commentService.fineCommentByDate(date);
+    public Result getCommentByUserMail(@RequestParam Date date, @RequestParam int pageSize, @RequestParam int currentPage) {
+        List<Comment> list = commentService.findCommentByDate(date);
         Long tot = (long) list.size();
 
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
     }
 
     @GetMapping("/commentByDepartment")
-    public Result getCommentByUserMail(@RequestParam CommentManagementDepartment department) {
+    public Result getCommentByUserMail(@RequestParam CommentManagementDepartment department, @RequestParam int pageSize, @RequestParam int currentPage) {
         List<Comment> list = commentService.findCommentByDepartment(department);
         Long tot = (long) list.size();
 
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+    }
+
+    @DeleteMapping("commentDelete/{id}")
+    public void deleteOne(@PathVariable long id) {
+        System.out.println(id);
+        commentService.deleteById(id);
     }
 }

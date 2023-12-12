@@ -1,8 +1,9 @@
-package com.example.campus.service;
+package com.example.ooadgroupproject.service.Impl;
 
-import com.example.campus.dao.CommentRepository;
-import com.example.campus.entity.Comment;
-import com.example.campus.entity.CommentManagementDepartment;
+import com.example.ooadgroupproject.dao.CommentRepository;
+import com.example.ooadgroupproject.entity.Comment;
+import com.example.ooadgroupproject.entity.CommentManagementDepartment;
+import com.example.ooadgroupproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,22 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByBelongDepartment(department);
     }
     @Override
-    public List<Comment> fineCommentByDate(Date date) {
+    public List<Comment> findCommentByDate(Date date) {
         return commentRepository.findByDate(date);
     }
 
     @Override
     public List<Comment> findCommentByUserMail(String userMail) {
         return commentRepository.findByUserMail(userMail);
+    }
+
+    @Override
+    public List<Comment> findAllComment() {
+        return commentRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(long id) {
+        commentRepository.deleteById(id);
     }
 }

@@ -15,4 +15,11 @@ public class SplitPage {
                 .mapToObj(i -> list.subList(i * groupSize, Math.min((i + 1) * groupSize, totalSize)))
                 .collect(Collectors.toList());
     }
+
+    public static <T> List<T> getPage(List<T> list, int pageSize, int currentPage) {
+        int startIndex = (currentPage - 1) * pageSize;
+        // 计算结束索引（不包括）
+        int endIndex = Math.min(startIndex + pageSize, list.size());
+        return list.subList(startIndex, endIndex);
+    }
 }
