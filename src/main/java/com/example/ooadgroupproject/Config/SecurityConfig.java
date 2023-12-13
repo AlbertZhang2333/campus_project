@@ -73,11 +73,7 @@ public class SecurityConfig  {
     public MyUsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter()throws Exception{
         return new MyUsernamePasswordAuthenticationFilter(authenticationManager());
     }
-    private static final String[]  permitAllList={
-            "/login/forgetPassword",
-            "/login/verificationEmail",
-            "/login/register"
-    };
+
 
 
     @Bean

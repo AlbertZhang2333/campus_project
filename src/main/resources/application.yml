@@ -4,21 +4,11 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/campus_project
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: 123456
+    password: yaz307165
 
-#  redis:
-#    host: 172.18.179.91
-#    port: 6379
-#    password: 307165
-#    lettuce:
-#      pool:
-#        max-activate: 8;
-#        max-idle: 8;
-#        min-idle: 0;
-#        max-wait: 100;
-#
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -50,7 +40,16 @@ spring:
             ssl:
               enable: true #开启SSL
     default-encoding: utf-8
-
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: ooadGroup
+      lettuce:
+        pool:
+          max-idle: 8
+          min-idle: 0
+          max-wait: 100
 
 
 

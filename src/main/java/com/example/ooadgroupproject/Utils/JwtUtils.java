@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Component
 public class JwtUtils {
-    private static long expire=3600*24L;
+    public static long expire=3600*24L;
     private static String secret="zyazzyaz_ooadproject_abcdefjaifhawidnaiwdnaiwdndawkdnaksdnawdadawdaw";
     private final static SecureDigestAlgorithm<SecretKey,SecretKey> algorithm = Jwts.SIG.HS256;
     public static final SecretKey key= Keys.hmacShaKeyFor(secret.getBytes());

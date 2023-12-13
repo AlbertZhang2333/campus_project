@@ -40,6 +40,10 @@ public class ReservationRecord {
     @NotNull
     private ReservationState state;
 
+    public ReservationRecord() {
+
+    }
+
     public long getId() {
         return id;
     }
@@ -107,8 +111,21 @@ public class ReservationRecord {
     public String getLocation() {
         return location;
     }
-
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public ReservationRecord(String userName,String userMail,String roomName,
+                             Time startTime,Time endTime,Date date,
+                             String location){
+        this.userName=userName;
+        this.userMail=userMail;
+        this.roomName=roomName;
+        this.location=location;
+        this.startTime=startTime;
+        this.endTime=endTime;
+        this.date=date;
+        this.location=location;
+        this.state=ReservationState.NotChecked;
     }
 }

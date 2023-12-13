@@ -1,10 +1,8 @@
-package com.example.ooadgroupproject.Config;
+package com.example.ooadgroupproject;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -13,6 +11,7 @@ import java.net.UnknownHostException;
 
 @Configuration
 class RedisConfig {
+
     @Bean
     public RedisTemplate<String,Object>redisTemplate(RedisConnectionFactory connectionFactory)
     throws UnknownHostException {

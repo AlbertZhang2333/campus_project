@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.service;
 
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface ReservationRecordService {
 
     //this function is used to insert a new reservation record.
     public ReservationRecord save(ReservationRecord reservationRecord);
+
+    public Result validateReservationRecord(ReservationRecord reservationRecord);
+
+
 }

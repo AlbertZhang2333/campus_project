@@ -61,24 +61,6 @@ public class AccountController {
     //和前端配合，让用户页面进行跳转到登录用户界面
 
 
-    //向网页请求信息，并完成用户的登录
-    //11.26添加cookie与seesion
-//    @PostMapping("/loginCheck")
-//    public Result AccountLogin(@RequestParam String userMail,
-//                               @RequestParam String password){
-////        Account account=accountService.AccountExistCheck(userMail,password);
-////        Result result;
-////        if(account==null){
-////            result=Result.fail("账号邮箱/密码错误");
-////        }else {
-////            UsernamePasswordAuthenticationToken token =
-////                    new UsernamePasswordAuthenticationToken(userMail, null, account.getAuthorities());
-////            SecurityContextHolder.getContext().setAuthentication(token);
-////            result=Result.success("登陆成功！欢迎你"+account.getUsername());
-////        }
-////        return result;
-//    }
-
     @Autowired private EmailService emailService;
     @PostMapping("/forgetPassword")
     public String sendVerificationMail(String userMail){

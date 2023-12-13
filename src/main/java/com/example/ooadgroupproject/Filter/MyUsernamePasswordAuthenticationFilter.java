@@ -15,7 +15,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -23,6 +25,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.io.IOException;
 
 public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+    private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
+
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -51,9 +55,12 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
         Account account=accountService.findByUserMailAndPassword(userMail,password);
         if(account!=null) {
             UsernamePasswordAuthenticationToken token =
-                    new UsernamePasswordAuthenticationToken(userMail, null, account.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(userMail, account.getUsername(), account.getAuthorities());
+            //令牌通过了验证
             Authentication authentication=authenticationManager.authenticate(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+            context.setAuthentication(authentication);
+            this.securityContextHolderStrategy.setContext(context);
             loginSuccessHandler.onAuthenticationSuccess(request,response,authentication);
             return authentication;
         }else {
