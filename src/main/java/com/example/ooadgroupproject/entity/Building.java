@@ -23,6 +23,7 @@ public class Building {
     private String name;
     @NotNull(message = "建筑描述不能为空")
     private String description;
+    private String photoPath;
     private String busStop;
     @Override
     public String toString() {
