@@ -1,9 +1,15 @@
 package com.example.ooadgroupproject.Utils;
 
+import com.example.ooadgroupproject.IdentityLevel;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecureDigestAlgorithm;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.Data;
+import lombok.Setter;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -18,7 +24,7 @@ public class JwtUtils {
     public static final SecretKey key= Keys.hmacShaKeyFor(secret.getBytes());
 
 
-    public String generateToken(String userMail){
+    public String generateToken(long id,String userMail, String username, int identity){
         Date date=new Date();
         Date expireDate = new Date(date.getTime()+ expire*1000);
         return Jwts.builder()
@@ -26,7 +32,10 @@ public class JwtUtils {
                 .add("typ","JWT")
                 .add("alg","HS256")
                 .and()
+                .claim("id",id)
                 .claim("userMail",userMail)
+                .claim("username",username)
+                .claim("identity",identity)
                 .expiration(expireDate)
                 .issuedAt(new Date())
                 .signWith(key, algorithm)

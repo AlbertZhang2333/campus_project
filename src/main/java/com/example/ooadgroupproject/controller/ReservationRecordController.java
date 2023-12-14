@@ -1,7 +1,9 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
+import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
 import com.example.ooadgroupproject.service.ReservationRecordService;
@@ -30,9 +32,9 @@ public class ReservationRecordController {
                                     @RequestParam Time endTime,
                                     @RequestParam Date date,
                                     @RequestParam String location){
-        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
-        String userMail=authentication.getName();
-        String username=(String)authentication.getCredentials();
+        Account account= LoginUserInfo.getAccount();
+        String userMail=account.getUserMail();
+        String username=account.getUsername();
         ReservationRecord reservationRecord=new ReservationRecord(username,userMail,roomName,
                 startTime,endTime, date,location);
 

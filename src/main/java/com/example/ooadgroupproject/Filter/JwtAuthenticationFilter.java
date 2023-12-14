@@ -57,20 +57,21 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             throw new JwtException("token已过期");
         }
         String userMail = (String) jws.getPayload().get("userMail");
-        Account account = accountService.findAccountByUserMail(userMail);
-        if(account!=null) {
-            String username=account.getUsername();
-            UsernamePasswordAuthenticationToken token =
-                    new UsernamePasswordAuthenticationToken(userMail, username, account.getAuthorities());
-            //令牌通过了验证
-            Authentication authentication=authenticationManager.authenticate(token);
-            SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-            context.setAuthentication(authentication);
-            this.securityContextHolderStrategy.setContext(context);
-            chain.doFilter(request,response);
-        }else {
-            chain.doFilter(request,response);
-            return;
-        }
+        String username = (String) jws.getPayload().get("username");
+        long id=(long) jws.getPayload().get("id");
+        int identity = (int) jws.getPayload().get("identity");
+        Account authenticationAccount=new Account();
+        authenticationAccount.setUserMail(userMail);
+        authenticationAccount.setUsername(username);
+        authenticationAccount.setId(id);
+        authenticationAccount.setIdentity(identity);
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(authenticationAccount, null, Account.getAuthorities(identity));
+        //令牌通过了验证
+        Authentication authentication=authenticationManager.authenticate(token);
+        SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+        context.setAuthentication(authentication);
+        this.securityContextHolderStrategy.setContext(context);
+        chain.doFilter(request,response);
     }
 }

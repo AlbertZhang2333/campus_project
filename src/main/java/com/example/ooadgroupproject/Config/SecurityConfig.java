@@ -58,9 +58,8 @@ public class SecurityConfig  {
 
             @Override
             public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                String userMail = authentication.getName();
                 List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
-                UsernamePasswordAuthenticationToken authenticatedToken = new UsernamePasswordAuthenticationToken(userMail, null, authorities);
+                UsernamePasswordAuthenticationToken authenticatedToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), null, authorities);
                 return authenticatedToken;
             }
         };

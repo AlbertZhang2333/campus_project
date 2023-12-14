@@ -23,7 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
-
 public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
 
@@ -53,9 +52,14 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
         String password=obtainPassword(request);
         String userMail=obtainUserMail(request);
         Account account=accountService.findByUserMailAndPassword(userMail,password);
+        Account authenticationAccount=new Account();
+        authenticationAccount.setId(account.getId());
+        authenticationAccount.setUsername(account.getUsername());
+        authenticationAccount.setUserMail(account.getUserMail());
+        authenticationAccount.setIdentity(account.getIdentity());
         if(account!=null) {
             UsernamePasswordAuthenticationToken token =
-                    new UsernamePasswordAuthenticationToken(userMail, account.getUsername(), account.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(authenticationAccount,null, account.getAuthorities());
             //令牌通过了验证
             Authentication authentication=authenticationManager.authenticate(token);
             SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();

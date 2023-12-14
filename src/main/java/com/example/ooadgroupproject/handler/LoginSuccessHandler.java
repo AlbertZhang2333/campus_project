@@ -2,6 +2,7 @@ package com.example.ooadgroupproject.handler;
 
 import cn.hutool.json.JSONUtil;
 import com.example.ooadgroupproject.Utils.JwtUtils;
+import com.example.ooadgroupproject.entity.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
@@ -38,13 +39,22 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
-        String jwt= jwtUtils.generateToken(authentication.getName());
-        Jws<Claims>aa=JwtUtils.parseClaim(jwt);
-        Claims c=JwtUtils.parsePayload(jwt);
+        Object authenticationPrincipal=authentication.getPrincipal();
+        if(authenticationPrincipal instanceof Account) {
+            Account authenticationAccount = (Account) authentication.getPrincipal();
+            String jwt = jwtUtils.generateToken(authenticationAccount.getId(), authenticationAccount.getUserMail()
+                    , authenticationAccount.getUsername(), authenticationAccount.getIdentity());
+            Jws<Claims> aa = JwtUtils.parseClaim(jwt);
+            Claims c = JwtUtils.parsePayload(jwt);
 
-        response.setHeader(JwtUtils.getHeader(),jwt);
-        Result result = Result.success(jwt);
-        outputStream.write(JSONUtil.toJsonStr(result).getBytes(StandardCharsets.UTF_8));
+
+            response.setHeader(JwtUtils.getHeader(), jwt);
+            Result result = Result.success(jwt);
+
+            outputStream.write(JSONUtil.toJsonStr(result).getBytes(StandardCharsets.UTF_8));
+        }else {
+            Result result = Result.fail("登录失败");
+        }
         outputStream.flush();
         outputStream.close();
     }
