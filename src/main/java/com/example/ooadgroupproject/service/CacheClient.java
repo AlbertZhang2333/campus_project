@@ -21,7 +21,7 @@ public class CacheClient {
     RedisTemplate<Object,Object>redisTemplate;
 
     public static String getReservationRecordKey(ReservationRecord reservationRecord){
-        String key=RESERVATION_RECORD_KEY+reservationRecord.getDate().toString()
+        String key=RESERVATION_RECORD_KEY+reservationRecord.getRoomName()+":"+reservationRecord.getDate().toString()
                 +":"+reservationRecord.getUserMail()+reservationRecord.getId();
         return key;
     }
@@ -49,9 +49,9 @@ public class CacheClient {
         String key=CacheClient.getReservationRecordKey(reservationRecord);
         redisTemplate.opsForValue().getOperations().delete(key);
     }
-    public List<ReservationRecord> getReservationRecordList(Date date){
+    public List<ReservationRecord> getReservationRecordList(String roomName,Date date){
         List<ReservationRecord>recordArrayList =new ArrayList<>();
-        String key=RESERVATION_RECORD_KEY+date.toString()+":*";
+        String key=RESERVATION_RECORD_KEY+roomName+":"+date.toString()+":*";
         Set<Object> keys=redisTemplate.keys(key);
         if (keys != null) {
             for(Object key1:keys){

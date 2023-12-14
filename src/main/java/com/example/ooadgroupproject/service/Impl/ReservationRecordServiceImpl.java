@@ -61,8 +61,6 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         if (compareResult > 0) {
             return Result.fail("预约开始时间不能大于预约结束时间");
         }
-        List<ReservationRecord> records = cacheClient.getReservationRecordList(reservationRecord.getDate());
-        //现在将增添，确保将要放入的时段中，仅仅目前还没有人预约，确保不存在预约时间冲突//后续将改为查缓存
 //        for(ReservationRecord record:reservationRecordRepository.findReservationRecordByDateAndRoomNameAndLocation
 //                (reservationRecord.getDate(),reservationRecord.getRoomName(),reservationRecord.getLocation())){
 //            boolean isConflict1=false;
@@ -75,28 +73,41 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
 //                return Result.fail("预约时间冲突");
 //            }
 //        }
+
+        List<ReservationRecord> records = cacheClient.getReservationRecordList(
+                reservationRecord.getRoomName(),
+                reservationRecord.getDate());
         //去查缓存里能不能放的下。由于缓存内仅仅保存还未到期的预约，因此可以查询更少的数据完成任务
-        if (records != null) {
-            for (ReservationRecord record : records) {
-                boolean isConflict1 = false;
-                isConflict1 = (record.getStartTime().compareTo(reservationRecord.getStartTime()) <= 0
-                        && record.getEndTime().compareTo(reservationRecord.getStartTime()) >= 0);
-                boolean isConflict2 = false;
-                isConflict2 = (record.getStartTime().compareTo(reservationRecord.getEndTime()) <= 0)
-                        && (record.getEndTime().compareTo(reservationRecord.getEndTime()) >= 0);
-                if (isConflict1 || isConflict2) {
-                    return Result.fail("预约时间冲突");
+        int temp = records.size();
+        do {
+            if (records != null) {
+                for (ReservationRecord record : records) {
+                    boolean isConflict1 = false;
+                    isConflict1 = (record.getStartTime().compareTo(reservationRecord.getStartTime()) <= 0
+                            && record.getEndTime().compareTo(reservationRecord.getStartTime()) >= 0);
+                    boolean isConflict2 = false;
+                    isConflict2 = (record.getStartTime().compareTo(reservationRecord.getEndTime()) <= 0)
+                            && (record.getEndTime().compareTo(reservationRecord.getEndTime()) >= 0);
+                    if (isConflict1 || isConflict2) {
+                        return Result.fail("预约时间冲突");
+                    }
                 }
             }
-        }
-        ReservationRecord reservationRecord1 = reservationRecordRepository.save(reservationRecord);
-        long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord1.getStartTime().getTime();
+            records = cacheClient.getReservationRecordList(
+                    reservationRecord.getRoomName(),
+                    reservationRecord.getDate());
+        }while (temp!=records.size());
+
+        long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord.getStartTime().getTime();
         Random random = new Random();
         //用于规避一次需要删除过量的数据，减轻压力
         long r = random.nextLong(5000);
         //同步将该数据放入到缓存中
-        cacheClient.setReservationRecord(reservationRecord1, TTL + r,
+        cacheClient.setReservationRecord(reservationRecord, TTL + r,
                 TimeUnit.MILLISECONDS);
+
+        ReservationRecord reservationRecord1 = reservationRecordRepository.save(reservationRecord);
+
 
         return Result.success(reservationRecord1);
     }
