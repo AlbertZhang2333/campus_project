@@ -7,6 +7,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -45,6 +48,20 @@ public class CacheClient {
     public void deleteReservationRecord(ReservationRecord reservationRecord){
         String key=CacheClient.getReservationRecordKey(reservationRecord);
         redisTemplate.opsForValue().getOperations().delete(key);
+    }
+    public List<ReservationRecord> getReservationRecordList(Date date){
+        List<ReservationRecord>recordArrayList =new ArrayList<>();
+        String key=RESERVATION_RECORD_KEY+date.toString()+":*";
+        Set<Object> keys=redisTemplate.keys(key);
+        if (keys != null) {
+            for(Object key1:keys){
+                String key2=(String) key1;
+                String value= (String) redisTemplate.opsForValue().get(key2);
+                ReservationRecord reservationRecord= JSONUtil.toBean(value,ReservationRecord.class);
+                recordArrayList.add(reservationRecord);
+            }
+        }
+        return recordArrayList;
     }
 
 }

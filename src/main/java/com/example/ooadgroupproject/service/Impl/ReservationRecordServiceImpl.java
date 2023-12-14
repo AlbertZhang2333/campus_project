@@ -14,6 +14,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -50,38 +51,56 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         return reservationRecordRepository.save(reservationRecord);
     }
     @Override
-    public Result validateReservationRecord(ReservationRecord reservationRecord,String userMail){
-        int compareResultDate=reservationRecord.getDate().compareTo(Date.valueOf(LocalDate.now()));
-        int compareResultTime=reservationRecord.getStartTime().compareTo(Time.valueOf(LocalTime.now()));
-        if(compareResultDate<0||(compareResultDate==0&&compareResultTime<0)){
+    public Result validateReservationRecord(ReservationRecord reservationRecord,String userMail) {
+        int compareResultDate = reservationRecord.getDate().compareTo(Date.valueOf(LocalDate.now()));
+        int compareResultTime = reservationRecord.getStartTime().compareTo(Time.valueOf(LocalTime.now()));
+        if (compareResultDate < 0 || (compareResultDate == 0 && compareResultTime < 0)) {
             return Result.fail("无法生成过时的预约记录");
         }
-        int compareResult=reservationRecord.getStartTime().compareTo(reservationRecord.getEndTime());
-        if(compareResult>0){
+        int compareResult = reservationRecord.getStartTime().compareTo(reservationRecord.getEndTime());
+        if (compareResult > 0) {
             return Result.fail("预约开始时间不能大于预约结束时间");
         }
-
+        List<ReservationRecord> records = cacheClient.getReservationRecordList(reservationRecord.getDate());
         //现在将增添，确保将要放入的时段中，仅仅目前还没有人预约，确保不存在预约时间冲突//后续将改为查缓存
-        for(ReservationRecord record:reservationRecordRepository.findReservationRecordByDateAndRoomNameAndLocation
-                (reservationRecord.getDate(),reservationRecord.getRoomName(),reservationRecord.getLocation())){
-            boolean isConflict1=false;
-            isConflict1=(record.getStartTime().compareTo(reservationRecord.getStartTime())<=0
-                    &&record.getEndTime().compareTo(reservationRecord.getStartTime())>=0);
-            boolean isConflict2=false;
-            isConflict2=(record.getStartTime().compareTo(reservationRecord.getEndTime())<=0)
-                    &&(record.getEndTime().compareTo(reservationRecord.getEndTime())>=0);
-            if(isConflict1||isConflict2) {
-                return Result.fail("预约时间冲突");
+//        for(ReservationRecord record:reservationRecordRepository.findReservationRecordByDateAndRoomNameAndLocation
+//                (reservationRecord.getDate(),reservationRecord.getRoomName(),reservationRecord.getLocation())){
+//            boolean isConflict1=false;
+//            isConflict1=(record.getStartTime().compareTo(reservationRecord.getStartTime())<=0
+//                    &&record.getEndTime().compareTo(reservationRecord.getStartTime())>=0);
+//            boolean isConflict2=false;
+//            isConflict2=(record.getStartTime().compareTo(reservationRecord.getEndTime())<=0)
+//                    &&(record.getEndTime().compareTo(reservationRecord.getEndTime())>=0);
+//            if(isConflict1||isConflict2) {
+//                return Result.fail("预约时间冲突");
+//            }
+//        }
+        //去查缓存里能不能放的下。由于缓存内仅仅保存还未到期的预约，因此可以查询更少的数据完成任务
+        if (records != null) {
+            for (ReservationRecord record : records) {
+                boolean isConflict1 = false;
+                isConflict1 = (record.getStartTime().compareTo(reservationRecord.getStartTime()) <= 0
+                        && record.getEndTime().compareTo(reservationRecord.getStartTime()) >= 0);
+                boolean isConflict2 = false;
+                isConflict2 = (record.getStartTime().compareTo(reservationRecord.getEndTime()) <= 0)
+                        && (record.getEndTime().compareTo(reservationRecord.getEndTime()) >= 0);
+                if (isConflict1 || isConflict2) {
+                    return Result.fail("预约时间冲突");
+                }
             }
         }
-        ReservationRecord reservationRecord1=reservationRecordRepository.save(reservationRecord);
-        long TTL=-Time.valueOf(LocalTime.now()).getTime()+reservationRecord1.getStartTime().getTime();
-
+        ReservationRecord reservationRecord1 = reservationRecordRepository.save(reservationRecord);
+        long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord1.getStartTime().getTime();
+        Random random = new Random();
+        //用于规避一次需要删除过量的数据，减轻压力
+        long r = random.nextLong(5000);
         //同步将该数据放入到缓存中
-        cacheClient.setReservationRecord(reservationRecord1,TTL,
-                TimeUnit.MILLISECONDS);;
+        cacheClient.setReservationRecord(reservationRecord1, TTL + r,
+                TimeUnit.MILLISECONDS);
+
         return Result.success(reservationRecord1);
     }
+
 
     @Override
     public Result deleteByDateAndIdAndUserMail(Date date, long id, String userMail) {
