@@ -16,7 +16,7 @@ public class LoginUserInfo {
            anonymousAccount.setUsername("anonymous");
            anonymousAccount.setUserMail("null");
            anonymousAccount.setIdentity(IdentityLevel.VISITOR);
-           return null;
+           return anonymousAccount;
        }
        return (Account) authentication.getPrincipal();
    }
