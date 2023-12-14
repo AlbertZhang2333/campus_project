@@ -15,7 +15,7 @@ public class CacheClient {
 
 
     @Autowired
-    RedisTemplate<String,Object>redisTemplate;
+    RedisTemplate<Object,Object>redisTemplate;
 
     public static String getReservationRecordKey(ReservationRecord reservationRecord){
         String key=RESERVATION_RECORD_KEY+reservationRecord.getDate().toString()
@@ -29,7 +29,7 @@ public class CacheClient {
         return redisTemplate.opsForValue().get(key);
     }
     public boolean delete(String key){
-        return redisTemplate.opsForValue().getOperations().delete(key);
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
     }
 
 
@@ -38,9 +38,9 @@ public class CacheClient {
         String key=CacheClient.getReservationRecordKey(reservationRecord);
         redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(reservationRecord));
     }
-    public void deleteReservationRecord(Date date,long id,String userMail){
+    public boolean deleteReservationRecord(Date date,long id,String userMail){
         String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
-        redisTemplate.opsForValue().getOperations().delete(key);
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
     }
     public void deleteReservationRecord(ReservationRecord reservationRecord){
         String key=CacheClient.getReservationRecordKey(reservationRecord);

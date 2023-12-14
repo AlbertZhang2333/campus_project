@@ -121,9 +121,9 @@ public class ReservationRecordController {
     }
     @PostMapping("/deleteByDateAndIdAndUserMail")
     public Result deleteByDateAndIdAndUserMail(@RequestParam Date date,
-                                               @RequestParam long id,
-                                               @RequestParam String userMail){
-        return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,userMail);
+                                               @RequestParam long id){
+        Account account=LoginUserInfo.getAccount();
+        return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,account.getUserMail());
     }
 
     @PostMapping("/deleteAll")
