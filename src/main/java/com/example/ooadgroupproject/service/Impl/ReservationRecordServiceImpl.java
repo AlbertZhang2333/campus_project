@@ -96,6 +96,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
 
     @Override
     public void deleteAll(){
+        boolean a=cacheClient.delete(CacheClient.RESERVATION_RECORD_KEY);
         reservationRecordRepository.deleteAll();
     }
     @Override

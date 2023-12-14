@@ -28,7 +28,7 @@ public class CacheClient {
     public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
     }
-    public Boolean delete(String key){
+    public boolean delete(String key){
         return redisTemplate.opsForValue().getOperations().delete(key);
     }
 
