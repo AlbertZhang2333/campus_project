@@ -44,17 +44,19 @@ public class AdminAccountController {
     public List<Account> findAllAccount(){
         return accountService.findAll();
     }
+    //后期需要更新
     @PostMapping("/setBlackList")
     public Result setBlackList(long id){
        Account account= accountService.getUserById(id);
-       account.setInBlackList(true);
+
        return Result.success("已成功将"+id+"用户拉入黑名单");
     }
+    //后期需要更新
     @PostMapping("/releaseFromBlackList")
     public Result releaseFromBlackList(long id){
         Account account= accountService.getUserById(id);
-        if(account.isInBlackList()){
-            account.setInBlackList(false);
+        if(true){
+
             return Result.success("已成功将"+id+"用户从黑名单内释放");
         }else {
             return Result.fail("用户"+id+"不在黑名单内");

@@ -44,7 +44,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             Account authenticationAccount = (Account) authentication.getPrincipal();
             String jwt = jwtUtils.generateToken( authenticationAccount.getUserMail()
                     , authenticationAccount.getUsername(), authenticationAccount.getIdentity()
-                    ,authenticationAccount.isInBlackList());
+            );
             Jws<Claims> aa = JwtUtils.parseClaim(jwt);
             Claims c = JwtUtils.parsePayload(jwt);
 

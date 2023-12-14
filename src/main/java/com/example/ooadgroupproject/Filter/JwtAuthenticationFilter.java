@@ -58,7 +58,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
         String userMail = (String) jws.getPayload().get("userMail");
         String username = (String) jws.getPayload().get("username");
-        boolean inBlackList=(boolean) jws.getPayload().get("inBlackList");
         int identity = (int) jws.getPayload().get("identity");
         Account authenticationAccount=new Account();
         authenticationAccount.setUserMail(userMail);
