@@ -23,5 +23,8 @@ public interface ReservationRecordService {
 
     public Result deleteByIdAndUserMail(long id, String userMail);
 
+    public void deleteAll();
+
+    public List<ReservationRecord>findAll();
 
 }

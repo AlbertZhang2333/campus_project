@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.service.Impl;
 
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
     }
     private String userVerificationCode = null;
     @Override
-    public String sendEmail(String userMail) {
+    public Result sendEmail(String userMail) {
         String userVerificationCode=generateVerificationCode();
         try{
             SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -46,9 +47,9 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mailMessage);
             this.userVerificationCode = userVerificationCode;
         } catch (MailException e) {
-            return ("发送给"+userMail+"的验证码未能发送成功");
+            return Result.fail("发送给"+userMail+"的验证码未能发送成功");
         }
-        return ("发送给"+userMail+"的验证码"+userVerificationCode+"发送成功");
+        return Result.success("发送给"+userMail+"的验证码"+userVerificationCode+"发送成功");
     }
 
     @Override

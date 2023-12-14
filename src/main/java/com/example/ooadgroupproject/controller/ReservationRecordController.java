@@ -119,4 +119,13 @@ public class ReservationRecordController {
         Long tot = (long) list.size();
         return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
+
+    @PostMapping("/deleteAll")
+    public void deleteAll(){
+        reservationRecordService.deleteAll();
+    }
+    @GetMapping("/findAll")
+    public List<ReservationRecord>findAll(){
+        return reservationRecordService.findAll();
+    }
 }

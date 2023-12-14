@@ -62,8 +62,8 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         }
 
         //现在将增添，确保将要放入的时段中，仅仅目前还没有人预约，确保不存在预约时间冲突//后续将改为查缓存
-        for(ReservationRecord record:reservationRecordRepository.findReservationRecordByDateAndRoomName
-                (reservationRecord.getDate(),reservationRecord.getRoomName())){
+        for(ReservationRecord record:reservationRecordRepository.findReservationRecordByDateAndRoomNameAndLocation
+                (reservationRecord.getDate(),reservationRecord.getRoomName(),reservationRecord.getLocation())){
             boolean isConflict1=false;
             isConflict1=(record.getStartTime().compareTo(reservationRecord.getStartTime())<=0
                     &&record.getEndTime().compareTo(reservationRecord.getStartTime())>=0);
@@ -75,7 +75,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
             }
         }
         ReservationRecord reservationRecord1=reservationRecordRepository.save(reservationRecord);
-        long TTL=Time.valueOf(LocalTime.now()).getTime()-reservationRecord1.getStartTime().getTime();
+        long TTL=-Time.valueOf(LocalTime.now()).getTime()+reservationRecord1.getStartTime().getTime();
 
         //同步将该数据放入到缓存中
         cacheClient.set(CacheClient.RESERVATION_RECORD_KEY
@@ -95,4 +95,12 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         return Result.success("已成功取消预约");
     }
 
+    @Override
+    public void deleteAll(){
+        reservationRecordRepository.deleteAll();
+    }
+    @Override
+    public List<ReservationRecord> findAll(){
+        return reservationRecordRepository.findAll();
+    }
 }

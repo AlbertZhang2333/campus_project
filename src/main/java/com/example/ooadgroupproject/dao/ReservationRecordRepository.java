@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ReservationRecordRepository extends JpaRepository<ReservationRecord, Long> {
+    public void deleteAllBy();
     public List<ReservationRecord> findByUserMail(String userMail);
 
     public List<ReservationRecord> findByDate(Date date);
@@ -18,7 +19,10 @@ public interface ReservationRecordRepository extends JpaRepository<ReservationRe
 
     public List<ReservationRecord> findByRoomName(String roomName);
 
-    public List<ReservationRecord>  findReservationRecordByDateAndRoomName(Date date,String roomName);
+    public List<ReservationRecord>
+    findReservationRecordByDateAndRoomNameAndLocation(Date date,
+                                                      String roomName,String location);
 
     public void deleteReservationRecordByIdAndUserMail(long id,String userMail);
+    public List<ReservationRecord>findAll();
 }
