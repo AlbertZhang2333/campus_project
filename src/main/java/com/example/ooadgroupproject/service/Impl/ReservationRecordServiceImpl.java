@@ -78,20 +78,19 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         long TTL=-Time.valueOf(LocalTime.now()).getTime()+reservationRecord1.getStartTime().getTime();
 
         //同步将该数据放入到缓存中
-        cacheClient.set(CacheClient.RESERVATION_RECORD_KEY
-                        +String.valueOf(reservationRecord1.getId())
-                        +userMail
-                , JSONUtil.toJsonStr(reservationRecord1),TTL+1000L,TimeUnit.MILLISECONDS);
+        cacheClient.setReservationRecord(reservationRecord1,TTL,
+                TimeUnit.MILLISECONDS);;
         return Result.success("预约成功!");
     }
 
     @Override
-    public Result deleteByIdAndUserMail(long id,String userMail) {
+    public Result deleteByDateAndIdAndUserMail(Date date, long id, String userMail) {
         //删除一条预约信息，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
 
         boolean cacheDelRes=cacheClient.delete
                 (CacheClient.RESERVATION_RECORD_KEY+String.valueOf(id)+userMail);
-        reservationRecordRepository.deleteReservationRecordByIdAndUserMail(id,userMail);
+        reservationRecordRepository.deleteReservationRecordByDateAndIdAndUserMail
+                (date,id,userMail);
         return Result.success("已成功取消预约");
     }
 

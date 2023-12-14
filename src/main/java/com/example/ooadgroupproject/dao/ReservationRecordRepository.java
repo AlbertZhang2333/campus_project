@@ -23,6 +23,6 @@ public interface ReservationRecordRepository extends JpaRepository<ReservationRe
     findReservationRecordByDateAndRoomNameAndLocation(Date date,
                                                       String roomName,String location);
 
-    public void deleteReservationRecordByIdAndUserMail(long id,String userMail);
+    public void deleteReservationRecordByDateAndIdAndUserMail(Date date,long id,String userMail);
     public List<ReservationRecord>findAll();
 }

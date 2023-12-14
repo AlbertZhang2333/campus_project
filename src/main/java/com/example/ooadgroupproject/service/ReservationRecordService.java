@@ -21,7 +21,7 @@ public interface ReservationRecordService {
 
     Result validateReservationRecord(ReservationRecord reservationRecord, String userMail);
 
-    public Result deleteByIdAndUserMail(long id, String userMail);
+    public Result deleteByDateAndIdAndUserMail(Date date,long id, String userMail);
 
     public void deleteAll();
 

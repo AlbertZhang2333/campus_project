@@ -119,6 +119,12 @@ public class ReservationRecordController {
         Long tot = (long) list.size();
         return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
+    @PostMapping("/deleteByDateAndIdAndUserMail")
+    public Result deleteByDateAndIdAndUserMail(@RequestParam Date date,
+                                               @RequestParam long id,
+                                               @RequestParam String userMail){
+        return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,userMail);
+    }
 
     @PostMapping("/deleteAll")
     public void deleteAll(){
