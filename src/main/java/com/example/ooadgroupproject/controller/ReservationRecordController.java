@@ -38,7 +38,7 @@ public class ReservationRecordController {
         ReservationRecord reservationRecord=new ReservationRecord(username,userMail,roomName,
                 startTime,endTime, date,location);
 
-        return reservationRecordService.validateReservationRecord(reservationRecord);
+        return reservationRecordService.validateReservationRecord(reservationRecord,userMail);
     }
 
 

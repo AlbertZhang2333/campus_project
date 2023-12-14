@@ -33,11 +33,13 @@ public class Account implements UserDetails {
     @NotNull
     private String userMail;
     @Setter
+    @Getter
     @NotNull
     private boolean inBlackList;
     //注意！在调用此方法时，为避免因手误或者后续方案调整导致的bug，请不要直接输入int数值，而是通过调用IdentityLevel类输入数值
     @Setter
     private int identity;
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -101,7 +103,6 @@ public class Account implements UserDetails {
         this.setUserMail(userMail);
         this.setUsername(username);
         this.setInBlackList(false);
-
     }
     public Account() {
 

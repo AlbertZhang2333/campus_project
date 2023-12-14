@@ -19,7 +19,9 @@ public interface ReservationRecordService {
     //this function is used to insert a new reservation record.
     public ReservationRecord save(ReservationRecord reservationRecord);
 
-    public Result validateReservationRecord(ReservationRecord reservationRecord);
+    Result validateReservationRecord(ReservationRecord reservationRecord, String userMail);
+
+    public Result deleteByIdAndUserMail(long id, String userMail);
 
 
 }

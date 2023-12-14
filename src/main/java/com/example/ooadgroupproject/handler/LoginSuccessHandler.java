@@ -42,8 +42,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Object authenticationPrincipal=authentication.getPrincipal();
         if(authenticationPrincipal instanceof Account) {
             Account authenticationAccount = (Account) authentication.getPrincipal();
-            String jwt = jwtUtils.generateToken(authenticationAccount.getId(), authenticationAccount.getUserMail()
-                    , authenticationAccount.getUsername(), authenticationAccount.getIdentity());
+            String jwt = jwtUtils.generateToken( authenticationAccount.getUserMail()
+                    , authenticationAccount.getUsername(), authenticationAccount.getIdentity()
+                    ,authenticationAccount.isInBlackList());
             Jws<Claims> aa = JwtUtils.parseClaim(jwt);
             Claims c = JwtUtils.parsePayload(jwt);
 

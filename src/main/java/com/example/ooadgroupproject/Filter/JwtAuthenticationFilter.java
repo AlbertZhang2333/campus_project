@@ -58,12 +58,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
         String userMail = (String) jws.getPayload().get("userMail");
         String username = (String) jws.getPayload().get("username");
-        long id=(long) jws.getPayload().get("id");
+        boolean inBlackList=(boolean) jws.getPayload().get("inBlackList");
         int identity = (int) jws.getPayload().get("identity");
         Account authenticationAccount=new Account();
         authenticationAccount.setUserMail(userMail);
         authenticationAccount.setUsername(username);
-        authenticationAccount.setId(id);
+ //       authenticationAccount.setId(id);
         authenticationAccount.setIdentity(identity);
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(authenticationAccount, null, Account.getAuthorities(identity));

@@ -24,7 +24,7 @@ public class JwtUtils {
     public static final SecretKey key= Keys.hmacShaKeyFor(secret.getBytes());
 
 
-    public String generateToken(long id,String userMail, String username, int identity){
+    public String generateToken(String userMail, String username, int identity,boolean inBlackList){
         Date date=new Date();
         Date expireDate = new Date(date.getTime()+ expire*1000);
         return Jwts.builder()
@@ -32,10 +32,10 @@ public class JwtUtils {
                 .add("typ","JWT")
                 .add("alg","HS256")
                 .and()
-                .claim("id",id)
                 .claim("userMail",userMail)
                 .claim("username",username)
                 .claim("identity",identity)
+                .claim("inBlackList",inBlackList)
                 .expiration(expireDate)
                 .issuedAt(new Date())
                 .signWith(key, algorithm)

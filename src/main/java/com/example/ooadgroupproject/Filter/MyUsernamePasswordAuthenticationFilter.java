@@ -53,10 +53,11 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
         String userMail=obtainUserMail(request);
         Account account=accountService.findByUserMailAndPassword(userMail,password);
         Account authenticationAccount=new Account();
-        authenticationAccount.setId(account.getId());
+      //  authenticationAccount.setId(account.getId());
         authenticationAccount.setUsername(account.getUsername());
         authenticationAccount.setUserMail(account.getUserMail());
         authenticationAccount.setIdentity(account.getIdentity());
+        authenticationAccount.setInBlackList(account.isInBlackList());
         if(account!=null) {
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(authenticationAccount,null, account.getAuthorities());

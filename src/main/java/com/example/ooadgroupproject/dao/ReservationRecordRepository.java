@@ -19,4 +19,6 @@ public interface ReservationRecordRepository extends JpaRepository<ReservationRe
     public List<ReservationRecord> findByRoomName(String roomName);
 
     public List<ReservationRecord>  findReservationRecordByDateAndRoomName(Date date,String roomName);
+
+    public void deleteReservationRecordByIdAndUserMail(long id,String userMail);
 }
