@@ -45,7 +45,6 @@ public class AccountController {
                            @RequestParam String password,
                            @RequestParam int identity){
         Account account=new Account();
-        account.setId(id);//如果该id未存在于表内，将创建新的一条数据，否则为修改已有数据
         account.setIdentity(identity);
         account.setPassword(password);
         account.setUsername(username);
