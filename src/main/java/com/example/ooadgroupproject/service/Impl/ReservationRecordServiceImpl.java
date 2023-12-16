@@ -51,7 +51,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         return reservationRecordRepository.save(reservationRecord);
     }
     @Override
-    public Result validateReservationRecord(ReservationRecord reservationRecord,String userMail) {
+    public synchronized Result validateReservationRecord(ReservationRecord reservationRecord,String userMail) {
         int compareResultDate = reservationRecord.getDate().compareTo(Date.valueOf(LocalDate.now()));
         int compareResultTime = reservationRecord.getStartTime().compareTo(Time.valueOf(LocalTime.now()));
         if (compareResultDate < 0 || (compareResultDate == 0 && compareResultTime < 0)) {
@@ -79,8 +79,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
                 reservationRecord.getDate());
         //去查缓存里能不能放的下。由于缓存内仅仅保存还未到期的预约，因此可以查询更少的数据完成任务
         int temp = records.size();
-        do {
-            if (records != null) {
+        if (records != null) {
                 for (ReservationRecord record : records) {
                     boolean isConflict1 = false;
                     isConflict1 = (record.getStartTime().compareTo(reservationRecord.getStartTime()) <= 0
@@ -96,7 +95,6 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
             records = cacheClient.getReservationRecordList(
                     reservationRecord.getRoomName(),
                     reservationRecord.getDate());
-        }while (temp!=records.size());
 
         long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord.getStartTime().getTime();
         Random random = new Random();
