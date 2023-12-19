@@ -57,7 +57,7 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
         authenticationAccount.setUsername(account.getUsername());
         authenticationAccount.setUserMail(account.getUserMail());
         authenticationAccount.setIdentity(account.getIdentity());
-        if(account!=null) {
+        if(account!=null&&account.isEnabled()) {
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(authenticationAccount,null, account.getAuthorities());
             //令牌通过了验证
@@ -67,7 +67,12 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
             this.securityContextHolderStrategy.setContext(context);
             loginSuccessHandler.onAuthenticationSuccess(request,response,authentication);
             return authentication;
-        }else {
+        }else if(account!=null&&!account.isEnabled()){
+            AuthenticationException authenticationException=new LoginFailedException("登陆失败！该账号已被禁用。" +
+                    "请和管理员联系了解详情");
+            loginFailureHandler.onAuthenticationFailure(request,response,authenticationException);
+            return null;
+        }else{
             AuthenticationException authenticationException=new LoginFailedException("登陆失败！密码或邮箱错误");
             loginFailureHandler.onAuthenticationFailure(request,response,authenticationException);
             return null;

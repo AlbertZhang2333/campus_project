@@ -29,8 +29,12 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         return optionalAccount.orElse(null);
     }
     @Override
-    public Account save(Account account){
-        return accountRepository.save(account);
+    public Account save(Account account) {
+        try {
+            return accountRepository.save(account);
+        }catch (Exception e){
+            return null;
+        }
     }
     @Override
     public void deleteById(long id){

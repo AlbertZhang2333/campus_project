@@ -36,6 +36,10 @@ public class Account implements UserDetails {
     @Setter
     private int identity;
 
+    @Setter
+    @NotNull
+    private boolean enabled;
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -53,7 +57,7 @@ public class Account implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override
@@ -97,6 +101,7 @@ public class Account implements UserDetails {
         this.setPassword(password);
         this.setUserMail(userMail);
         this.setUsername(username);
+        this.enabled=true;
 
     }
     public Account() {

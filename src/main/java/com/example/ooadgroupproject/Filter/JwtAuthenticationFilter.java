@@ -6,6 +6,7 @@ import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.handler.LoginFailureHandler;
 import com.example.ooadgroupproject.handler.LoginSuccessHandler;
 import com.example.ooadgroupproject.service.AccountService;
+import com.example.ooadgroupproject.service.CacheClient;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -38,6 +39,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private LoginFailureHandler loginFailureHandler;
     @Autowired
     private  AuthenticationManager authenticationManager;
+    @Autowired
+    private CacheClient cacheClient;
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager){
         super(authenticationManager);
     }
@@ -63,6 +66,9 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         authenticationAccount.setUserMail(userMail);
         authenticationAccount.setUsername(username);
  //       authenticationAccount.setId(id);
+        if(checkIfAccountInBlackList(userMail)){
+            throw new JwtException("该用户已被拉黑");
+        }
         authenticationAccount.setIdentity(identity);
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(authenticationAccount, null, Account.getAuthorities(identity));
@@ -72,5 +78,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         context.setAuthentication(authentication);
         this.securityContextHolderStrategy.setContext(context);
         chain.doFilter(request,response);
+    }
+    private boolean checkIfAccountInBlackList(String userMail){
+        return cacheClient.isAccountInBlackList(userMail);
     }
 }

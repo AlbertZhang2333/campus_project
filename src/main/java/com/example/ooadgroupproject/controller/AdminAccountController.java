@@ -1,19 +1,19 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.IdentityLevel;
 import com.example.ooadgroupproject.Utils.ManageAccountUtil;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
+import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.Impl.UploadFileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/manageAccount")
@@ -22,6 +22,8 @@ public class AdminAccountController {
     private AccountService accountService;
     @Autowired
     private UploadFileServiceImpl uploadFileService;
+    @Autowired
+    private CacheClient cacheClient;
 
     @PostMapping("/batchAddAccount")
     public Result batchAddAccount(MultipartFile file) throws IOException {
@@ -46,10 +48,19 @@ public class AdminAccountController {
     }
     //后期需要更新
     @PostMapping("/setBlackList")
-    public Result setBlackList(long id){
-       Account account= accountService.getUserById(id);
-
-       return Result.success("已成功将"+id+"用户拉入黑名单");
+    public Result setBlackList(@RequestParam String userMail){
+        //现在实际数据库中
+        Account aimAccount=accountService.findAccountByUserMail(userMail);
+        if(aimAccount!=null&&aimAccount.isEnabled()){
+            aimAccount.setEnabled(false);
+            accountService.save(aimAccount);
+            cacheClient.addAccountIntoBlackList(userMail);
+            return Result.success("已成功将"+userMail+"用户拉入黑名单");
+        }else if(aimAccount==null){
+            return Result.fail("用户"+userMail+"不存在");
+        }else {
+            return Result.fail("用户"+userMail+"已被拉入黑名单");
+        }
     }
     //后期需要更新
     @PostMapping("/releaseFromBlackList")
@@ -62,6 +73,7 @@ public class AdminAccountController {
             return Result.fail("用户"+id+"不在黑名单内");
         }
     }
+
 
 
 }

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CacheClient {
     public static final String RESERVATION_RECORD_KEY="reservation_record_key:";
-
+    public static final String ACCOUNT_BLACKLIST_KEY="account_blacklist_key:";
 
     @Autowired
     RedisTemplate<Object,Object>redisTemplate;
@@ -24,6 +24,9 @@ public class CacheClient {
         String key=RESERVATION_RECORD_KEY+reservationRecord.getRoomName()+":"+reservationRecord.getDate().toString()
                 +":"+reservationRecord.getUserMail()+reservationRecord.getId();
         return key;
+    }
+    public static String getAccountBlacklistKey(String userMail){
+        return ACCOUNT_BLACKLIST_KEY+userMail;
     }
     public void set(String key, Object value, long ttl, TimeUnit timeUnit){
         redisTemplate.opsForValue().set(key,value,ttl,timeUnit);
@@ -63,5 +66,19 @@ public class CacheClient {
         }
         return recordArrayList;
     }
+    public void addAccountIntoBlackList(String userMail){
+        String key=CacheClient.getAccountBlacklistKey(userMail);
+        redisTemplate.opsForValue().set(key,userMail);
+    }
+    public boolean deleteAccountFromBlackList(String userMail){
+        String key=CacheClient.getAccountBlacklistKey(userMail);
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
+    }
+    public boolean isAccountInBlackList(String userMail){
+        String key=CacheClient.getAccountBlacklistKey(userMail);
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+    }
+
+
 
 }

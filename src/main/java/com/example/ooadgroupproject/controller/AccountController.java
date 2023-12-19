@@ -35,8 +35,12 @@ public class AccountController {
                                  @RequestParam String userMail,
                                  @RequestParam String password){
         Account account=new Account(username,userMail,password,IdentityLevel.NORMAL_USER);
-        accountService.save(account);
-        return Result.success("用户创建成功，欢迎您！"+username);
+        Account res=accountService.save(account);
+        if(res!=null) {
+            return Result.success("用户创建成功，欢迎您！" + username);
+        }else {
+            return Result.fail("邮箱重复！，注册失败");
+        }
     }
 
     @PutMapping("/ModifyingInformation")
