@@ -68,7 +68,7 @@ public class CacheClient {
     }
     public void addAccountIntoBlackList(String userMail){
         String key=CacheClient.getAccountBlacklistKey(userMail);
-        redisTemplate.opsForValue().set(key,userMail);
+        redisTemplate.opsForValue().set(key,userMail,1000000000L,TimeUnit.DAYS);
     }
     public boolean deleteAccountFromBlackList(String userMail){
         String key=CacheClient.getAccountBlacklistKey(userMail);
