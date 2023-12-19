@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             );
             Jws<Claims> aa = JwtUtils.parseClaim(jwt);
             Claims c = JwtUtils.parsePayload(jwt);
-
-
             response.setHeader(JwtUtils.getHeader(), jwt);
+            response.setStatus(200);
+
+            Cookie cookie =new Cookie("token",jwt);
+            cookie.setMaxAge(3600*24);
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+
             Result result = Result.success(jwt);
 
             outputStream.write(JSONUtil.toJsonStr(result).getBytes(StandardCharsets.UTF_8));

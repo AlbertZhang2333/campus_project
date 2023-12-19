@@ -12,6 +12,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,17 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
-        String jwt=request.getHeader("ooad_project");
+        Cookie[]cookies =request.getCookies();
+        String jwt=null;
+        if(cookies!=null) {
+            for (int i = 0; i < cookies.length; i++) {
+                if (cookies[i].getName().equals("token") && cookies[i].getValue() != null &&
+                        !cookies[i].getValue().equals("null")) {
+                    jwt = cookies[i].getValue();
+                    break;
+                }
+            }
+        }
         if(StrUtil.isBlankOrUndefined(jwt)){
             chain.doFilter(request,response);
             return;
