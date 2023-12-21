@@ -31,6 +31,10 @@ public class ItemsShoppingRecord {
     @Getter
     @Setter
     private boolean isRefund;
+    @NotNull
+    @Getter
+    @Setter
+    private boolean isPurchased;
     @Getter
     private Time createTime;
     @NotNull
@@ -45,6 +49,7 @@ public class ItemsShoppingRecord {
         this.isRefund = false;
         this.createTime = Time.valueOf(LocalTime.now());
         this.userMail = userMail;
+        this.isPurchased=false;
     }
     public long generateId(){
         long id=0;
