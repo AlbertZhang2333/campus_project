@@ -3,7 +3,12 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PayTool {
     public static String URL = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
     public static String APPID = "9021000133619219";
@@ -27,6 +32,14 @@ public class PayTool {
     }
     public AlipayClient getAlipayClient() throws AlipayApiException {
         return new DefaultAlipayClient(getAliPayConfig());
+    }
+    public AlipayTradePagePayModel getPurchaseModel(ItemsShoppingRecord itemsShoppingRecord){
+        AlipayTradePagePayModel model=new AlipayTradePagePayModel();
+        model.setOutTradeNo(itemsShoppingRecord.getId()+"");
+        model.setTotalAmount(itemsShoppingRecord.getAmount()+"");
+        model.setSubject(itemsShoppingRecord.getItemName());
+        model.setProductCode("FAST_INSTANT_TRADE_PAY");
+        return model;
     }
 }
 

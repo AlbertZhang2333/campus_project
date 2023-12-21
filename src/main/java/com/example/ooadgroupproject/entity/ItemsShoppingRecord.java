@@ -8,12 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Random;
 
 @Entity
 public class ItemsShoppingRecord {
     @Id
-    @GeneratedValue
+    @Getter
     private long id;
     @NotNull
     @Getter
@@ -35,6 +38,7 @@ public class ItemsShoppingRecord {
     private String userMail;
     public ItemsShoppingRecord(Item item, int num,
                                String userMail) {
+        this.id=generateId();
         this.ItemName = item.getName();
         this.num = num;
         this.amount = this.num * item.getPrice();
@@ -42,6 +46,17 @@ public class ItemsShoppingRecord {
         this.createTime = Time.valueOf(LocalTime.now());
         this.userMail = userMail;
     }
+    public long generateId(){
+        long id=0;
+        LocalDateTime now = LocalDateTime.now();
+        long nowSecond=now.toEpochSecond(ZoneOffset.UTC);
+        long timestamp=nowSecond-1000000L;
+        Random random=new Random(System.currentTimeMillis());
+        id=timestamp+random.nextLong(80000L);
+        return id;
+
+    }
+
 
 
     public ItemsShoppingRecord() {
