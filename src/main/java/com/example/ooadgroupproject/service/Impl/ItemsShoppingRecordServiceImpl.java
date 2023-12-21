@@ -47,6 +47,10 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         //能成功建立联系，就存储对应的记录
         itemsShoppingRecordRepository.save(itemsShoppingRecord);
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
+        //设置支付宝的请求参数
+        AlipayTradePagePayModel model=payTool.getPurchaseModel(itemsShoppingRecord);
+        request.setBizModel(model);
+        //调用支付宝的接口
         AlipayTradePagePayResponse response=alipayClient.pageExecute(request,"POST");
         String pageRedirectionData=response.getBody();
         System.out.println(pageRedirectionData);
