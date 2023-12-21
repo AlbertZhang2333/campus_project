@@ -66,13 +66,13 @@ public class AdminAccountController {
     @PostMapping("/releaseFromBlackList")
     public Result releaseFromBlackList(long id){
         Account account= accountService.getUserById(id);
-        if(true){
-
-            return Result.success("已成功将"+id+"用户从黑名单内释放");
-        }else {
-            return Result.fail("用户"+id+"不在黑名单内");
-        }
+        account.setEnabled(true);
+        cacheClient.deleteAccountFromBlackList(account.getUserMail());
+        return Result.success("已成功将"+id+"用户从黑名单内释放");
     }
+    
+
+
 
 
 
