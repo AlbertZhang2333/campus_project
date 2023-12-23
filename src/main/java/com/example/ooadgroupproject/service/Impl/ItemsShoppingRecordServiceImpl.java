@@ -39,6 +39,9 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         return itemsShoppingRecordRepository.findByItemName(itemName);
     }
     //该方法用于请求支付宝完成金额交易，但是该方法不会完成减少库存的任务。减少库存的部分将在届时调用该方法的地方编写，以便于做高并发处理
+    //暂时有些疑惑，我觉得可以加入查询状态功能，以应对更多场景
+    //TODO
+    //需要进一步优化！！
     @Override
     public boolean callAlipayToPurchase(String userMail, Item item, int num) throws AlipayApiException {
         //呼叫支付宝来结账
@@ -56,9 +59,12 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         System.out.println(pageRedirectionData);
         //分两次存储，确保交易成功后，服务器即便突然崩溃，也能保证在用户支付成功前已将数据存储到数据库中
         if(response.isSuccess()){
-            itemsShoppingRecord.setPurchased(true);
-            itemsShoppingRecordRepository.save(itemsShoppingRecord);
+            //接下来，确认已为用户请求跳转了支付宝页面，现在需要去确认用户是否已完成了支付
+
+        }else {
+            return false;
         }
+
         //返回true，表示成功
         return response.isSuccess();
     }
