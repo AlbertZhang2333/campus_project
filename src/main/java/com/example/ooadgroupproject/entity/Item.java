@@ -1,5 +1,7 @@
 package com.example.ooadgroupproject.entity;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
@@ -48,6 +50,17 @@ public class Item {
             throw new Exception("商品数量不能为负数！");
         }
         return new Item(itemsName,itemNum,price,description,imagePath);
+    }
+    public static Item generateNewItems
+            (String JsonString)throws Exception {
+        Item item=new Item();
+        JSONObject jsonObject=new JSONObject(JsonString);
+        item.num= jsonObject.getInt("num");
+        item.name=jsonObject.getStr("name");
+        item.price=jsonObject.getDouble("price");
+        item.description=jsonObject.getStr("description");
+        item.imagePath=jsonObject.getStr("imagePath");
+        return item;
     }
     public boolean shoppingItem(int num){
         if(num>this.num){

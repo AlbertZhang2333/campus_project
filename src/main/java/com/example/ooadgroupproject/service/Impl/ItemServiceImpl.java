@@ -1,27 +1,63 @@
 package com.example.ooadgroupproject.service.Impl;
 
+import cn.hutool.json.JSONUtil;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsRepository;
 import com.example.ooadgroupproject.entity.Item;
+import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ItemServiceImpl implements ItemsService {
     @Autowired
     private ItemsRepository itemsRepository;
+    @Autowired
+    private CacheClient cacheClient;
     @Override
     public List<Item> findAll(){
         return itemsRepository.findAll();
     }
 
     @Override
-    public Optional<Item> findByName(String name) {
-        return itemsRepository.findByName(name);
+    public Item findByName(String name) {
+        //说明该商品最近被人查询过，存在被多次查询的可能，现在对其添加缓存多级管理
+        String itemJSON=cacheClient.getItemInfo(name);
+        Item item=null;
+        if(itemJSON!=null){
+            if(!itemJSON.isEmpty()){
+                try {
+                    item = Item.generateNewItems(itemJSON);
+                    return item;
+                }catch (Exception e){
+                    return null;
+                }
+            }else {
+                return null;
+            }
+        }
+        //需要想个办法确保和验证item为最新版
+        item=itemsRepository.findByName(name).orElse(null);
+        cacheClient.setItemInfo(name,item);
+        return item;
+    }
+    @Override
+    public Result updateItem(String itemName, double price,
+                             String description, String imagePath){
+        Item item=itemsRepository.findByName(itemName).orElse(null);
+        if(item==null){
+            return Result.fail("不存在该商品");
+        }
+        item.setPrice(price);
+        item.setDescription(description);
+        item.setImagePath(imagePath);
+        itemsRepository.save(item);
+        //缓存更新
+        cacheClient.deleteItems(item);
+        return Result.success("商品数据已修改");
     }
 
 
@@ -32,17 +68,24 @@ public class ItemServiceImpl implements ItemsService {
         if (item != null) {
             item.addNum(addNum);
             itemsRepository.save(item);
+            cacheClient.deleteItems(item);
         }
         return false;
     }
 
+    //此方法仅仅由销售记录service调用，不得由controller调用
     @Override
     public boolean reduceItem(String name, int num) {
-        Item item = itemsRepository.findByName(name).orElse(null);
+        Item item = findByName(name);
         if(item == null){
             return false;
         }
-        return item.shoppingItem(num);
+        boolean res=item.shoppingItem(num);
+        if(res) {
+            itemsRepository.save(item);
+            cacheClient.deleteItems(item);
+        }
+        return res;
     }
 
     @Override
@@ -59,6 +102,8 @@ public class ItemServiceImpl implements ItemsService {
         itemsRepository.save(item);
         return Result.success("目标商品已创建");
     }
+
+
 
 
 

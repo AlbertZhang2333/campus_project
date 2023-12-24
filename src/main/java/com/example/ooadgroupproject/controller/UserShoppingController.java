@@ -32,7 +32,7 @@ public class UserShoppingController {
     public Result purchase(String itemName, int num){
         Account account=LoginUserInfo.getAccount();
         try {
-            Item item=itemsService.findByName(itemName).orElse(null);
+            Item item=itemsService.findByName(itemName);
             if(item==null){
                 return Result.fail("不存在该商品！可能是系统故障或管理员临时进行了调整");
             }
@@ -60,7 +60,7 @@ public class UserShoppingController {
     @PostMapping("/addItemToTheCart")
     public Result addItemToTheCart(String itemName, int num) {
         Account account=LoginUserInfo.getAccount();
-        Item item=itemsService.findByName(itemName).orElse(null);
+        Item item=itemsService.findByName(itemName);
         if(item==null){
             return Result.fail("不存在该商品！可能是系统故障或管理员临时进行了调整");
         }

@@ -1,8 +1,10 @@
 package com.example.ooadgroupproject.service;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.JSONObject;
 import com.example.ooadgroupproject.common.CartForm;
+import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +24,7 @@ public class CacheClient {
     public static final String ACCOUNT_BLACKLIST_KEY="account_blacklist_key:";
 
     public static final String ItemsShoppingCart="ItemsShoppingCart:";
+    public static final String Item_Info_Key="Item_Info_Key:";
 
     @Autowired
     RedisTemplate<Object,Object>redisTemplate;
@@ -108,6 +112,29 @@ public class CacheClient {
         }
         return cartForms;
     }
+
+    public void setItemInfo(String itemName,Item item){
+        String key=Item_Info_Key+itemName;
+        Random random=new Random();
+        if(item!=null) {
+            long t = random.nextLong(5L);
+            redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(item), 30L + t, TimeUnit.MINUTES);
+        }else {
+            redisTemplate.opsForValue().set(key,"",60000L+random.nextLong(20000L),
+                    TimeUnit.MILLISECONDS);
+        }
+    }
+    public boolean deleteItems(Item item){
+        String key=Item_Info_Key+item.getName();
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
+    }
+    public String getItemInfo(String name){
+        String key=Item_Info_Key+name;
+        String value= (String) redisTemplate.opsForValue().get(key);
+        return value;
+    }
+
+
 
 
 

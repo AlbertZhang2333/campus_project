@@ -24,7 +24,7 @@ public class ItemsManageController {
 
     @GetMapping("/findByName")
     public Result findByName(String name){
-       Item item = itemsService.findByName(name).orElse(null);
+       Item item = itemsService.findByName(name);
        if(item==null){
            return Result.fail("不存在该商品");
        }else return Result.success(item);

@@ -13,6 +13,7 @@ import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
+import com.example.ooadgroupproject.service.ItemsService;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,8 @@ import java.util.Map;
 public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordService {
     @Autowired
     private ItemsShoppingRecordRepository itemsShoppingRecordRepository;
+    @Autowired
+    private ItemsService itemsService;
     @Autowired
     private PayTool payTool;
 
@@ -83,21 +86,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     }
 
 
-//    public boolean receiveAlipayInfo()throws Exception{
-//        AlipayTradeQueryRequest request=new AlipayTradeQueryRequest();
-//
-//        AlipayClient alipayClient=payTool.getAlipayClient();
-//        AlipayTradeQueryModel model=new AlipayTradeQueryModel();
-//        request.setBizModel(model);
-//        AlipayTradeQueryResponse response=alipayClient.execute(request);
-//        System.out.println(response.getBody());
-//        if(response.isSuccess()){
-//            System.out.println("调用");
-//        }else {
-//            System.out.println("没调用");
-//        }
-//        return response.isSuccess();
-//    }
+
 
 
 
