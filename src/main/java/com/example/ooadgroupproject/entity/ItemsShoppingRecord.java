@@ -3,6 +3,7 @@ package com.example.ooadgroupproject.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,26 +31,29 @@ public class ItemsShoppingRecord {
     @NotNull
     @Getter
     @Setter
-    private boolean isRefund;
-    @NotNull
-    @Getter
-    @Setter
-    private boolean isPurchased;
+    private int status;
     @Getter
     private Time createTime;
     @NotNull
     @Getter
     private String userMail;
+
+    @Transient
+    public static int Initial_State=0;
+    @Transient
+    public static int Purchased_State=1;
+    @Transient
+    public static int Refund_State=2;
+
     public ItemsShoppingRecord(Item item, int num,
                                String userMail) {
         this.id=generateId();
         this.itemName = item.getName();
         this.num = num;
         this.amount = this.num * item.getPrice();
-        this.isRefund = false;
         this.createTime = Time.valueOf(LocalTime.now());
         this.userMail = userMail;
-        this.isPurchased=false;
+        this.status=Initial_State;
     }
     public long generateId(){
         long id=0;

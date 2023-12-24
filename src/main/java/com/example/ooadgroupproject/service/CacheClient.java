@@ -1,6 +1,8 @@
 package com.example.ooadgroupproject.service;
 
 import cn.hutool.json.JSONUtil;
+import com.example.ooadgroupproject.common.CartForm;
+import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class CacheClient {
     public static final String RESERVATION_RECORD_KEY="reservation_record_key:";
     public static final String ACCOUNT_BLACKLIST_KEY="account_blacklist_key:";
+
+    public static final String ItemsShoppingCart="ItemsShoppingCart:";
 
     @Autowired
     RedisTemplate<Object,Object>redisTemplate;
@@ -77,6 +81,30 @@ public class CacheClient {
     public boolean isAccountInBlackList(String userMail){
         String key=CacheClient.getAccountBlacklistKey(userMail);
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+    }
+
+
+    public void setItemsShoppingCart(String userMail, CartForm cartForm){
+        String key=ItemsShoppingCart+userMail+":"+cartForm.getTime();
+        redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(cartForm),1L,TimeUnit.DAYS);
+    }
+    public boolean deleteItemsShoppingCart(String userMail,long cartFormTime){
+        String key=ItemsShoppingCart+userMail+":"+ cartFormTime;
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
+    }
+    public List<CartForm> getCartForms(String userMail){
+        List<CartForm> cartForms=new ArrayList<>();
+        String key=ItemsShoppingCart+userMail+":*";
+        if (redisTemplate.hasKey(key)){
+            Set<Object> keys=redisTemplate.keys(key);
+            for(Object key1:keys){
+                String key2=(String) key1;
+                String value= (String) redisTemplate.opsForValue().get(key2);
+                CartForm cartForm= JSONUtil.toBean(value,CartForm.class);
+                cartForms.add(cartForm);
+            }
+        }
+        return cartForms;
     }
 
 

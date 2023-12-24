@@ -48,6 +48,11 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     public List<ItemsShoppingRecord> findByItemName(String itemName) {
         return itemsShoppingRecordRepository.findByItemName(itemName);
     }
+
+    @Override
+    public void save(ItemsShoppingRecord itemsShoppingRecord){
+        itemsShoppingRecordRepository.save(itemsShoppingRecord);
+    }
     //该方法用于请求支付宝完成金额交易，但是该方法不会完成减少库存的任务。减少库存的部分将在届时调用该方法的地方编写，以便于做高并发处理
     //暂时有些疑惑，我觉得可以加入查询状态功能，以应对更多场景
     //TODO
