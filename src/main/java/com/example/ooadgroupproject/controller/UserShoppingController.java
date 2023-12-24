@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.controller;
 
 import com.alipay.api.AlipayApiException;
+import com.example.ooadgroupproject.common.CartForm;
 import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
@@ -9,11 +10,13 @@ import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -83,6 +86,35 @@ public class UserShoppingController {
 //
 //        }
 //    }
+    @GetMapping("/checkItemCart")
+    public Result checkItemCart(){
+        Account account=LoginUserInfo.getAccount();
+        List<CartForm>cartFormList=cacheClient.getCartForms(account.getUserMail());
+        if(cartFormList==null|| cartFormList.isEmpty()){
+            cartFormList=new ArrayList<>();
+        }
+        return Result.success(cartFormList);
+    }
+    @PutMapping("/addItemToTheCart")
+    public Result addItemToTheCart(String itemName, int num) {
+        Account account=LoginUserInfo.getAccount();
+        Item item=itemsService.findByName(itemName).orElse(null);
+        if(item==null){
+            return Result.fail("不存在该商品！可能是系统故障或管理员临时进行了调整");
+        }
+        CartForm cartForm=new CartForm(itemName,num,account.getUserMail());
+        cacheClient.setItemsShoppingCart(account.getUserMail(),cartForm);
+        return Result.success("已将目标商品添加入购物车");
+    }
+    @PutMapping("/deleteItemFromTheCart")
+    public Result deleteItemFromTheCart(long cartFormTime) {
+        Account account=LoginUserInfo.getAccount();
+        if(cacheClient.deleteItemsShoppingCart(account.getUserMail(),cartFormTime)){
+            return Result.success("已将目标商品从购物车中删除");
+        }else{
+            return Result.fail("删除失败，可能是因为该商品不存在于购物车中");
+        }
+    }
 
 
 
