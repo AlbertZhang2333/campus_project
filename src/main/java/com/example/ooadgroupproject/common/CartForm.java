@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.common;
 
+import cn.hutool.json.JSONObject;
 import lombok.Getter;
 
 import java.sql.Date;
@@ -23,5 +24,11 @@ public class CartForm {
         LocalDateTime now = LocalDateTime.now();
         long nowSecond=now.toEpochSecond(ZoneOffset.UTC);
         this.time=nowSecond;
+    }
+    public CartForm(JSONObject jsonObject){
+        this.itemName=jsonObject.getStr("itemName");
+        this.num=jsonObject.getInt("num");
+        this.userMail=jsonObject.getStr("userMail");
+        this.time=jsonObject.getLong("time");
     }
 }

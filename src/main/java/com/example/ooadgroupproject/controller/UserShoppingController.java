@@ -10,10 +10,7 @@ import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
 
 import java.util.ArrayList;
@@ -50,42 +47,6 @@ public class UserShoppingController {
         }
     }
 
-    //TODO
-    //用户将商品拉入到购物车中，购物车内单个商品仅仅只能存在一天
-//    @PutMapping("/addItemToTheCart")
-//    public Result addItemToTheCart(String itemName, int num){
-//        Account account=LoginUserInfo.getAccount();
-//        Item item=itemsService.findByName(itemName).orElse(null);
-//        if(item==null){
-//            return Result.fail("不存在该商品！可能是系统故障或管理员临时进行了调整");
-//        }
-//        ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,num,account.getUserMail());
-//        itemsShoppingRecordService.save(itemsShoppingRecord);
-//        cacheClient.setItemsShoppingCart(account.getUserMail(),itemsShoppingRecord);
-//        return Result.success("已将目标商品添加入购物车");
-//    }
-//    @PutMapping("/deleteItemFromTheCart")
-//    public Result deleteItemFromTheCart(long itemShoppingRecord_id){
-//        Account account=LoginUserInfo.getAccount();
-//        if(cacheClient.deleteItemsShoppingCart(account.getUserMail(),itemShoppingRecord_id)){
-//            return Result.success("已将目标商品从购物车中删除");
-//        }else{
-//            return Result.fail("删除失败，可能是因为该商品不存在于购物车中");
-//        }
-//    }
-//
-//    @PutMapping("/checkItemCart")
-//    public Result checkItemCart(){
-//        Account account=LoginUserInfo.getAccount();
-//        List<ItemsShoppingRecord> itemsShoppingRecordList=cacheClient.getItemsShoppingCart(account.getUserMail());
-//        if(itemsShoppingRecordList.size()==0){
-//            return Result.fail("购物车中没有商品，请先添加商品");
-//        }
-//        double totalPrice=0;
-//        for(ItemsShoppingRecord itemsShoppingRecord:itemsShoppingRecordList){
-//
-//        }
-//    }
     @GetMapping("/checkItemCart")
     public Result checkItemCart(){
         Account account=LoginUserInfo.getAccount();
@@ -95,7 +56,8 @@ public class UserShoppingController {
         }
         return Result.success(cartFormList);
     }
-    @PutMapping("/addItemToTheCart")
+
+    @PostMapping("/addItemToTheCart")
     public Result addItemToTheCart(String itemName, int num) {
         Account account=LoginUserInfo.getAccount();
         Item item=itemsService.findByName(itemName).orElse(null);
@@ -106,8 +68,8 @@ public class UserShoppingController {
         cacheClient.setItemsShoppingCart(account.getUserMail(),cartForm);
         return Result.success("已将目标商品添加入购物车");
     }
-    @PutMapping("/deleteItemFromTheCart")
-    public Result deleteItemFromTheCart(long cartFormTime) {
+    @DeleteMapping("/deleteItemFromTheCart")
+    public Result deleteItemFromTheCart(long cartFormTime){
         Account account=LoginUserInfo.getAccount();
         if(cacheClient.deleteItemsShoppingCart(account.getUserMail(),cartFormTime)){
             return Result.success("已将目标商品从购物车中删除");
@@ -116,7 +78,10 @@ public class UserShoppingController {
         }
     }
 
-
+    @GetMapping("/checkShoppingItems")
+    public Result checkShoppingItems(){
+        return Result.success(itemsService.findAll());
+    }
 
 
 

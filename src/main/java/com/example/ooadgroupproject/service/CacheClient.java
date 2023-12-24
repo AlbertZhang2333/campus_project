@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.service;
 
 import cn.hutool.json.JSONUtil;
+import cn.hutool.json.JSONObject;
 import com.example.ooadgroupproject.common.CartForm;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
@@ -95,12 +96,13 @@ public class CacheClient {
     public List<CartForm> getCartForms(String userMail){
         List<CartForm> cartForms=new ArrayList<>();
         String key=ItemsShoppingCart+userMail+":*";
-        if (redisTemplate.hasKey(key)){
-            Set<Object> keys=redisTemplate.keys(key);
+        Set<Object> keys=redisTemplate.keys(key);
+        if (keys!=null&&keys.size()>0){
             for(Object key1:keys){
                 String key2=(String) key1;
                 String value= (String) redisTemplate.opsForValue().get(key2);
-                CartForm cartForm= JSONUtil.toBean(value,CartForm.class);
+                JSONObject jsonObject= JSONUtil.parseObj(value);
+                CartForm cartForm= new CartForm(jsonObject);
                 cartForms.add(cartForm);
             }
         }
