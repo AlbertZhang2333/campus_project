@@ -3,19 +3,29 @@ package com.example.ooadgroupproject.service.Impl;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.example.ooadgroupproject.common.PayTool;
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintWriter;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordService {
@@ -43,7 +53,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     //TODO
     //需要进一步优化！！
     @Override
-    public boolean callAlipayToPurchase(String userMail, Item item, int num) throws AlipayApiException {
+    public Result callAlipayToPurchase(String userMail, Item item, int num) throws AlipayApiException {
         //呼叫支付宝来结账
         ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,num,userMail);
         AlipayClient alipayClient=payTool.getAlipayClient();
@@ -56,17 +66,34 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         //调用支付宝的接口
         AlipayTradePagePayResponse response=alipayClient.pageExecute(request,"POST");
         String pageRedirectionData=response.getBody();
-        System.out.println(pageRedirectionData);
+//        System.out.println(pageRedirectionData);
         //分两次存储，确保交易成功后，服务器即便突然崩溃，也能保证在用户支付成功前已将数据存储到数据库中
-        if(response.isSuccess()){
-            //接下来，确认已为用户请求跳转了支付宝页面，现在需要去确认用户是否已完成了支付
-
+        if(response.isSuccess()) {
+            //返回true，表示成功
+            return Result.success(pageRedirectionData);
         }else {
-            return false;
+            //返回false，表示失败
+            return Result.fail("支付页面拉取失败！");
         }
-
-        //返回true，表示成功
-        return response.isSuccess();
     }
+
+
+//    public boolean receiveAlipayInfo()throws Exception{
+//        AlipayTradeQueryRequest request=new AlipayTradeQueryRequest();
+//
+//        AlipayClient alipayClient=payTool.getAlipayClient();
+//        AlipayTradeQueryModel model=new AlipayTradeQueryModel();
+//        request.setBizModel(model);
+//        AlipayTradeQueryResponse response=alipayClient.execute(request);
+//        System.out.println(response.getBody());
+//        if(response.isSuccess()){
+//            System.out.println("调用");
+//        }else {
+//            System.out.println("没调用");
+//        }
+//        return response.isSuccess();
+//    }
+
+
 
 }

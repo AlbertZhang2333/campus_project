@@ -35,7 +35,7 @@ public class Item {
 
     }
 
-    public Item generateNewItems
+    public static Item generateNewItems
             (String itemsName,int itemNum,double price,String description,String imagePath)throws Exception {
         String strPrice = price + "";
         if (strPrice.contains(".")) {

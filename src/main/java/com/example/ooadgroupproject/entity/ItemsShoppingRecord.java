@@ -20,7 +20,7 @@ public class ItemsShoppingRecord {
     private long id;
     @NotNull
     @Getter
-    private String ItemName;
+    private String itemName;
     @NotNull
     @Getter
     private int num;
@@ -43,7 +43,7 @@ public class ItemsShoppingRecord {
     public ItemsShoppingRecord(Item item, int num,
                                String userMail) {
         this.id=generateId();
-        this.ItemName = item.getName();
+        this.itemName = item.getName();
         this.num = num;
         this.amount = this.num * item.getPrice();
         this.isRefund = false;

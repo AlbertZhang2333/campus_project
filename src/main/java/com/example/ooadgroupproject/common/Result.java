@@ -13,32 +13,42 @@ public class Result implements Serializable {
     private Long total;//总数
 
     private Object data;//数据
+    private boolean ifSuccess;
 
     public static Result fail() {
-        return result(400, "Fail", 0L, null);
+        return resultF(400, "Fail", 0L, null);
     }
 
     public static Result success() {
-        return result(200, "Success", 0L, null);
+        return resultS(200, "Success", 0L, null);
     }
 
     public static Result success(Object data) {
-        return result(200, "Success", 0L, data);
+        return resultS(200, "Success", 0L, data);
     }
     public static Result fail(Object data) {
-        return result(400, "Fail", 0L, data);
+        return resultF(400, "Fail", 0L, data);
     }
     public static Result success(Long total, Object data) {
-        return result(200, "Success", total, data);
+        return resultS(200, "Success", total, data);
     }
 
-    public static Result result(int code, String msg, Long total, Object data) {
+    public static Result resultS(int code, String msg, Long total, Object data) {
         Result ret = new Result();
         ret.setCode(code);
         ret.setMsg(msg);
         ret.setTotal(total);
         ret.setData(data);
-
+        ret.ifSuccess=true;
+        return ret;
+    }
+    public static Result resultF(int code, String msg, Long total, Object data) {
+        Result ret = new Result();
+        ret.setCode(code);
+        ret.setMsg(msg);
+        ret.setTotal(total);
+        ret.setData(data);
+        ret.ifSuccess=false;
         return ret;
     }
 }
