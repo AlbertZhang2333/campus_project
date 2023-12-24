@@ -83,5 +83,16 @@ public class UserShoppingController {
         return Result.success(itemsService.findAll());
     }
 
+    @GetMapping("/checkShoppingRecords")
+    public Result checkShoppingRecords(){
+        Account account=LoginUserInfo.getAccount();
+        List<ItemsShoppingRecord>itemsShoppingRecordList=itemsShoppingRecordService.findByUserMail(account.getUserMail());
+        if(itemsShoppingRecordList==null|| itemsShoppingRecordList.isEmpty()){
+            itemsShoppingRecordList=new ArrayList<>();
+        }
+        return Result.success(itemsShoppingRecordList);
+    }
+
+
 
 }
