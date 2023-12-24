@@ -64,7 +64,7 @@ public class AccountController {
 
     @Autowired private EmailService emailService;
     @PostMapping("/forgetPassword")
-    public Result sendVerificationMail(String userMail){
+    public Result sendVerificationMail(@RequestParam String userMail){
         if(accountService.findAccountByUserMail(userMail)==null)return Result.fail("不存在该账户");
         return emailService.sendEmail(userMail);
     }

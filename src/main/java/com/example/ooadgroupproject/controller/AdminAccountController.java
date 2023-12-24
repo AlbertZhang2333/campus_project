@@ -64,7 +64,7 @@ public class AdminAccountController {
     }
     //后期需要更新
     @PostMapping("/releaseFromBlackList")
-    public Result releaseFromBlackList(long id){
+    public Result releaseFromBlackList(@RequestParam  long id){
         Account account= accountService.getUserById(id);
         account.setEnabled(true);
         cacheClient.deleteAccountFromBlackList(account.getUserMail());
