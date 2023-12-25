@@ -17,8 +17,9 @@ public class ManagerDataAnalysisController {
     public int usersNumber(){
         return accountService.findAll().size();
     }
-//    @RequestMapping("/roomsNumber")
-//    public int roomsNumber(){
-//
-//    }
+
+    @RequestMapping("/roomsNumber")
+    public int roomsNumber(){
+
+    }
 }
