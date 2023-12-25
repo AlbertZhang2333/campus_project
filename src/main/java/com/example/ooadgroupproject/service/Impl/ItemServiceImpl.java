@@ -55,7 +55,6 @@ public class ItemServiceImpl implements ItemsService {
         item.setDescription(description);
         item.setImagePath(imagePath);
         itemsRepository.save(item);
-        //缓存更新
         cacheClient.deleteItems(item);
         return Result.success("商品数据已修改");
     }
@@ -68,7 +67,7 @@ public class ItemServiceImpl implements ItemsService {
         if (item != null) {
             item.addNum(addNum);
             itemsRepository.save(item);
-            cacheClient.deleteItems(item);
+            cacheClient.setItemInfo(item.getName(),item);
         }
         return false;
     }
@@ -83,7 +82,8 @@ public class ItemServiceImpl implements ItemsService {
         boolean res=item.shoppingItem(num);
         if(res) {
             itemsRepository.save(item);
-            cacheClient.deleteItems(item);
+//            cacheClient.deleteItems(item);
+            cacheClient.setItemInfo(item.getName(),item);
         }
         return res;
     }
