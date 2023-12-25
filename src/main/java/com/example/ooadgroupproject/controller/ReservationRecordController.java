@@ -22,11 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/Reservation")
 public class ReservationRecordController {
+    private final int PAGE_SIZE = 5;
     @Autowired
     private ReservationRecordService reservationRecordService;
     @Autowired
     private RoomService roomService;
-    private final int PAGE_SIZE = 5;
 
     @PostMapping("/reservationAdd")
     public Result addOne(@RequestParam String roomName,
@@ -112,13 +112,7 @@ public class ReservationRecordController {
         return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
 
-    // 查询某栋建筑所有的预约记录
-    @GetMapping("/reservationRecordsByLocation")
-    public Result getRecordsByLocation(@RequestParam String location) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByLocation(location);
-        Long tot = (long) list.size();
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
-    }
+
 
     // 查询某个场地的所有预约记录
     @GetMapping("/reservationRecordsByRoomName")
