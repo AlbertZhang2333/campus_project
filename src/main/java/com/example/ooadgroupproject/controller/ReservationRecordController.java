@@ -50,28 +50,6 @@ public class ReservationRecordController {
 
 
     //该方法有问题，需要后续修改
-    @PutMapping("/reservationUpdate")
-    public ReservationRecord update(@RequestParam long id,
-                                    @RequestParam String userName,
-                                    @RequestParam String userMail,
-                                    @RequestParam String roomName,
-                                    @RequestParam Time startTime,
-                                    @RequestParam Time endTime,
-                                    @RequestParam Date date,
-                                    @RequestParam String location,
-                                    @RequestParam int state) {
-        ReservationRecord reservationRecord = new ReservationRecord();
-        reservationRecord.setId(id);
-        reservationRecord.setUserName(userName);
-        reservationRecord.setUserMail(userMail);
-        reservationRecord.setRoomName(roomName);
-        reservationRecord.setStartTime(startTime);
-        reservationRecord.setEndTime(endTime);
-        reservationRecord.setDate(date);
-        reservationRecord.setLocation(location);
-        reservationRecord.setState(ReservationState.getByCode(state));
-        return reservationRecordService.save(reservationRecord);
-    }
     @GetMapping("/UserCheckSelfHistoryReservation")
     public List<ReservationRecord>selfHistoryReservation(){
         return
@@ -111,6 +89,12 @@ public class ReservationRecordController {
 
         return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
+    @GetMapping("/reservationRecordByRoomNameAndDate")
+    public Result getRecordsByRoomNameAndDate(@RequestParam String roomName, @RequestParam Date date) {
+        List<ReservationRecord> list = reservationRecordService.findALLByRoomNameAndDate(roomName, date);
+        Long tot = (long) list.size();
+        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+    }
 
 
 
@@ -128,12 +112,5 @@ public class ReservationRecordController {
         return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,account.getUserMail());
     }
 
-    @PostMapping("/deleteAll")
-    public void deleteAll(){
-        reservationRecordService.deleteAll();
-    }
-    @GetMapping("/findAll")
-    public List<ReservationRecord>findAll(){
-        return reservationRecordService.findAll();
-    }
+
 }
