@@ -13,13 +13,13 @@ public interface RoomService {
 
     Result updateRoom(String roomName, String location, int capacity);
 
-    Result findRoomByLocation(String location);
+    List<Room> findRoomByLocation(String location);
 
     Result findRoomByRoomName(String roomName);
 
     Result findRoomById(long id);
 
-    Result findAll();
+    List<Room> findAll();
 
     Result deleteRoomByRoomName(String roomName);
 

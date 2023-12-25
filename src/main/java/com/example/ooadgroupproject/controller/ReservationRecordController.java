@@ -7,6 +7,7 @@ import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
 import com.example.ooadgroupproject.service.ReservationRecordService;
+import com.example.ooadgroupproject.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,8 @@ import java.util.List;
 public class ReservationRecordController {
     @Autowired
     private ReservationRecordService reservationRecordService;
-
+    @Autowired
+    private RoomService roomService;
     private final int PAGE_SIZE = 5;
 
     @PostMapping("/reservationAdd")
@@ -35,6 +37,11 @@ public class ReservationRecordController {
         Account account= LoginUserInfo.getAccount();
         String userMail=account.getUserMail();
         String username=account.getUsername();
+        //检验确认该房间存在:
+        if(roomService.findRoomByRoomName(roomName)==null){
+            return Result.fail("该房间不存在");
+        }
+
         ReservationRecord reservationRecord=new ReservationRecord(username,userMail,roomName,
                 startTime,endTime, date,location);
 
@@ -42,6 +49,7 @@ public class ReservationRecordController {
     }
 
 
+    //该方法有问题，需要后续修改
     @PutMapping("/reservationUpdate")
     public ReservationRecord update(@RequestParam long id,
                                     @RequestParam String userName,

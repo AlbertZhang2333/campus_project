@@ -16,7 +16,7 @@ public class RoomController {
 
     @GetMapping("/getAllRooms")
     public Result getAllRooms() {
-        return roomService.findAll();
+        return Result.success(roomService.findAll());
     }
     @GetMapping("/findRoomById")
     public Result findRoomById(@RequestParam long id) {
@@ -29,13 +29,14 @@ public class RoomController {
     }
     @GetMapping("/findRoomByLocation")
     public Result findRoomByLocation(@RequestParam String location) {
-        return roomService.findRoomByLocation(location);
+        return Result.success(roomService.findRoomByLocation(location));
     }
     @GetMapping("/checkLocations")
     public Result checkLocations() {
         List<String> locations = roomService.checkLocations();
         return Result.success(locations);
     }
+
 //    @PutMapping("/room")
 //    public Room createNewRoom(@RequestParam long id,
 //                       @RequestParam String roomName,

@@ -52,8 +52,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Result findRoomByLocation(String location){
-        return Result.success(roomRepository.findRoomByLocation(location));
+    public List<Room> findRoomByLocation(String location){
+        return roomRepository.findRoomByLocation(location);
     }
 
     @Override
@@ -65,8 +65,8 @@ public class RoomServiceImpl implements RoomService {
         return Result.success(roomRepository.findById(id));
     }
     @Override
-    public Result findAll(){
-        return Result.success(roomRepository.findAll());
+    public List<Room> findAll(){
+        return roomRepository.findAll();
     }
     @Override
     public Result deleteRoomByRoomName(String roomName){

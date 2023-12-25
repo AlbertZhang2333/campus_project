@@ -34,7 +34,7 @@ public class RoomManagerController {
     }
     @RequestMapping("/findRoomByLocation")
     public Result findRoomByLocation(@RequestParam String location) {
-        return roomService.findRoomByLocation(location);
+        return Result.success(roomService.findRoomByLocation(location));
     }
     @RequestMapping("/deleteRoomByRoomName")
     public Result deleteRoomByRoomName(@RequestParam String roomName) {
@@ -42,7 +42,7 @@ public class RoomManagerController {
     }
     @RequestMapping("/findAll")
     public Result findAll() {
-        return roomService.findAll();
+        return Result.success(roomService.findAll());
     }
     @RequestMapping("/checkLocations")
     public Result checkLocations() {

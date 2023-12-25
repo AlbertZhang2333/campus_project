@@ -4,6 +4,7 @@ import com.example.ooadgroupproject.service.AccountService;
 import com.example.ooadgroupproject.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,6 +21,11 @@ public class ManagerDataAnalysisController {
 
     @RequestMapping("/roomsNumber")
     public int roomsNumber(){
-
+        return roomService.findAll().size();
     }
+    @RequestMapping("/roomNumberByLocation")
+    public int roomNumberByLocation(@RequestParam String location){
+        return roomService.findRoomByLocation(location).size();
+    }
+    //接下来做个近期预定房间的统计，统计每个房间相关的预约数目
 }
