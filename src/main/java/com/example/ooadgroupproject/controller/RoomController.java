@@ -37,21 +37,5 @@ public class RoomController {
         return Result.success(locations);
     }
 
-//    @PutMapping("/room")
-//    public Room createNewRoom(@RequestParam long id,
-//                       @RequestParam String roomName,
-//                       @RequestParam String location) {
-//        Room room = new Room();
-//
-//        room.setId(id);
-//        room.setRoomName(roomName);
-//        room.setLocation(location);
-//
-//        return roomService.save(room);
-//    }
 
-//    @DeleteMapping("/room/{id}")
-//    public void deleteOne(@PathVariable long id) {
-//        roomService.deleteById(id);
-//    }
 }

@@ -27,4 +27,5 @@ public interface ReservationRecordService {
 
     public List<ReservationRecord>findAll();
 
+    List<ReservationRecord>findALLByRoomNameAndDate(String roomName, Date date);
 }

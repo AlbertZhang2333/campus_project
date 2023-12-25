@@ -1,6 +1,5 @@
 package com.example.ooadgroupproject.service.Impl;
 
-import cn.hutool.json.JSONUtil;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ReservationRecordRepository;
 import com.example.ooadgroupproject.entity.ReservationRecord;
@@ -96,7 +95,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
                     reservationRecord.getRoomName(),
                     reservationRecord.getDate());
 
-        long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord.getStartTime().getTime();
+        long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord.getEndTime().getTime()+3600*24*1000L;
         Random random = new Random();
         //用于规避一次需要删除过量的数据，减轻压力
         long r = random.nextLong(5000);
@@ -129,5 +128,13 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Override
     public List<ReservationRecord> findAll(){
         return reservationRecordRepository.findAll();
+    }
+    @Override
+    public List<ReservationRecord>findALLByRoomNameAndDate(String roomName, Date date){
+        if(date.compareTo(Date.valueOf(LocalDate.now()))<0){
+            return reservationRecordRepository.findAll();
+        }else {
+            return cacheClient.getReservationRecordList(roomName,date);
+        }
     }
 }
