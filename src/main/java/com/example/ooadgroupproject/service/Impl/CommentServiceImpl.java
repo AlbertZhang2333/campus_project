@@ -21,21 +21,52 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> findCommentByUserName(String userName) {
+    public List<Comment> findByUserNameAndState(String userName) {
+        return commentRepository.findByUserNameAndState(userName, 1);
+    }
+
+    @Override
+    public List<Comment> findByBelongDepartmentAndState(CommentManagementDepartment department) {
+        return commentRepository.findByBelongDepartmentAndState(department, 1);
+    }
+    @Override
+    public List<Comment> findByDateAndState(Date date) {
+        return commentRepository.findByDateAndState(date, 1);
+    }
+
+    @Override
+    public List<Comment> findByUserMailAndState(String userMail) {
+        return commentRepository.findByUserMailAndState(userMail, 1);
+    }
+
+    @Override
+    public List<Comment> findAllCommentByState() {
+        return commentRepository.findAllByState(1);
+    }
+
+    @Override
+    public List<Comment> findByUserName(String userName) {
         return commentRepository.findByUserName(userName);
     }
 
     @Override
-    public List<Comment> findCommentByDepartment(CommentManagementDepartment department) {
+    public List<Comment> findByBelongDepartment(CommentManagementDepartment department) {
         return commentRepository.findByBelongDepartment(department);
     }
+
     @Override
-    public List<Comment> fineCommentByDate(Date date) {
+    public List<Comment> findByDate(Date date) {
         return commentRepository.findByDate(date);
     }
 
     @Override
-    public List<Comment> findCommentByUserMail(String userMail) {
+    public List<Comment> findByUserMail(String userMail) {
         return commentRepository.findByUserMail(userMail);
     }
+
+    @Override
+    public List<Comment> findAllComment() {
+        return commentRepository.findAll();
+    }
+
 }

@@ -10,6 +10,16 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+    public List<Comment> findByUserMailAndState(String userMail, int state);
+
+    public List<Comment> findByUserNameAndState(String userName, int state);
+
+    public List<Comment> findByDateAndState(Date date, int state);
+
+    public List<Comment> findAllByState(int state);
+
+    public List<Comment> findByBelongDepartmentAndState(CommentManagementDepartment department, int state);
+
     public List<Comment> findByUserMail(String userMail);
 
     public List<Comment> findByUserName(String userName);
