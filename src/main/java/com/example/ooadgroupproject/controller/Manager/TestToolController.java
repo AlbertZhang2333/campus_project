@@ -1,4 +1,4 @@
-package com.example.ooadgroupproject.controller;
+package com.example.ooadgroupproject.controller.Manager;
 
 import com.example.ooadgroupproject.Utils.JwtUtils;
 import com.example.ooadgroupproject.entity.Account;

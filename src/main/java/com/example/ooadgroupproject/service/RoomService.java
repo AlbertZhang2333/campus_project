@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RoomService {
     // 保存或更新Room信息
-    public Room save(Room room);
+//    public Room save(Room room);
     public void deleteById(long id);
     public Result createRoom(String roomName, String location,int capacity);
 

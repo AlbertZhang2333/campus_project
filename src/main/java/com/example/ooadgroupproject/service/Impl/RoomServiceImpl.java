@@ -14,10 +14,10 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    @Override
-    public Room save(Room room) {
-        return roomRepository.save(room);
-    }
+//    @Override
+//    public Room save(Room room) {
+//        return roomRepository.save(room);
+//    }
 
     @Override
     public void deleteById(long id) {
@@ -83,4 +83,5 @@ public class RoomServiceImpl implements RoomService {
     public List<String>checkLocations(){
         return roomRepository.findAll().stream().map(Room::getLocation).toList();
     }
+
 }
