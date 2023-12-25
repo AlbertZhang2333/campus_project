@@ -17,7 +17,7 @@ public class RoomController {
     }
 
     @PutMapping("/room")
-    public Room update(@RequestParam long id,
+    public Room createNewRoom(@RequestParam long id,
                        @RequestParam String roomName,
                        @RequestParam String location) {
         Room room = new Room();

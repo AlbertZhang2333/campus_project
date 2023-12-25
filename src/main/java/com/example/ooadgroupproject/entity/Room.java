@@ -1,6 +1,8 @@
 package com.example.ooadgroupproject.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
@@ -11,9 +13,20 @@ public class Room {
     @Column(unique = true)
     @NotNull
     private String roomName;
-
     @NotNull
     private String location;
+    @Getter
+    @Setter
+    @NotNull
+    private int capacity;
+
+    public Room() {
+    }
+    public Room(String roomName, String location,int capacity) {
+        this.roomName = roomName;
+        this.location = location;
+        this.capacity = capacity;
+    }
 
 
     public long getId() {
@@ -39,6 +52,8 @@ public class Room {
     public void setLocation(String location) {
         this.location = location;
     }
+
+
 
 
 }

@@ -52,7 +52,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             response.setStatus(200);
 
             Cookie cookie =new Cookie("token",jwt);
-            cookie.setMaxAge(3600*24);
+            cookie.setMaxAge((int) JwtUtils.expire);
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
 

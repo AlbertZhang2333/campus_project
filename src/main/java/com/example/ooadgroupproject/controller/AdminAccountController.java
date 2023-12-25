@@ -70,7 +70,14 @@ public class AdminAccountController {
         cacheClient.deleteAccountFromBlackList(account.getUserMail());
         return Result.success("已成功将"+id+"用户从黑名单内释放");
     }
-    
+
+
+    @GetMapping("/getRegisterUserNum")
+    public Result getRegisterUserNum(){
+        return Result.success(accountService.findAll().size());
+    }
+
+
 
 
 

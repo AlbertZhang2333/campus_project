@@ -70,6 +70,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if(jwtUtils.ExpiredCheck(jws.getPayload())){
             throw new JwtException("token已过期");
         }
+
+
         String userMail = (String) jws.getPayload().get("userMail");
         String username = (String) jws.getPayload().get("username");
         int identity = (int) jws.getPayload().get("identity");
@@ -79,13 +81,24 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
  //       authenticationAccount.setId(id);
         if(checkIfAccountInBlackList(userMail)){
             //踢下线后，删除对应cookie，缓存中也不用再费劲的存被拉黑的人了
-            //TODO
             cacheClient.deleteAccountFromBlackList(userMail);
             throw new JwtException("该用户已被拉黑");
         }
+
+        //截至到此处，用户已经通过了所有的验证，是可以正常使用的了
         authenticationAccount.setIdentity(identity);
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(authenticationAccount, null, Account.getAuthorities(identity));
+        //截至到此处，用户已经通过了所有的验证，是可以正常使用的了，我来给他刷新一次token
+        if(jwtUtils.IfNeedFlush(jws.getPayload())){
+            String newToken=jwtUtils.generateToken(userMail,username,identity);
+            response.setHeader(JwtUtils.getHeader(), jwt);
+            response.setStatus(200);
+            Cookie cookie=new Cookie("token",newToken);
+            cookie.setMaxAge((int) JwtUtils.expire);
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+        }
         //令牌通过了验证
         Authentication authentication=authenticationManager.authenticate(token);
         SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
@@ -96,4 +109,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private boolean checkIfAccountInBlackList(String userMail){
         return cacheClient.isAccountInBlackList(userMail);
     }
+
+
+
+//
+
+
 }

@@ -82,7 +82,6 @@ public class ItemServiceImpl implements ItemsService {
         boolean res=item.shoppingItem(num);
         if(res) {
             itemsRepository.save(item);
-//            cacheClient.deleteItems(item);
             cacheClient.setItemInfo(item.getName(),item);
         }
         return res;

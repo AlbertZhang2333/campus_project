@@ -1,15 +1,9 @@
 package com.example.ooadgroupproject.Utils;
 
-import com.example.ooadgroupproject.IdentityLevel;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecureDigestAlgorithm;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.Data;
-import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -57,6 +51,16 @@ public class JwtUtils {
     //检查令牌是否过期，若未过期，将返回true，过期返回false
     public boolean ExpiredCheck(Claims claims){
         return claims.getExpiration().before(new Date());
+    }
+    public boolean IfNeedFlush(Claims claims){
+        Date expiration =claims.getExpiration();
+        Date now=new Date();
+        //如果相差时间少于一小时，刷新令牌
+        if(expiration.getTime()-now.getTime()<3600*1000){
+            return true;
+        }else{
+            return false;
+        }
     }
     public static String getHeader(){
         return "ooad_project";

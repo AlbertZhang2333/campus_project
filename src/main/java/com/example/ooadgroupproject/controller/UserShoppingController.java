@@ -83,6 +83,15 @@ public class UserShoppingController {
         return Result.success(itemsService.findAll());
     }
 
+    @GetMapping("/searchItem")
+    public Result searchItem(String itemName){
+        Item item=itemsService.findByName(itemName);
+        if(item==null){
+            return Result.fail("不存在该商品！可能是系统故障或管理员临时进行了调整");
+        }
+        return Result.success(item);
+    }
+
     @GetMapping("/checkShoppingRecords")
     public Result checkShoppingRecords(){
         Account account=LoginUserInfo.getAccount();
