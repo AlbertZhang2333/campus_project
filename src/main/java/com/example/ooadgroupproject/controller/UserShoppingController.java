@@ -36,7 +36,7 @@ public class UserShoppingController {
         try {
             Item item=itemsService.findByName(itemName);
             if(item==null){
-                return Result.fail("不存在该商品！可能是系统故障或管理员临时进行了调整");
+                return Result.fail(new String[]{"不存在该商品！可能是系统故障或管理员临时进行了调整"});
             }
             ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,num,account.getUserMail());
             String res=itemsShoppingRecordService.callAlipayToPurchase(itemsShoppingRecord);
@@ -44,7 +44,7 @@ public class UserShoppingController {
             if(res!=null){
                 return Result.success(new String[]{String.valueOf(itemsShoppingRecord.getId()),res});
             }else{
-                return Result.fail(new String[]{"支付失败！"});
+                return Result.fail(new String[]{"支付宝支付故障，请核对你的资金并与联系管理员解决！"});
             }
         }catch (AlipayApiException e){
             return Result.fail(new String[]{"支付宝支付故障，请核对你的资金并与联系管理员解决！"});
@@ -139,6 +139,8 @@ public class UserShoppingController {
         }
         return Result.success(itemsShoppingRecordList);
     }
+
+
 
 
 

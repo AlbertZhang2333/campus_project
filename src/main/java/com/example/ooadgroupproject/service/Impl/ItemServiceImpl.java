@@ -20,7 +20,6 @@ public class ItemServiceImpl implements ItemsService {
     public List<Item> findAll(){
         return itemsRepository.findAll();
     }
-
     @Override
     public Item findByName(String name) {
         //说明该商品最近被人查询过，存在被多次查询的可能，现在对其添加缓存多级管理
