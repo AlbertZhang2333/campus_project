@@ -105,7 +105,9 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         //TODO
         AlipayClient alipayClient=payTool.getAlipayClient();
         AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
-        AlipayDataDataserviceBillDownloadurlQueryModel model = payTool.getBillModel(date.toString());
+        // model.setBillDate("2016-04-05");
+//        AlipayDataDataserviceBillDownloadurlQueryModel model = payTool.getBillModel();
+//        request.setBizModel(model);
 
         AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
         return "";

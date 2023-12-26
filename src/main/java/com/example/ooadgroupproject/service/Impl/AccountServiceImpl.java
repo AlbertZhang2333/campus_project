@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import com.example.ooadgroupproject.Utils.JwtUtils;
 
 @Service
 public class AccountServiceImpl implements AccountService, UserDetailsService {
@@ -75,5 +74,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException,NumberFormatException {
         return accountRepository.findAccountByUserMail(userMail).orElse(null);
+    }
+
+    @Override
+    public void deleteByMail(String userMail){
+        accountRepository.deleteAccountByUserMail(userMail);
     }
 }

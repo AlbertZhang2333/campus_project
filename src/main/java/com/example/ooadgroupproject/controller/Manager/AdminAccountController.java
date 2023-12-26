@@ -78,6 +78,34 @@ public class AdminAccountController {
     }
 
 
+    @GetMapping("/findUserByUserMail")
+    public Result findUserByUserMail(@RequestParam String userMail){
+        if(userMail==null|| userMail.isEmpty()){
+            return Result.fail("邮箱为空");
+        }else {
+            Account account=accountService.findAccountByUserMail(userMail);
+            if(account==null){
+                return Result.fail("该邮箱不存在");
+            }else {
+                return Result.success(account);
+            }
+        }
+    }
+    @GetMapping("/deleteUserByUserMail")
+    public Result deleteUserByUserMail(@RequestParam String userMail){
+        if(userMail==null|| userMail.isEmpty()){
+            return Result.fail("邮箱为空");
+        }else {
+            Account account=accountService.findAccountByUserMail(userMail);
+            if(account==null){
+                return Result.fail("该邮箱不存在");
+            }else {
+                accountService.deleteById(account.getId());
+                return Result.success("已成功删除该用户");
+            }
+        }
+    }
+
 
 
 

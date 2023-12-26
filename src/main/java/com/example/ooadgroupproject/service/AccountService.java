@@ -23,6 +23,7 @@ public Account getUserById(long id);
  public Account findAccountByUserMail(String userMail);
 
 
+ void deleteByMail(String userMail);
 }
 
 
