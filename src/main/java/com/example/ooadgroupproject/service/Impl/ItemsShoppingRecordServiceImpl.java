@@ -6,8 +6,11 @@ import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayDataDataserviceBillDownloadurlQueryResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
+import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.example.ooadgroupproject.common.PayTool;
 import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
@@ -90,11 +93,22 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     model.setOutTradeNo(String.valueOf(tradeNo));
     request.setBizModel(model);
     AlipayTradeQueryResponse response=alipayClient.execute(request);
-    if(response.isSuccess()){
-        return response.getTradeStatus();
-    }else {
-        return null;
+        if(response.isSuccess()){
+            return response.getTradeStatus();
+        }else {
+            return null;
+        }
     }
+
+    @Override
+    public String queryBillData(Date date)throws AlipayApiException{
+        //TODO
+        AlipayClient alipayClient=payTool.getAlipayClient();
+        AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
+        AlipayDataDataserviceBillDownloadurlQueryModel model = payTool.getBillModel(date.toString());
+
+        AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
+        return "";
     }
 
 

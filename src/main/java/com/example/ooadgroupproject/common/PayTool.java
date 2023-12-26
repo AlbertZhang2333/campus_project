@@ -3,6 +3,7 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
@@ -45,6 +46,12 @@ public class PayTool {
     public AlipayTradeQueryModel getQueryModel(String tradeNo){
         AlipayTradeQueryModel model=new AlipayTradeQueryModel();
         model.setOutTradeNo(tradeNo);
+        return model;
+    }
+    public AlipayDataDataserviceBillDownloadurlQueryModel getBillModel(String billData){
+        AlipayDataDataserviceBillDownloadurlQueryModel model=new AlipayDataDataserviceBillDownloadurlQueryModel();
+        model.setBillType("trade");
+        model.setBillDate(billData);
         return model;
     }
 }

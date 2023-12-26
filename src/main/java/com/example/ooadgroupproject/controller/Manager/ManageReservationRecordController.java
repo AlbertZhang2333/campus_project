@@ -62,4 +62,7 @@ public class ManageReservationRecordController {
         reservationRecord.setState(ReservationState.getByCode(state));
         return reservationRecordService.save(reservationRecord);
     }
+
+
+
 }
