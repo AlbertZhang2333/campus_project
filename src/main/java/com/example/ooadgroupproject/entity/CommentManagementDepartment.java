@@ -1,5 +1,8 @@
 package com.example.ooadgroupproject.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum CommentManagementDepartment {
     Store(0);
 
@@ -10,11 +13,9 @@ public enum CommentManagementDepartment {
         this.department = department;
     }
 
-    public int getDepartment() {
-        return department;
-    }
+    public static CommentManagementDepartment getByCode(Integer departmentCode) {
+        if (departmentCode == null) return null;
 
-    public static CommentManagementDepartment getByCode(int departmentCode) {
         for (CommentManagementDepartment c : CommentManagementDepartment.values()) {
             if (c.department == departmentCode) {
                 return c;
