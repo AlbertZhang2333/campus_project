@@ -9,24 +9,14 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.example.ooadgroupproject.common.PayTool;
-import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
-import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.ItemsService;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintWriter;
-import java.sql.Time;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordService {
@@ -40,6 +30,10 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     @Override
     public List<ItemsShoppingRecord> findAll() {
         return itemsShoppingRecordRepository.findAll();
+    }
+    @Override
+    public Optional<ItemsShoppingRecord> findById(long id) {
+        return itemsShoppingRecordRepository.findById(id);
     }
 
     @Override
@@ -61,9 +55,11 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     //TODO
     //需要进一步优化！！
     @Override
-    public Result callAlipayToPurchase(String userMail, Item item, Integer num) throws AlipayApiException {
+    public String callAlipayToPurchase(ItemsShoppingRecord itemsShoppingRecord) throws AlipayApiException {
         //呼叫支付宝来结账
-        ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,num,userMail);
+        if(!Objects.equals(itemsShoppingRecord.getStatus(), ItemsShoppingRecord.Initial_State)){
+            return null;
+        }
         AlipayClient alipayClient=payTool.getAlipayClient();
         //能成功建立联系，就存储对应的记录
         itemsShoppingRecordRepository.save(itemsShoppingRecord);
@@ -78,11 +74,26 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         //分两次存储，确保交易成功后，服务器即便突然崩溃，也能保证在用户支付成功前已将数据存储到数据库中
         if(response.isSuccess()) {
             //返回true，表示成功
-            return Result.success(pageRedirectionData);
+            return pageRedirectionData;
         }else {
             //返回false，表示失败
-            return Result.fail("支付页面拉取失败！");
+            return null;
         }
+    }
+
+    @Override
+    public String queryAlipayStatus(long tradeNo) throws AlipayApiException {
+    AlipayClient alipayClient=payTool.getAlipayClient();
+    AlipayTradeQueryRequest request=new AlipayTradeQueryRequest();
+    AlipayTradeQueryModel model=new AlipayTradeQueryModel();
+    model.setOutTradeNo(String.valueOf(tradeNo));
+    request.setBizModel(model);
+    AlipayTradeQueryResponse response=alipayClient.execute(request);
+    if(response.isSuccess()){
+        return response.getTradeStatus();
+    }else {
+        return null;
+    }
     }
 
 

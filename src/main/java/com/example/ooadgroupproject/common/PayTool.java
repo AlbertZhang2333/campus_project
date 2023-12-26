@@ -4,6 +4,7 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,12 @@ public class PayTool {
         model.setTotalAmount(itemsShoppingRecord.getAmount()+"");
         model.setSubject(itemsShoppingRecord.getItemName());
         model.setProductCode("FAST_INSTANT_TRADE_PAY");
+        return model;
+    }
+
+    public AlipayTradeQueryModel getQueryModel(String tradeNo){
+        AlipayTradeQueryModel model=new AlipayTradeQueryModel();
+        model.setOutTradeNo(tradeNo);
         return model;
     }
 }
