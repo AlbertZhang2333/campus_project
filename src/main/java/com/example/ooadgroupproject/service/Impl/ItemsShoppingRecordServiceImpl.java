@@ -61,7 +61,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     //TODO
     //需要进一步优化！！
     @Override
-    public Result callAlipayToPurchase(String userMail, Item item, int num) throws AlipayApiException {
+    public Result callAlipayToPurchase(String userMail, Item item, Integer num) throws AlipayApiException {
         //呼叫支付宝来结账
         ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,num,userMail);
         AlipayClient alipayClient=payTool.getAlipayClient();

@@ -11,6 +11,6 @@ public interface ItemsShoppingRecordService {
     public List<ItemsShoppingRecord>findAll();
     public List<ItemsShoppingRecord>findByUserMail(String userMail);
     public List<ItemsShoppingRecord>findByItemName(String itemName);
-    public Result callAlipayToPurchase(String userMail, Item item, int num) throws AlipayApiException;
+    public Result callAlipayToPurchase(String userMail, Item item, Integer num) throws AlipayApiException;
     public void save(ItemsShoppingRecord itemsShoppingRecord);
 }

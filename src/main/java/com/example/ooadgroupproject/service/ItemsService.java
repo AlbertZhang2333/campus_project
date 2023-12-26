@@ -10,14 +10,14 @@ public interface ItemsService {
     public List<Item> findAll();
     public Item findByName(String name);
 
-    Result updateItem(String itemName, double price,
+    Result updateItem(String itemName, Double price,
                       String description, String imagePath);
 
-    public boolean addItem(String name, int addNum);
-    public boolean reduceItem(String name, int num);
-    public double calculatePrice(Item item,int num);
+    public boolean addItem(String name, Integer addNum);
+    public boolean reduceItem(String name, Integer num);
+    public Double calculatePrice(Item item,Integer num);
 
-    public Result generateANewItem(String name,int num,double price,String description,String imagePath) throws Exception;
+    public Result generateANewItem(String name,Integer num,Double price,String description,String imagePath) throws Exception;
 
 
 }

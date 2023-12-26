@@ -24,14 +24,14 @@ public class ItemsShoppingRecord {
     private String itemName;
     @NotNull
     @Getter
-    private int num;
+    private Integer num;
     @NotNull
     @Getter
-    private double amount;
+    private Double amount;
     @NotNull
     @Getter
     @Setter
-    private int status;
+    private Integer status;
     @Getter
     private Time createTime;
     @NotNull
@@ -39,13 +39,13 @@ public class ItemsShoppingRecord {
     private String userMail;
 
     @Transient
-    public static int Initial_State=0;
+    public static Integer Initial_State=0;
     @Transient
-    public static int Purchased_State=1;
+    public static Integer Purchased_State=1;
     @Transient
-    public static int Refund_State=2;
+    public static Integer Refund_State=2;
 
-    public ItemsShoppingRecord(Item item, int num,
+    public ItemsShoppingRecord(Item item, Integer num,
                                String userMail) {
         this.id=generateId();
         this.itemName = item.getName();

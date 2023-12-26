@@ -29,7 +29,7 @@ public class UserShoppingController {
     //TODO
     //用于拉取支付宝交易页面，返回一个html信息，需要和前端协同才能完成该功能
     @PutMapping("/purchase")
-    public Result purchase(String itemName, int num){
+    public Result purchase(String itemName, Integer num){
         Account account=LoginUserInfo.getAccount();
         try {
             Item item=itemsService.findByName(itemName);
@@ -58,7 +58,7 @@ public class UserShoppingController {
     }
 
     @PostMapping("/addItemToTheCart")
-    public Result addItemToTheCart(String itemName, int num) {
+    public Result addItemToTheCart(String itemName, Integer num) {
         Account account=LoginUserInfo.getAccount();
         Item item=itemsService.findByName(itemName);
         if(item==null){

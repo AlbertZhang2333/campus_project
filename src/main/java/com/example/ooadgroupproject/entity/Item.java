@@ -16,17 +16,17 @@ public class Item {
     private String name;
     @Setter
     @NotNull
-    private int num;
+    private Integer num;
     @Setter
     @NotNull
-    private double price;
+    private Double price;
     @Setter
     @NotNull
     private String description;
     @Setter
     private String imagePath;
 
-    private Item(String itemsName, int itemNum, double price, String description, String imagePath){
+    private Item(String itemsName, Integer itemNum, Double price, String description, String imagePath){
         this.name = itemsName;
         this.num=itemNum;
         this.price=price;
@@ -38,7 +38,7 @@ public class Item {
     }
 
     public static Item generateNewItems
-            (String itemsName,int itemNum,double price,String description,String imagePath)throws Exception {
+            (String itemsName,Integer itemNum,Double price,String description,String imagePath)throws Exception {
         String strPrice = price + "";
         if (strPrice.contains(".")) {
             //检查小数点后是否仅有最多两位小数
@@ -62,17 +62,17 @@ public class Item {
         item.imagePath=jsonObject.getStr("imagePath");
         return item;
     }
-    public boolean shoppingItem(int num){
+    public boolean shoppingItem(Integer num){
         if(num>this.num){
             return false;
         }
         this.num-=num;
         return true;
     }
-    public void addNum(int num){
+    public void addNum(Integer num){
         this.num+=num;
     }
-    public double calculateTotalPrice(int num){
+    public Double calculateTotalPrice(Integer num){
         return this.price*num;
     }
 

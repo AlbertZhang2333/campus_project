@@ -29,7 +29,7 @@ public class ItemsManageController {
 
     @PostMapping("/generateANewItem")
     public Result generateANewItem(@RequestParam String name,@RequestParam
-    int num,@RequestParam double price,@RequestParam String description,@RequestParam String imagePath){
+    Integer num,@RequestParam Double price,@RequestParam String description,@RequestParam String imagePath){
         try {
             return itemsService.generateANewItem(name, num, price, description, imagePath);
         }catch (Exception e){
@@ -37,7 +37,7 @@ public class ItemsManageController {
         }
     }
     @PutMapping("/updateItem")
-    public Result updateItem(@RequestParam String itemName,@RequestParam double price,
+    public Result updateItem(@RequestParam String itemName,@RequestParam Double price,
                              @RequestParam String description,@RequestParam String imagePath){
         return itemsService.updateItem(itemName,price,description,imagePath);
     }

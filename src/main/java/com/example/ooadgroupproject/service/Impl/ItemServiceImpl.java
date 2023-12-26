@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemsService {
         return item;
     }
     @Override
-    public Result updateItem(String itemName, double price,
+    public Result updateItem(String itemName, Double price,
                              String description, String imagePath){
         Item item=itemsRepository.findByName(itemName).orElse(null);
         if(item==null){
@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemsService {
 
 
     @Override
-    public boolean addItem(String name, int addNum) {
+    public boolean addItem(String name, Integer addNum) {
         Item item = itemsRepository.findByName(name).orElse(null);
         if (item != null) {
             item.addNum(addNum);
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemsService {
 
     //此方法仅仅由销售记录service调用，不得由controller调用
     @Override
-    public boolean reduceItem(String name, int num) {
+    public boolean reduceItem(String name, Integer num) {
         Item item = findByName(name);
         if(item == null){
             return false;
@@ -88,12 +88,12 @@ public class ItemServiceImpl implements ItemsService {
     }
 
     @Override
-    public double calculatePrice(Item item, int num) {
+    public Double calculatePrice(Item item, Integer num) {
         return item.calculateTotalPrice(num);
     }
 
     @Override
-    public Result generateANewItem(String name, int num, double price, String description, String imagePath) throws Exception {
+    public Result generateANewItem(String name, Integer num, Double price, String description, String imagePath) throws Exception {
         if(itemsRepository.findByName(name).isPresent()){
             return Result.fail("该名称的商品已存在");
         }
