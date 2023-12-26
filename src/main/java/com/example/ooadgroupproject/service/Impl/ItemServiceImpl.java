@@ -1,6 +1,5 @@
 package com.example.ooadgroupproject.service.Impl;
 
-import cn.hutool.json.JSONUtil;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsRepository;
 import com.example.ooadgroupproject.entity.Item;
@@ -100,6 +99,17 @@ public class ItemServiceImpl implements ItemsService {
         Item item=Item.generateNewItems(name,num,price,description,imagePath);
         itemsRepository.save(item);
         return Result.success("目标商品已创建");
+    }
+
+    @Override
+    public Result deleteItem(String name){
+        Item item=itemsRepository.findByName(name).orElse(null);
+        if(item==null){
+            return Result.fail("不存在该商品");
+        }
+        itemsRepository.delete(item);
+        cacheClient.deleteItems(item);
+        return Result.success("商品已删除");
     }
 
 

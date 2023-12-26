@@ -42,4 +42,9 @@ public class ItemsManageController {
         return itemsService.updateItem(itemName,price,description,imagePath);
     }
 
+    @DeleteMapping("/deleteItem")
+    public Result deleteItem(@RequestParam String name){
+        return itemsService.deleteItem(name);
+    }
+
 }

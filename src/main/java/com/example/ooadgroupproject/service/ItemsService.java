@@ -20,4 +20,5 @@ public interface ItemsService {
     public Result generateANewItem(String name,Integer num,Double price,String description,String imagePath) throws Exception;
 
 
+    Result deleteItem(String name);
 }
