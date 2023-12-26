@@ -3,6 +3,7 @@ package com.example.ooadgroupproject.service.Impl;
 import com.example.ooadgroupproject.dao.CommentRepository;
 import com.example.ooadgroupproject.entity.Comment;
 import com.example.ooadgroupproject.entity.CommentManagementDepartment;
+import com.example.ooadgroupproject.entity.CommentType;
 import com.example.ooadgroupproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,52 +22,39 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> findByUserNameAndState(String userName) {
-        return commentRepository.findByUserNameAndState(userName, 1);
+    public List<Comment> findAllByBelongDepartmentAndStateAndType(CommentManagementDepartment belongDepartment, int state, CommentType type) {
+        return commentRepository.findAllByBelongDepartmentAndStateAndType(belongDepartment, state, type);
     }
 
     @Override
-    public List<Comment> findByBelongDepartmentAndState(CommentManagementDepartment department) {
-        return commentRepository.findByBelongDepartmentAndState(department, 1);
-    }
-    @Override
-    public List<Comment> findByDateAndState(Date date) {
-        return commentRepository.findByDateAndState(date, 1);
+    public List<Comment> findAllByBelongDepartmentAndStateAndTypeAndReplyId(CommentManagementDepartment belongDepartment, int state, CommentType type, Long replyId) {
+        return commentRepository.findAllByBelongDepartmentAndStateAndTypeAndReplyId(belongDepartment, state, type, replyId);
     }
 
     @Override
-    public List<Comment> findByUserMailAndState(String userMail) {
-        return commentRepository.findByUserMailAndState(userMail, 1);
+    public List<Comment> findAllByBelongDepartmentAndType(CommentManagementDepartment belongDepartment, CommentType type) {
+        return commentRepository.findAllByBelongDepartmentAndType(belongDepartment, type);
     }
 
     @Override
-    public List<Comment> findAllCommentByState() {
-        return commentRepository.findAllByState(1);
+    public List<Comment> findAllByBelongDepartmentAndTypeAndReplyId(CommentManagementDepartment belongDepartment, CommentType type, Long replyId) {
+        return commentRepository.findAllByBelongDepartmentAndTypeAndReplyId(belongDepartment, type, replyId);
     }
 
     @Override
-    public List<Comment> findByUserName(String userName) {
-        return commentRepository.findByUserName(userName);
-    }
-
-    @Override
-    public List<Comment> findByBelongDepartment(CommentManagementDepartment department) {
-        return commentRepository.findByBelongDepartment(department);
-    }
-
-    @Override
-    public List<Comment> findByDate(Date date) {
-        return commentRepository.findByDate(date);
-    }
-
-    @Override
-    public List<Comment> findByUserMail(String userMail) {
-        return commentRepository.findByUserMail(userMail);
-    }
-
-    @Override
-    public List<Comment> findAllComment() {
+    public List<Comment> findAll() {
         return commentRepository.findAll();
     }
 
+    @Override
+    public List<Comment> findByConditions(String userMail, Date date, CommentManagementDepartment belongDepartment, CommentType type) {
+        if (date != null) {
+            System.out.println(date);
+            System.out.println(date.getClass());
+        }
+        System.out.println(belongDepartment);
+        System.out.println(type);
+
+        return commentRepository.findByConditions(userMail, date, belongDepartment, type);
+    }
 }
