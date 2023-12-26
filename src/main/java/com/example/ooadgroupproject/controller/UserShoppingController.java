@@ -54,7 +54,7 @@ public class UserShoppingController {
     public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
         long recordId=-1;
         try {
-            recordId = Long.valueOf(itemShoppingRecordId);
+            recordId = Long.parseLong(itemShoppingRecordId);
         }catch (Exception e){
             return Result.fail("参数错误！");
         }
@@ -65,15 +65,15 @@ public class UserShoppingController {
         if(Objects.equals(itemsShoppingRecord.getStatus(), ItemsShoppingRecord.Initial_State)){
             try {
                 String payInfo = itemsShoppingRecordService.queryAlipayStatus(recordId);
-                JSONObject jsonObject=new JSONObject(payInfo);
-                if(jsonObject.get("trade_status").equals("TRADE_SUCCESS")||
-                        jsonObject.get("trade_status").equals("TRADE_FINISHED")){
+
+                if(payInfo.equals("TRADE_SUCCESS")||
+                        payInfo.equals("TRADE_FINISHED")){
                     itemsShoppingRecord.setStatus(ItemsShoppingRecord.Purchased_State);
                     itemsShoppingRecordService.save(itemsShoppingRecord);
                     return Result.success("支付成功！");
-                }else if(jsonObject.get("trade_status").equals("TRADE_CLOSED")){
+                }else if(payInfo.equals("TRADE_CLOSED")){
                     return Result.fail("支付超时！");
-                }else if(jsonObject.get("trade_status").equals("WAIT_BUYER_PAY")){
+                }else if(payInfo.equals("WAIT_BUYER_PAY")){
                     return Result.success("等待支付");
                 }
             }catch (Exception e){
