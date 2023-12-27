@@ -56,14 +56,13 @@ public class ItemsShoppingRecord {
         this.status=Initial_State;
     }
     public long generateId(){
-        long id=0;
+        long id;
         LocalDateTime now = LocalDateTime.now();
-        long nowSecond=now.toEpochSecond(ZoneOffset.UTC);
-        long timestamp=nowSecond-1000000L;
+        long nowSecond=now.toEpochSecond(ZoneOffset.UTC)*1000000L;
+        long timestamp=nowSecond-10L;
         Random random=new Random(System.currentTimeMillis());
-        id=timestamp+random.nextLong(80000L);
+        id=timestamp+random.nextLong(999999L);
         return id;
-
     }
 
 

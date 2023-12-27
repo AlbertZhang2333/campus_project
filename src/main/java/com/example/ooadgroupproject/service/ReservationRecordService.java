@@ -24,10 +24,8 @@ public interface ReservationRecordService {
 
     //TODO
     Result deleteByRoomNameAndDateAndIdAndUserMail(String roomName, Date date, long id, String userMail);
-
-    Result CancelReservation(String roomName, Date date, long id, String userMail);
-
-    Result CancelReservation(String roomName, Date date, long id);
+    Result AdminCancelReservation(long id);
+    Result UserCancelReservation(long id);
 
     Result deleteById(long id);
 
