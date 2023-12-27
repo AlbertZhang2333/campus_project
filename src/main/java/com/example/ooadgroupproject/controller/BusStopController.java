@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.BusStop;
 import com.example.ooadgroupproject.service.BusStopService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,34 +13,65 @@ public class BusStopController {
     @Autowired
     private BusStopService busStopService;
     @GetMapping("/allStop")
-    public List<BusStop> findAll(){
-        return busStopService.findAll();
+    public Result findAll(){
+        try {
+            return Result.success(busStopService.findAll());
+        } catch (Exception e){
+            return Result.fail("Find all bus stop failed");
+        }
     }
     @GetMapping("searchStopName/{name}")
-    public BusStop findByName(@PathVariable String name){return busStopService.findByName(name);}
+    public Result findByName(@PathVariable String name){
+        try {
+            return Result.success(busStopService.findByName(name));
+        } catch (Exception e){
+            return Result.fail("Find bus stop by name failed");
+        }
+    }
 
     @GetMapping("nearbyStop")
-    public BusStop findNearBusStop(@RequestParam Double lat,
+    public Result findNearBusStop(@RequestParam Double lat,
                                          @RequestParam Double lng){
-        return busStopService.findNearBusStop(lat, lng);
+        try {
+            return Result.success(busStopService.findNearBusStop(lat, lng));
+        } catch (Exception e){
+            return Result.fail("Find nearby bus stop failed");
+        }
     }
 
     @PostMapping("/addStop")
-    public BusStop addOne(BusStop busStop) { return busStopService.save(busStop); }
+    public Result addOne(BusStop busStop) {
+        try {
+            return Result.success(busStopService.save(busStop));
+        } catch (Exception e){
+            return Result.fail("Add bus stop failed");
+        }
+    }
     @PutMapping("/updateStop")
-    public BusStop update(Integer id,
+    public Result update(Integer id,
                           Double lat,
                           Double lng,
                           String name){
-        BusStop busStop = new BusStop();
-        busStop.setId(id);
-        busStop.setLat(lat);
-        busStop.setLng(lng);
-        busStop.setName(name);
-        return busStopService.save(busStop);
+        try {
+            BusStop busStop = new BusStop();
+            busStop.setId(id);
+            busStop.setLat(lat);
+            busStop.setLng(lng);
+            busStop.setName(name);
+            return Result.success(busStopService.save(busStop));
+        } catch (Exception e){
+            return Result.fail("Update bus stop failed");
+        }
     }
 
     @DeleteMapping("/deleteStop/{id}")
-    public void deleteOne(@PathVariable Integer id){busStopService.deleteById(id);}
+    public Result deleteOne(@PathVariable Integer id){
+        try {
+            busStopService.deleteById(id);
+            return Result.success("Delete bus stop successfully");
+        } catch (Exception e){
+            return Result.fail("Delete bus stop failed");
+        }
+    }
 
 }

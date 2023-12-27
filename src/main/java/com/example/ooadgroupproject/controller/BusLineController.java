@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.BusLine;
 import com.example.ooadgroupproject.service.BusLineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,34 +15,61 @@ public class BusLineController {
     private BusLineService busLineService;
 
     @GetMapping("/allLine")
-    public List<BusLine> findAll(){
-        return busLineService.findAll();
+    public Result findAll(){
+        try {
+            return Result.success(busLineService.findAll());
+        } catch (Exception e){
+            return Result.fail("Find all bus line failed");
+        }
     }
 
     @GetMapping("/searchLineId")
-    public BusLine findById(Integer id){return busLineService.findById(id);}
+    public Result findById(Integer id){
+        try{
+            return Result.success(busLineService.findById(id));
+        } catch (Exception e){
+            return Result.fail("Find bus line by id failed");
+        }
+    }
 
     @PostMapping("/addLine")
-    public BusLine addOne(BusLine busLine) { return busLineService.save(busLine); }
+    public Result addOne(BusLine busLine) {
+        try {
+            return Result.success(busLineService.save(busLine));
+        } catch (Exception e){
+            return Result.fail("Add bus line failed");
+        }
+    }
 
     @PostMapping("/updateLine")
-    public BusLine update(Integer id,
+    public Result update(Integer id,
                           Boolean inService,
                           String startTime,
                           String endTime,
                           Integer startStopId,
                           Integer endStopId){
-        BusLine busLine = new BusLine();
-        busLine.setId(id);
-        busLine.setInService(inService);
-        busLine.setStartTime(startTime);
-        busLine.setEndTime(endTime);
-        busLine.setStartStopId(startStopId);
-        busLine.setEndStopId(endStopId);
-        return busLineService.save(busLine);
+        try {
+            BusLine busLine = new BusLine();
+            busLine.setId(id);
+            busLine.setInService(inService);
+            busLine.setStartTime(startTime);
+            busLine.setEndTime(endTime);
+            busLine.setStartStopId(startStopId);
+            busLine.setEndStopId(endStopId);
+            return Result.success(busLineService.save(busLine));
+        } catch (Exception e){
+            return Result.fail("Update bus line failed");
+        }
     }
     @DeleteMapping("/deleteLine/{id}")
-    public void deleteOne(@PathVariable Integer id){busLineService.deleteById(id);}
+    public Result deleteOne(@PathVariable Integer id){
+        try {
+            busLineService.deleteById(id);
+            return Result.success("Delete bus line successfully");
+        } catch (Exception e){
+            return Result.fail("Delete bus line failed");
+        }
+    }
 
     @GetMapping("/isInService/{id}")
     public boolean isInService(@PathVariable Integer id){return busLineService.isInService(id);}
