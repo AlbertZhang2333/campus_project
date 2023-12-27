@@ -1,8 +1,8 @@
 package com.example.ooadgroupproject.controller;
 
-import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Building;
 import com.example.ooadgroupproject.service.BuildingService;
+import com.example.ooadgroupproject.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,25 +17,24 @@ public class BuildingController {
     public Result findAll(){
         try {
             return Result.success(buildingService.findAll());
-        } catch (Exception e){
-            return Result.fail("Find all building failed");
+        } catch (Exception e) {
+            return Result.fail("查找失败");
         }
     }
     @GetMapping("/searchBuildingName/{name}")
     public Result findByName(@PathVariable String name){
         try {
-            Building building = buildingService.findByName(name);
-            return Result.success(building);
-        } catch (Exception e){
-            return Result.fail("Find building by name failed");
+            return Result.success(buildingService.findByName(name));
+        } catch (Exception e) {
+            return Result.fail("查找失败");
         }
     }
     @PostMapping("/addBuilding")
     public Result addOne(Building building) {
-        try{
+        try {
             return Result.success(buildingService.save(building));
-        } catch (Exception e){
-            return Result.fail("Add building failed");
+        } catch (Exception e) {
+            return Result.fail("添加失败");
         }
     }
     @PutMapping("/updateBuilding")
@@ -46,7 +45,7 @@ public class BuildingController {
                            String description,
                            String photoPath,
                            String busStop){
-        try{
+        try {
             Building building = new Building();
             building.setId(id);
             building.setLat(lat);
@@ -56,8 +55,8 @@ public class BuildingController {
             building.setPhotoPath(photoPath);
             building.setBusStop(busStop);
             return Result.success(buildingService.save(building));
-        } catch (Exception e){
-            return Result.fail("Update building failed");
+        } catch (Exception e) {
+            return Result.fail("添加失败");
         }
     }
 
@@ -65,9 +64,18 @@ public class BuildingController {
     public Result deleteOne(@PathVariable Integer id){
         try {
             buildingService.deleteById(id);
-            return Result.success("Delete building successfully");
-        } catch (Exception e){
-            return Result.fail("Delete building failed");
+            return Result.success("删除成功");
+        } catch (Exception e) {
+            return Result.fail("删除失败");
+        }
+    }
+
+    @GetMapping("/searchingBuilding/{name}")
+    public Result search(@PathVariable String name){
+        try {
+            return Result.success(buildingService.search(name));
+        } catch (Exception e) {
+            return Result.fail("查找失败");
         }
     }
 }

@@ -1,14 +1,13 @@
 package com.example.ooadgroupproject.service.Impl;
 
 import com.example.ooadgroupproject.dao.BusStopRepository;
+import com.example.ooadgroupproject.entity.Building;
 import com.example.ooadgroupproject.entity.BusStop;
 import com.example.ooadgroupproject.service.BusStopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 @Service
 public class BusStopImpl implements BusStopService {
@@ -49,5 +48,8 @@ public class BusStopImpl implements BusStopService {
         }
         return stop;
     }
+
+    @Override
+    public List<BusStop> search(String name){return busStopRepository.search(name);}
 
 }

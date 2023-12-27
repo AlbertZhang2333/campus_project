@@ -8,5 +8,7 @@ public interface BusRelationService {
     public List<BusRelation> findAll();
     public BusRelation save(BusRelation BusRelation);
     public void deleteById(Integer id);
-    public List<BusRelation> findByStartEnd(Integer startStop, Integer endStop);
+    public List<BusRelation> findByStartEnd(String startStop, String endStop);
+
+    public List<BusRelation> searchByStartOrEnd(String stop);
 }

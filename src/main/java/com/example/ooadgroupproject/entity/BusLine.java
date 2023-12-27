@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Data
 @Entity
@@ -14,15 +11,18 @@ public class BusLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotNull
+    @NotNull(message = "线路名不能为空")
+    private Integer lineId;
+    @NotNull(message = "方向不能为空")
+    private String direction;
+    @NotNull(message = "运营状态不能为空")
     private Boolean inService;
-    @NotNull
+    @NotNull(message = "起始时间不能为空")
     private String startTime;
-    @NotNull
+    @NotNull(message = "结束时间不能为空")
     private String endTime;
-    @NotNull
+    @NotNull(message = "起始站不能为空")
     private Integer startStopId;
-    @NotNull
+    @NotNull(message = "终点站不能为空")
     private Integer endStopId;
-
 }

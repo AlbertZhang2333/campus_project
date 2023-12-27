@@ -12,12 +12,13 @@ public class BusRelation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
-    private Integer startStop; //起始站的id
+    private String startStop; //起始站的id
     @NotNull
-    private Integer endStop;
+    private String endStop;
     @NotNull
     private Integer time; //分钟数
     @NotNull
     private Integer lineId;
-
+    private String direction; //方向
+    private Integer stopNum; //站点数
 }

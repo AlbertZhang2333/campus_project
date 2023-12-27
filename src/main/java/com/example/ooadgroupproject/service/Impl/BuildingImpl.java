@@ -31,4 +31,7 @@ public class BuildingImpl implements BuildingService {
     @Override
     public Building findByName(String name){return buildingRepository.findByName(name);}
 
+    @Override
+    public List<Building> search(String name){return buildingRepository.search(name);}
+
 }

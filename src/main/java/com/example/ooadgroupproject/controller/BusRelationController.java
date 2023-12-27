@@ -6,7 +6,6 @@ import com.example.ooadgroupproject.service.BusRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.Relation;
 import java.util.List;
 
 @RestController
@@ -18,17 +17,17 @@ public class BusRelationController {
     public Result findAll(){
         try {
             return Result.success(busRelationService.findAll());
-        } catch (Exception e){
-            return Result.fail("Find all bus relation failed");
+        } catch (Exception e) {
+            return Result.fail("查找失败");
         }
     }
-    @GetMapping("/startEndRelation")
-    public Result findByStartEnd(@RequestParam Integer startStop,
-                                            @RequestParam Integer endStop){
+    @GetMapping("/startEndRelation/{startStop}/{endStop}")
+    public Result findByStartEnd(@PathVariable String startStop,
+                                            @PathVariable String endStop){
         try {
             return Result.success(busRelationService.findByStartEnd(startStop, endStop));
-        } catch (Exception e){
-            return Result.fail("Find bus relation by start and end failed");
+        } catch (Exception e) {
+            return Result.fail("查找失败");
         }
     }
 
@@ -36,38 +35,50 @@ public class BusRelationController {
     public Result addOne(BusRelation busRelation) {
         try {
             return Result.success(busRelationService.save(busRelation));
-        } catch (Exception e){
-            return Result.fail("Add bus relation failed");
+        } catch (Exception e) {
+            return Result.fail("添加失败");
         }
     }
     @PutMapping("/updateRelation")
     public Result update(@RequestParam Integer id,
-                              @RequestParam Integer startStop,
-                              @RequestParam Integer endStop,
+                              @RequestParam String startStop,
+                              @RequestParam String endStop,
                               @RequestParam Integer time,
-                              @RequestParam Integer lineId){
-        try{
+                              @RequestParam Integer lineId,
+                              @RequestParam String direction,
+                              @RequestParam Integer stopNum){
+        try {
             BusRelation busRelation = new BusRelation();
             busRelation.setId(id);
             busRelation.setStartStop(startStop);
             busRelation.setEndStop(endStop);
             busRelation.setTime(time);
             busRelation.setLineId(lineId);
+            busRelation.setDirection(direction);
+            busRelation.setStopNum(stopNum);
             return Result.success(busRelationService.save(busRelation));
-        } catch (Exception e){
-            return Result.fail("Update bus relation failed");
+        } catch (Exception e) {
+            return Result.fail("添加失败");
         }
     }
 
     @DeleteMapping("/deleteRelation/{id}")
     public Result deleteOne(@PathVariable Integer id){
-        try{
+        try {
             busRelationService.deleteById(id);
-            return Result.success();
-        } catch (Exception e){
-            return Result.fail("Delete bus relation failed");
+            return Result.success("删除成功");
+        } catch (Exception e) {
+            return Result.fail("删除失败");
         }
     }
 
+    @GetMapping("/searchByStartOrEnd/{stop}")
+    public Result searchByStartOrEnd(@PathVariable String stop){
+        try {
+            return Result.success(busRelationService.searchByStartOrEnd(stop));
+        } catch (Exception e) {
+            return Result.fail("查找失败");
+        }
+    }
 
 }
