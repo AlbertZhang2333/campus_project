@@ -21,9 +21,8 @@ public class UploadFileServiceImpl implements UploadFileService {
         try {
             inputStream = file.getInputStream();
             reader=new BufferedInputStream(inputStream);
-            LocalDateTime localDateTime= LocalDateTime.now();
-            Date date= Date.valueOf(String.valueOf(localDateTime));
-            File localFile=new File(localFilePlace+date.toString()+"_" + file.getOriginalFilename());
+            long time = System.currentTimeMillis();
+            File localFile=new File(localFilePlace+time+"_" + file.getOriginalFilename());
             localFile.createNewFile();
             outputStream = new FileOutputStream(localFile);
             writer=new BufferedOutputStream(outputStream);
