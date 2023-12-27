@@ -115,8 +115,8 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
             //现在给用户发消息，告知其预约已被取消
             return Result.success("已成功取消预约");
         }
-
     }
+
     @Override
     public Result deleteById(long id) {
         //删除一条预约信息，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
