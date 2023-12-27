@@ -68,11 +68,11 @@ public class AdminAccountController {
     }
     //后期需要更新
     @PostMapping("/releaseFromBlackList")
-    public Result releaseFromBlackList(@RequestParam  long id){
-        Account account= accountService.getUserById(id);
+    public Result releaseFromBlackList(@RequestParam  String userMail){
+        Account account= accountService.findAccountByUserMail(userMail);
         account.setEnabled(true);
         cacheClient.deleteAccountFromBlackList(account.getUserMail());
-        return Result.success("已成功将"+id+"用户从黑名单内释放");
+        return Result.success("已成功将"+userMail+"用户从黑名单内释放");
     }
 
 
@@ -108,6 +108,33 @@ public class AdminAccountController {
                 return Result.success("已成功删除该用户");
             }
         }
+    }
+//    @PostMapping("/register")
+//    public Result addNewAccount(@RequestParam String username,
+//                                @RequestParam String userMail,
+//                                @RequestParam String password){
+//        Account account=new Account(username,userMail,password,IdentityLevel.NORMAL_USER);
+//        Account res=accountService.save(account);
+//        if(res!=null) {
+//            return Result.success("用户创建成功，欢迎您！" + username);
+//        }else {
+//            return Result.fail("邮箱重复！，注册失败");
+//        }
+//    }
+    @PostMapping("/createANewAccount")
+    public Result createANewAccount(@RequestParam String userName,@RequestParam String userMail, @RequestParam String password,
+                                    @RequestParam int identity){
+        if(identity!=IdentityLevel.NORMAL_USER&&identity!=IdentityLevel.ACCOUNT_ADMIN){
+            return Result.fail("身份指定错误");
+        }
+        Account account=new Account(userName,userMail,password,identity);
+        Account res=accountService.save(account);
+        if(res!=null) {
+            return Result.success("用户创建成功" + userName);
+        }else {
+            return Result.fail("邮箱重复！，注册失败");
+        }
+
     }
 
 
