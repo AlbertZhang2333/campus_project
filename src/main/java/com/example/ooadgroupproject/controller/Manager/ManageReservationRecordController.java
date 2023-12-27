@@ -119,7 +119,7 @@ public class ManageReservationRecordController {
         return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
     }
 
-
+    //TODO
     @PutMapping("/reservationCancel")
     public Result CancelReservation(@RequestParam long id) {
         return reservationRecordService.AdminCancelReservation(id);
