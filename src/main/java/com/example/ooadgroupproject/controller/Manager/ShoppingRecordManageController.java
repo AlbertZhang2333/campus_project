@@ -14,11 +14,11 @@ public class ShoppingRecordManageController {
     private ItemsShoppingRecordService itemsShoppingRecordService;
     @RequestMapping("/findShoppingRecordByItemName")
     public Result findShoppingRecordByItemName(String itemName){
-        return Result.success(itemsShoppingRecordService.findByItemName(itemName).toString());
+        return Result.success(itemsShoppingRecordService.findByItemName(itemName));
     }
     @RequestMapping("/findShoppingRecordByUserMail")
     public Result findShoppingRecordByUserMail(String userMail){
-        return Result.success(itemsShoppingRecordService.findByUserMail(userMail).toString());
+        return Result.success(itemsShoppingRecordService.findByUserMail(userMail));
     }
 
     //去支付宝查交易账单

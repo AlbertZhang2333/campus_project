@@ -35,6 +35,9 @@ public class CacheClient {
                 +":"+reservationRecord.getUserMail()+reservationRecord.getId();
         return key;
     }
+    public static String getReservationRecordKey(String roomName,Date date,String userMail,long id){
+        return "";
+    }
     public static String getAccountBlacklistKey(String userMail){
         return ACCOUNT_BLACKLIST_KEY+userMail;
     }
@@ -54,10 +57,16 @@ public class CacheClient {
         String key=CacheClient.getReservationRecordKey(reservationRecord);
         redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(reservationRecord));
     }
+//    public boolean deleteReservationRecord(Date date,long id,String userMail){
+//        String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
+//        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
+//    }
+
     public boolean deleteReservationRecord(Date date,long id,String userMail){
         String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
         return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
     }
+
     public boolean cancelReservationRecord(Date date,long id,String userMail){
         String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
         ReservationRecord reservationRecord=(ReservationRecord) redisTemplate.opsForValue().get(key);
