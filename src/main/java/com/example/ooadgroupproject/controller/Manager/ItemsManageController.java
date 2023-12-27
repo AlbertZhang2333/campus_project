@@ -36,15 +36,16 @@ public class ItemsManageController {
             return Result.fail("输入的数据中存在不合规的数据");
         }
     }
+
     @PutMapping("/updateItem")
     public Result updateItem(@RequestParam String itemName,@RequestParam Double price,
                              @RequestParam String description,@RequestParam String imagePath){
-        return itemsService.updateItem(itemName,price,description,imagePath);
+        return Result.success(itemsService.updateItem(itemName,price,description,imagePath));
     }
 
     @DeleteMapping("/deleteItem")
     public Result deleteItem(@RequestParam String name){
-        return itemsService.deleteItem(name);
+        return Result.success(itemsService.deleteItem(name));
     }
 
 

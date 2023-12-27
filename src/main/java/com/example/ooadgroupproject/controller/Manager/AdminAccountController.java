@@ -3,6 +3,7 @@ package com.example.ooadgroupproject.controller.Manager;
 import com.example.ooadgroupproject.IdentityLevel;
 import com.example.ooadgroupproject.Utils.ManageAccountUtil;
 import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.common.SplitPage;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
 import com.example.ooadgroupproject.service.CacheClient;
@@ -25,6 +26,7 @@ public class AdminAccountController {
     @Autowired
     private CacheClient cacheClient;
 
+
     @PostMapping("/batchAddAccount")
     public Result batchAddAccount(MultipartFile file) throws IOException {
 
@@ -43,8 +45,10 @@ public class AdminAccountController {
         }
     }
     @GetMapping("/checkAllAccount")
-    public List<Account> findAllAccount(){
-        return accountService.findAll();
+    public Result findAllAccount(@RequestParam int pageSize,@RequestParam int currentPage){
+        List<Account>accountList=accountService.findAll();
+        Long tot=(long)accountList.size();
+        return Result.success(tot, SplitPage.getPage(accountList,pageSize,currentPage));
     }
     //后期需要更新
     @PostMapping("/setBlackList")
