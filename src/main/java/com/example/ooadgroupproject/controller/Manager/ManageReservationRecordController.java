@@ -4,7 +4,9 @@ import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
+import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.service.ReservationRecordService;
 
@@ -19,6 +21,8 @@ public class ManageReservationRecordController {
     private final int PAGE_SIZE = 5;
     @Autowired
     private ReservationRecordService reservationRecordService;
+    @Autowired
+    private EmailService emailService;
     //TODO
     @GetMapping("/reservationRecordsByLocation")
     public Result getRecordsByLocation(@RequestParam String location) {
@@ -80,6 +84,11 @@ public class ManageReservationRecordController {
     //TODO
     @DeleteMapping("/deleteById")
     public Result deleteById(@RequestParam long id){
+        ReservationRecord reservationRecord=reservationRecordService.findRecordsById(id).orElse(null);
+        if(reservationRecord == null){
+            return Result.fail("未找到该预约！");
+        }
+
         return reservationRecordService.deleteById(id);
     }
 

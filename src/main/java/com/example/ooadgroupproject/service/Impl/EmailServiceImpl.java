@@ -9,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.Random;
 
 @Service
@@ -34,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
     }
     private String userVerificationCode = null;
     @Override
-    public Result sendEmail(String userMail) {
+    public Result sendVerifyCodeEmail(String userMail) {
         String userVerificationCode=generateVerificationCode();
         try{
             SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -55,6 +56,24 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public boolean verifyCode(String code) {
         return this.userVerificationCode.equals(code);
+    }
+
+    @Override
+    public Result sendReservationCanceledEmail(String userMail, String roomName, Date date) {
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(userMail);
+            mailMessage.setSubject("Sustech Campus 预约取消通知");
+            String content="尊敬的先生/女士，您好！\n" +
+                    "很抱歉的通知您，您于"+date+"日"+"在"+roomName+"的预约已被取消。\n" +
+                    "详情请联系管理员。对于给您带来的不便，我们感到很抱歉";
+            mailMessage.setText(content);
+            javaMailSender.send(mailMessage);
+            return Result.success("发送给"+userMail+"的预约取消通知成功");
+        } catch (MailException e){
+            return Result.fail("发送给"+userMail+"的预约取消通知未能发送成功");
+        }
     }
 
 }

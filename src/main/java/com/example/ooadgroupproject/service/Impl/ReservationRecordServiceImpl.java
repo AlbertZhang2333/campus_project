@@ -3,6 +3,7 @@ package com.example.ooadgroupproject.service.Impl;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ReservationRecordRepository;
 import com.example.ooadgroupproject.entity.ReservationRecord;
+import com.example.ooadgroupproject.entity.ReservationState;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ReservationRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         int temp = records.size();
         if (records != null) {
                 for (ReservationRecord record : records) {
+                    if(record.getState()== ReservationState.Canceled){continue;}
                     boolean isConflict1 = false;
                     isConflict1 = (record.getStartTime().compareTo(reservationRecord.getStartTime()) <= 0
                             && record.getEndTime().compareTo(reservationRecord.getStartTime()) >= 0);
@@ -92,10 +94,6 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
                     }
                 }
             }
-            records = cacheClient.getReservationRecordList(
-                    reservationRecord.getRoomName(),
-                    reservationRecord.getDate());
-
         long TTL = -Time.valueOf(LocalTime.now()).getTime() + reservationRecord.getEndTime().getTime()+3600*24*1000L;
         Random random = new Random();
         //用于规避一次需要删除过量的数据，减轻压力

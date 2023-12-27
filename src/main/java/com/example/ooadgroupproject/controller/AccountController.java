@@ -5,19 +5,9 @@ import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
 import com.example.ooadgroupproject.service.EmailService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.IdentityLevel;
-import com.example.ooadgroupproject.CS_Attribute;
-import java.util.List;
 
 @RestController
 @RequestMapping("/login")
@@ -66,7 +56,7 @@ public class AccountController {
     @PostMapping("/forgetPassword")
     public Result sendVerificationMail(@RequestParam String userMail){
         if(accountService.findAccountByUserMail(userMail)==null)return Result.fail("不存在该账户");
-        return emailService.sendEmail(userMail);
+        return emailService.sendVerifyCodeEmail(userMail);
     }
     @PostMapping("/verificationEmail")
     public String verifyMailAndChangePassword(String code,String userMail,String password) {

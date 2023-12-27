@@ -1,9 +1,12 @@
 package com.example.ooadgroupproject.service;
 
 import com.example.ooadgroupproject.common.Result;
-import com.example.ooadgroupproject.entity.Account;
+
+import java.sql.Date;
 
 public interface EmailService {
-    Result sendEmail(String userMail);
+    Result sendVerifyCodeEmail(String userMail);
     boolean verifyCode(String code);
+
+    Result sendReservationCanceledEmail(String userMail, String roomName, Date date);
 }
