@@ -121,8 +121,8 @@ public class ManageReservationRecordController {
 
 
     @PutMapping("/reservationCancel")
-    public Result CancelReservation(@RequestParam Date date, @RequestParam long id, @RequestParam String userMail) {
-        return reservationRecordService.CancelReservation(date,id,userMail);
+    public Result CancelReservation(@RequestParam String roomName,@RequestParam Date date, @RequestParam long id, @RequestParam String userMail) {
+        return reservationRecordService.CancelReservation(roomName,date,id,userMail);
     }
 
 

@@ -36,7 +36,9 @@ public class CacheClient {
         return key;
     }
     public static String getReservationRecordKey(String roomName,Date date,String userMail,long id){
-        return "";
+        //输出date为"yyyy-MM-dd"格式
+        String dateStr=date.toString();
+        return RESERVATION_RECORD_KEY+roomName+":"+dateStr+":"+userMail+id;
     }
     public static String getAccountBlacklistKey(String userMail){
         return ACCOUNT_BLACKLIST_KEY+userMail;
@@ -55,24 +57,26 @@ public class CacheClient {
     public void setReservationRecord(ReservationRecord reservationRecord,
                                         long ttl,TimeUnit timeUnit){
         String key=CacheClient.getReservationRecordKey(reservationRecord);
-        redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(reservationRecord));
+        redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(reservationRecord),ttl,timeUnit);
     }
 //    public boolean deleteReservationRecord(Date date,long id,String userMail){
 //        String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
 //        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
 //    }
 
-    public boolean deleteReservationRecord(Date date,long id,String userMail){
-        String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
+    public boolean deleteReservationRecord(String roomName,Date date,long id,String userMail){
+        String key=getReservationRecordKey(roomName,date,userMail,id);
         return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
     }
 
-    public boolean cancelReservationRecord(Date date,long id,String userMail){
-        String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
+    //TODO
+    //需要考虑过期时间
+    public boolean cancelReservationRecord(String roomName,Date date,long id,String userMail){
+        String key=getReservationRecordKey(roomName,date,userMail,id);
         ReservationRecord reservationRecord=(ReservationRecord) redisTemplate.opsForValue().get(key);
         if(reservationRecord!=null){
             reservationRecord.setState(ReservationState.Canceled);
-            redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(reservationRecord));
+            redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(reservationRecord),1, TimeUnit.DAYS);
             return true;
         }
         return false;

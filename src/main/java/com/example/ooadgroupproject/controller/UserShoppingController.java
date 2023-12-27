@@ -104,7 +104,7 @@ public class UserShoppingController {
         }
         CartForm cartForm=new CartForm(itemName,num,account.getUserMail());
         cacheClient.setItemsShoppingCart(account.getUserMail(),cartForm);
-        return Result.success("已将目标商品添加入购物车");
+        return Result.success(cartForm);
     }
     @DeleteMapping("/deleteItemFromTheCart")
     public Result deleteItemFromTheCart(long cartFormTime){
