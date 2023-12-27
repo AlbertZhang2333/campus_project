@@ -27,6 +27,8 @@ public interface ReservationRecordService {
 
     Result CancelReservation(String roomName, Date date, long id, String userMail);
 
+    Result CancelReservation(String roomName, Date date, long id);
+
     Result deleteById(long id);
 
     public void deleteAll();

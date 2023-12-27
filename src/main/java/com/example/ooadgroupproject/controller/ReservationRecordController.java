@@ -71,25 +71,15 @@ public class ReservationRecordController {
         return resultList;
     }
 
-//
-//    // 查询某个具体用户的预约记录
-//    @GetMapping("/reservationRecordsByUserMail")
-//    public Result getRecordsByUserMail(@RequestParam String userMail) {
-//        List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail);
-//        Long tot = (long) list.size();
-//        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
-//    }
-
-
     // 查询某天的全部预约记录
     //加一个缓存，这里能提高下性能
-    @GetMapping("/reservationRecordsByDate")
-    public Result getRecordsByDate(@RequestParam Date date) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByDate(date);
-        Long tot = (long) list.size();
-
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
-    }
+//    @GetMapping("/reservationRecordsByDate")
+//    public Result getRecordsByDate(@RequestParam Date date) {
+//        List<ReservationRecord> list = reservationRecordService.findRecordsByDate(date);
+//        Long tot = (long) list.size();
+//
+//        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+//    }
     @GetMapping("/reservationRecordByRoomNameAndDate")
     public Result getRecordsByRoomNameAndDate(@RequestParam String roomName, @RequestParam Date date) {
         List<ReservationRecord> list = reservationRecordService.findALLByRoomNameAndDate(roomName, date);
@@ -106,12 +96,12 @@ public class ReservationRecordController {
         Long tot = (long) list.size();
         return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
     }
-    @PostMapping("/deleteByDateAndIdAndUserMail")
-    public Result deleteByDateAndIdAndUserMail(@RequestParam Date date,
-                                               @RequestParam long id){
-        Account account=LoginUserInfo.getAccount();
-        return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,account.getUserMail());
-    }
+//    @PostMapping("/deleteByDateAndIdAndUserMail")
+//    public Result deleteByDateAndIdAndUserMail(@RequestParam Date date,
+//                                               @RequestParam long id){
+//        Account account=LoginUserInfo.getAccount();
+//        return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,account.getUserMail());
+//    }
 
 
 }
