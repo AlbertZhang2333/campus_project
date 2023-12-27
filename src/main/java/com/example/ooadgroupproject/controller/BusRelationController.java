@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.BusRelation;
 import com.example.ooadgroupproject.service.BusRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,34 +15,59 @@ public class BusRelationController {
     private BusRelationService busRelationService;
 
     @GetMapping("/allRelation")
-    public List<BusRelation> findAll(){
-        return busRelationService.findAll();
+    public Result findAll(){
+        try {
+            return Result.success(busRelationService.findAll());
+        } catch (Exception e){
+            return Result.fail("Find all bus relation failed");
+        }
     }
     @GetMapping("/startEndRelation")
-    public List<BusRelation> findByStartEnd(@RequestParam Integer startStop,
+    public Result findByStartEnd(@RequestParam Integer startStop,
                                             @RequestParam Integer endStop){
-        return busRelationService.findByStartEnd(startStop, endStop);
+        try {
+            return Result.success(busRelationService.findByStartEnd(startStop, endStop));
+        } catch (Exception e){
+            return Result.fail("Find bus relation by start and end failed");
+        }
     }
 
     @PostMapping("/addRelation")
-    public BusRelation addOne(BusRelation busRelation) { return busRelationService.save(busRelation); }
+    public Result addOne(BusRelation busRelation) {
+        try {
+            return Result.success(busRelationService.save(busRelation));
+        } catch (Exception e){
+            return Result.fail("Add bus relation failed");
+        }
+    }
     @PutMapping("/updateRelation")
-    public BusRelation update(@RequestParam Integer id,
+    public Result update(@RequestParam Integer id,
                               @RequestParam Integer startStop,
                               @RequestParam Integer endStop,
                               @RequestParam Integer time,
                               @RequestParam Integer lineId){
-        BusRelation busRelation = new BusRelation();
-        busRelation.setId(id);
-        busRelation.setStartStop(startStop);
-        busRelation.setEndStop(endStop);
-        busRelation.setTime(time);
-        busRelation.setLineId(lineId);
-        return busRelationService.save(busRelation);
+        try{
+            BusRelation busRelation = new BusRelation();
+            busRelation.setId(id);
+            busRelation.setStartStop(startStop);
+            busRelation.setEndStop(endStop);
+            busRelation.setTime(time);
+            busRelation.setLineId(lineId);
+            return Result.success(busRelationService.save(busRelation));
+        } catch (Exception e){
+            return Result.fail("Update bus relation failed");
+        }
     }
 
     @DeleteMapping("/deleteRelation/{id}")
-    public void deleteOne(@PathVariable Integer id){busRelationService.deleteById(id);}
+    public Result deleteOne(@PathVariable Integer id){
+        try{
+            busRelationService.deleteById(id);
+            return Result.success();
+        } catch (Exception e){
+            return Result.fail("Delete bus relation failed");
+        }
+    }
 
 
 }
