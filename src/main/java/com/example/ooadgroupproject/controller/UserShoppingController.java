@@ -139,9 +139,8 @@ public class UserShoppingController {
         }
         return Result.success(itemsShoppingRecordList);
     }
-
-
-
-
-
+    @GetMapping("/findAll")
+    public Result findAll(){
+        return Result.success(itemsService.findAll());
+    }
 }
