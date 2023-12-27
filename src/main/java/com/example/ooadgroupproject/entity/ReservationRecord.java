@@ -6,11 +6,13 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Random;
 
 @Entity
 public class ReservationRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull
@@ -127,5 +129,15 @@ public class ReservationRecord {
         this.date=date;
         this.location=location;
         this.state=ReservationState.NotChecked;
+        this.id=generateId();
+    }
+    public long generateId(){
+        long id;
+        LocalDateTime now = LocalDateTime.now();
+        long nowSecond=now.toEpochSecond(ZoneOffset.UTC)*1000000L;
+        long timestamp=nowSecond-10L;
+        Random random=new Random(System.currentTimeMillis());
+        id=timestamp+random.nextLong(999999L);
+        return id;
     }
 }

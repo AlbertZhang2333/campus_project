@@ -20,7 +20,7 @@ public class AccountController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PutMapping("/register")
+    @PostMapping("/register")
     public Result addNewAccount(@RequestParam String username,
                                  @RequestParam String userMail,
                                  @RequestParam String password){

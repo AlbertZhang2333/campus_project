@@ -29,6 +29,7 @@ public class ReservationRecordController {
     private RoomService roomService;
 
     //用户创建预约
+    // TODO
     @PostMapping("/reservationAdd")
     public Result addOne(@RequestParam String roomName,
                                     @RequestParam Time startTime,
@@ -39,9 +40,9 @@ public class ReservationRecordController {
         String userMail=account.getUserMail();
         String username=account.getUsername();
         //检验确认该房间存在:
-        if(roomService.findRoomByRoomName(roomName)==null){
-            return Result.fail("该房间不存在");
-        }
+//        if(roomService.findRoomByRoomName(roomName).isIfSuccess()){
+//            return Result.fail("该房间不存在");
+//        }
 
         ReservationRecord reservationRecord=new ReservationRecord(username,userMail,roomName,
                 startTime,endTime, date,location);
@@ -71,37 +72,28 @@ public class ReservationRecordController {
         return resultList;
     }
 
-    // 查询某天的全部预约记录
-    //加一个缓存，这里能提高下性能
-//    @GetMapping("/reservationRecordsByDate")
-//    public Result getRecordsByDate(@RequestParam Date date) {
-//        List<ReservationRecord> list = reservationRecordService.findRecordsByDate(date);
-//        Long tot = (long) list.size();
-//
-//        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
-//    }
+
     @GetMapping("/reservationRecordByRoomNameAndDate")
     public Result getRecordsByRoomNameAndDate(@RequestParam String roomName, @RequestParam Date date) {
         List<ReservationRecord> list = reservationRecordService.findALLByRoomNameAndDate(roomName, date);
-        Long tot = (long) list.size();
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(list);
     }
 
 
 
-    // 查询某个场地的所有预约记录
-    @GetMapping("/reservationRecordsByRoomName")
-    public Result getRecordsByRoomName(@RequestParam String roomName) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByRoomName(roomName);
-        Long tot = (long) list.size();
-        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
-    }
-//    @PostMapping("/deleteByDateAndIdAndUserMail")
-//    public Result deleteByDateAndIdAndUserMail(@RequestParam Date date,
-//                                               @RequestParam long id){
-//        Account account=LoginUserInfo.getAccount();
-//        return reservationRecordService.deleteByDateAndIdAndUserMail(date,id,account.getUserMail());
+//    // 查询某个场地的所有预约记录
+//    @GetMapping("/reservationRecordsByRoomName")
+//    public Result getRecordsByRoomName(@RequestParam String roomName) {
+//        List<ReservationRecord> list = reservationRecordService.findRecordsByRoomName(roomName);
+//        Long tot = (long) list.size();
+//        return Result.success(tot,SplitPage.splitList(list, PAGE_SIZE));
 //    }
+
+    //取消预约
+    @PutMapping("/reservationCancel")
+    public Result CancelReservation(@RequestParam long id){
+        return reservationRecordService.UserCancelReservation(id);
+    }
 
 
 }

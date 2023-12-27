@@ -119,13 +119,10 @@ public class ManageReservationRecordController {
         return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
     }
 
-
+    //TODO
     @PutMapping("/reservationCancel")
-    public Result CancelReservation(@RequestParam String roomName,@RequestParam Date date, @RequestParam long id, @RequestParam String userMail) {
-        return reservationRecordService.CancelReservation(roomName,date,id,userMail);
+    public Result CancelReservation(@RequestParam long id) {
+        return reservationRecordService.AdminCancelReservation(id);
     }
-
-
-
 
 }

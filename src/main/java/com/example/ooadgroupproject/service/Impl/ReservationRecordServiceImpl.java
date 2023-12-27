@@ -39,6 +39,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
 
     @Override
     public List<ReservationRecord> findRecordsByDate(Date date){
+        int compareResultDate = date.compareTo(Date.valueOf(LocalDate.now()));
         return reservationRecordRepository.findByDate(date);
     }
 
@@ -106,31 +107,39 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         return Result.success("已成功删除预约");
     }
     @Override
-    public Result CancelReservation(String roomName, Date date, long id, String userMail) {
+    public Result AdminCancelReservation(long id) {
         //取消预约，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
-        boolean cacheDelRes=cacheClient.cancelReservationRecord(roomName,date,id,userMail);
         ReservationRecord reservationRecord=reservationRecordRepository.findById(id).orElse(null);
         if(reservationRecord==null){
             return Result.fail("找不到该预约记录");
         }else {
+            //更新缓存
+            boolean cacheDelRes=cacheClient.cancelReservationRecord(reservationRecord.getRoomName(),reservationRecord.getDate()
+                    ,id,reservationRecord.getUserMail());
             reservationRecord.setState(ReservationState.Canceled);
             reservationRecordRepository.save(reservationRecord);
             //现在给用户发消息，告知其预约已被取消
-            emailService.sendReservationCanceledEmail(userMail,roomName,date);
+            emailService.sendReservationCanceledEmail(reservationRecord.getUserMail(),
+                    reservationRecord.getRoomName(),reservationRecord.getDate());
             return Result.success("已成功取消预约");
         }
     }
 
     @Override
-    public Result CancelReservation(String roomName, Date date, long id) {
+    public Result UserCancelReservation(long id) {
         //取消预约，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
-        Account account= LoginUserInfo.getAccount();
-        String userMail=account.getUserMail();
-        boolean cacheDelRes=cacheClient.cancelReservationRecord(roomName,date,id,userMail);
         ReservationRecord reservationRecord=reservationRecordRepository.findById(id).orElse(null);
         if(reservationRecord==null){
             return Result.fail("找不到该预约记录");
         }else {
+            Account account= LoginUserInfo.getAccount();
+            String userMail=account.getUserMail();
+            if(!userMail.equals(reservationRecord.getUserMail())){
+                return Result.fail("您无权修改该条预约记录!");
+            }
+            // 改缓存
+            boolean cacheDelRes=cacheClient.cancelReservationRecord(reservationRecord.getRoomName(),reservationRecord.getDate()
+                    ,id,userMail);
             reservationRecord.setState(ReservationState.Canceled);
             reservationRecordRepository.save(reservationRecord);
             return Result.success("已成功取消预约");
@@ -162,7 +171,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
     }
     @Override
     public List<ReservationRecord>findALLByRoomNameAndDate(String roomName, Date date){
-        if(date.compareTo(Date.valueOf(LocalDate.now()))<0){
+        if(date.compareTo(Date.valueOf(LocalDate.now()))<=0){
             return reservationRecordRepository.findByRoomNameAndDate(roomName,date);
         }else {
             return cacheClient.getReservationRecordList(roomName,date);
