@@ -9,4 +9,5 @@ public interface BuildingService {
     public Building findByName(String name);
     public Building save(Building building);
     public void deleteById(Integer id);
+    public List<Building> search(String name);
 }
