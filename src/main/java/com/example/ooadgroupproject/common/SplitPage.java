@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 public class SplitPage {
 
     //实现查询页面分组
+    @Deprecated
     public static <T> List<List<T>> splitList(List<T> list, int groupSize) {
         int totalSize = list.size();
         int groupCount = (int) Math.ceil((double) totalSize / groupSize);

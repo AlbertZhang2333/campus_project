@@ -10,6 +10,7 @@ import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
@@ -28,6 +29,7 @@ public class UserShoppingController {
     @Autowired
     private CacheClient cacheClient;
 
+    private final Logger logger=Logger.getLogger(UserShoppingController.class);
     //TODO
     //用于拉取支付宝交易页面，返回一个html信息，需要和前端协同才能完成该功能
     @PutMapping("/purchase")
@@ -52,6 +54,7 @@ public class UserShoppingController {
     }
     @GetMapping("/checkIfUserHasPay")
     public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
+
         long recordId=-1;
         try {
             recordId = Long.parseLong(itemShoppingRecordId);
@@ -65,18 +68,22 @@ public class UserShoppingController {
         if(Objects.equals(itemsShoppingRecord.getStatus(), ItemsShoppingRecord.Initial_State)){
             try {
                 String payInfo = itemsShoppingRecordService.queryAlipayStatus(recordId);
-
+                logger.info(payInfo);
                 if(payInfo.equals("TRADE_SUCCESS")||
                         payInfo.equals("TRADE_FINISHED")){
                     itemsShoppingRecord.setStatus(ItemsShoppingRecord.Purchased_State);
                     itemsShoppingRecordService.save(itemsShoppingRecord);
-                    return Result.success("支付成功！");
+                    logger.info("支付成功！"+payInfo);
+                    return Result.success(itemShoppingRecordId+"支付成功！");
                 }else if(payInfo.equals("TRADE_CLOSED")){
+                    logger.info(itemShoppingRecordId+"支付超时"+payInfo);
                     return Result.fail("支付超时！");
-                }else if(payInfo.equals("WAIT_BUYER_PAY")){
+                }else if(payInfo.equals("WAIT_BUYER_PAY")||payInfo.equals("ACQ.TRADE_NOT_EXIST")){
+                    logger.info(itemShoppingRecordId+"等待支付"+payInfo);
                     return Result.success("等待支付");
                 }
             }catch (Exception e){
+                logger.error(e.getMessage()+" "+itemShoppingRecordId+" ");
                 return Result.fail("支付宝支付故障，请核对你的资金并与联系管理员解决！");
             }
         }else{
@@ -143,4 +150,6 @@ public class UserShoppingController {
     public Result findAll(){
         return Result.success(itemsService.findAll());
     }
+
+
 }

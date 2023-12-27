@@ -16,6 +16,7 @@ import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.ItemsService;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     private ItemsService itemsService;
     @Autowired
     private PayTool payTool;
+    private final Logger logger=Logger.getLogger(ItemsShoppingRecordServiceImpl.class);
 
     @Override
     public List<ItemsShoppingRecord> findAll() {
@@ -67,6 +69,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         AlipayClient alipayClient=payTool.getAlipayClient();
         //能成功建立联系，就存储对应的记录
         itemsShoppingRecordRepository.save(itemsShoppingRecord);
+        itemsService.reduceItem(itemsShoppingRecord.getItemName(),itemsShoppingRecord.getNum());
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         //设置支付宝的请求参数
         AlipayTradePagePayModel model=payTool.getPurchaseModel(itemsShoppingRecord);
@@ -96,7 +99,8 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         if(response.isSuccess()){
             return response.getTradeStatus();
         }else {
-            return null;
+            logger.warn(response.getBody());
+            return response.getTradeStatus();
         }
     }
 

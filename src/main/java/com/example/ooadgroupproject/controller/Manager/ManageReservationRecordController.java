@@ -2,8 +2,7 @@ package com.example.ooadgroupproject.controller.Manager;
 
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
-import com.example.ooadgroupproject.entity.ReservationRecord;
-import com.example.ooadgroupproject.entity.ReservationState;
+import com.example.ooadgroupproject.entity.*;
 import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,19 +22,33 @@ public class ManageReservationRecordController {
     private ReservationRecordService reservationRecordService;
     @Autowired
     private EmailService emailService;
+//    @GetMapping("/commentSearchAdmin")
+//    public Result getSearchAdmin(@RequestParam(required = false) String userMail,
+//                                 @RequestParam(required = false) Date date,
+//                                 @RequestParam(required = false) Integer belongDepartment,
+//                                 @RequestParam(required = false) Integer type,
+//                                 @RequestParam(required = false) int pageSize,
+//                                 @RequestParam(required = false) int currentPage) {
+//
+//        List<Comment> list = commentService.findByConditions(userMail, date, CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type));
+//        Long tot = (long) list.size();
+//
+//        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+//    }
+
     //TODO
     @GetMapping("/reservationRecordsByLocation")
-    public Result getRecordsByLocation(@RequestParam String location) {
+    public Result getRecordsByLocation(@RequestParam String location,@RequestParam int pageSize,@RequestParam int currentPage) {
         List<ReservationRecord> list = reservationRecordService.findRecordsByLocation(location);
         Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
     }
     //TODO
     @GetMapping("/reservationRecordsByUserMail")
-    public Result getRecordsByUserMail(@RequestParam String userMail) {
+    public Result getRecordsByUserMail(@RequestParam String userMail,@RequestParam int pageSize,@RequestParam int currentPage) {
         List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail);
         Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list,pageSize,currentPage));
     }
     @DeleteMapping("/deleteAll")
     public Result deleteAll(){
@@ -44,17 +57,17 @@ public class ManageReservationRecordController {
     }
     //TODO
     @GetMapping("/findAll")
-    public Result findAll(){
+    public Result findAll(@RequestParam int pageSize,@RequestParam int currentPage){
         List<ReservationRecord> list = reservationRecordService.findAll();
         Long tot=(long)list.size();
-        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list,pageSize,currentPage));
     }
     //TODO
     @GetMapping("/reservationRecordByDate")
-    public Result getRecordsByDate(@RequestParam Date date) {
+    public Result getRecordsByDate(@RequestParam Date date,@RequestParam int pageSize,@RequestParam int currentPage) {
         List<ReservationRecord> list = reservationRecordService.findRecordsByDate(date);
         Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
     }
 
 
@@ -94,11 +107,11 @@ public class ManageReservationRecordController {
 
     //TODO
     @GetMapping("/findById")
-    public Result findById(@RequestParam long id){
+    public Result findById(@RequestParam long id,@RequestParam int pageSize,@RequestParam int currentPage){
         ReservationRecord reservationRecord = reservationRecordService.findRecordsById(id).orElse(null);
         if (reservationRecord == null) {
             return Result.fail("未找到该预约！");
-        }else return Result.success(reservationRecord);
+        }else return Result.success(1L,reservationRecord);
     }
 
 
@@ -113,10 +126,11 @@ public class ManageReservationRecordController {
 //    }
     //TODO
     @GetMapping("/reservationRecordsByRoomNameAndDate")
-    public Result getRecordsByRoomNameAndDate(@RequestParam String roomName, @RequestParam Date date) {
+    public Result getRecordsByRoomNameAndDate(@RequestParam String roomName, @RequestParam Date date,
+                                              @RequestParam int pageSize, @RequestParam int currentPage) {
         List<ReservationRecord> list = reservationRecordService.findALLByRoomNameAndDate(roomName, date);
         Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
+        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
     }
 
     //TODO
