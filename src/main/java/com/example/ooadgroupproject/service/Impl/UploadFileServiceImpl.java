@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Service
@@ -20,7 +21,9 @@ public class UploadFileServiceImpl implements UploadFileService {
         try {
             inputStream = file.getInputStream();
             reader=new BufferedInputStream(inputStream);
-            File localFile=new File(localFilePlace + file.getOriginalFilename() + "_" + LocalDateTime.now());
+            LocalDateTime localDateTime= LocalDateTime.now();
+            Date date= Date.valueOf(String.valueOf(localDateTime));
+            File localFile=new File(localFilePlace+date.toString()+"_" + file.getOriginalFilename());
             localFile.createNewFile();
             outputStream = new FileOutputStream(localFile);
             writer=new BufferedOutputStream(outputStream);
