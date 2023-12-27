@@ -18,7 +18,9 @@ public class AccountController {
     private AccountService accountService;//=new AccountServiceImpl();new部分可写可不写
 
     @Autowired
+
     JwtUtils jwtUtils;
+    @Autowired private EmailService emailService;
 
     @PostMapping("/register")
     public Result addNewAccount(@RequestParam String username,
@@ -33,26 +35,39 @@ public class AccountController {
         }
     }
 
-    @PutMapping("/ModifyingInformation")
-    public Account update (@RequestParam long id,
-                           @RequestParam String username,
-                           @RequestParam String password,
-                           @RequestParam int identity){
-        Account account=new Account();
-        account.setIdentity(identity);
-        account.setPassword(password);
-        account.setUsername(username);
-        return accountService.save(account);
+//    @PutMapping("/ModifyingInformation")
+//    public Result update (@RequestParam long id,
+//                           @RequestParam String username,
+//                           @RequestParam String password){
+//        Account account=new Account();
+//        account.setPassword(password);
+//        account.setUsername(username);
+//        accountService.save(account);
+//        return Result.success("账号信息修改成功！");
+//    }
+//    @DeleteMapping("/{id}")
+//    public void deleteOne(@PathVariable long id){
+//        accountService.deleteById(id);
+//    }
+
+    //登录：
+    @Deprecated
+    @PostMapping("/login/loginCheck")
+    public Result login(@RequestParam String userMail,
+                        @RequestParam String password){
+        Account account=accountService.AccountExistCheck(userMail,password);
+        if(account!=null){
+            String token=jwtUtils.generateToken(userMail,account.getUsername(),account.getIdentity());
+            return Result.success(token);
+        }else {
+            return Result.fail("账号或密码错误");
+        }
     }
-    @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable long id){
-        accountService.deleteById(id);
-    }
+
 
     //和前端配合，让用户页面进行跳转到登录用户界面
 
 
-    @Autowired private EmailService emailService;
     @PostMapping("/forgetPassword")
     public Result sendVerificationMail(@RequestParam String userMail){
         if(accountService.findAccountByUserMail(userMail)==null)return Result.fail("不存在该账户");
