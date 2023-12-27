@@ -7,6 +7,7 @@ import com.example.ooadgroupproject.common.CartForm;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
+import com.example.ooadgroupproject.entity.ReservationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -57,10 +58,20 @@ public class CacheClient {
         String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
         return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
     }
-    public void deleteReservationRecord(ReservationRecord reservationRecord){
-        String key=CacheClient.getReservationRecordKey(reservationRecord);
-        redisTemplate.opsForValue().getOperations().delete(key);
+    public boolean cancelReservationRecord(Date date,long id,String userMail){
+        String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
+        ReservationRecord reservationRecord=(ReservationRecord) redisTemplate.opsForValue().get(key);
+        if(reservationRecord!=null){
+            reservationRecord.setState(ReservationState.Canceled);
+            redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(reservationRecord));
+            return true;
+        }
+        return false;
     }
+//    public void deleteReservationRecord(ReservationRecord reservationRecord){
+//        String key=CacheClient.getReservationRecordKey(reservationRecord);
+//        redisTemplate.opsForValue().getOperations().delete(key);
+//    }
     public List<ReservationRecord> getReservationRecordList(String roomName,Date date){
         List<ReservationRecord>recordArrayList =new ArrayList<>();
         String key=RESERVATION_RECORD_KEY+roomName+":"+date.toString()+":*";

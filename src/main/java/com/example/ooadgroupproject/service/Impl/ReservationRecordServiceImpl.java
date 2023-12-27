@@ -62,18 +62,6 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         if (compareResult > 0) {
             return Result.fail("预约开始时间不能大于预约结束时间");
         }
-//        for(ReservationRecord record:reservationRecordRepository.findReservationRecordByDateAndRoomNameAndLocation
-//                (reservationRecord.getDate(),reservationRecord.getRoomName(),reservationRecord.getLocation())){
-//            boolean isConflict1=false;
-//            isConflict1=(record.getStartTime().compareTo(reservationRecord.getStartTime())<=0
-//                    &&record.getEndTime().compareTo(reservationRecord.getStartTime())>=0);
-//            boolean isConflict2=false;
-//            isConflict2=(record.getStartTime().compareTo(reservationRecord.getEndTime())<=0)
-//                    &&(record.getEndTime().compareTo(reservationRecord.getEndTime())>=0);
-//            if(isConflict1||isConflict2) {
-//                return Result.fail("预约时间冲突");
-//            }
-//        }
 
         List<ReservationRecord> records = cacheClient.getReservationRecordList(
                 reservationRecord.getRoomName(),
@@ -101,10 +89,7 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         //同步将该数据放入到缓存中
         cacheClient.setReservationRecord(reservationRecord, TTL + r,
                 TimeUnit.MILLISECONDS);
-
         ReservationRecord reservationRecord1 = reservationRecordRepository.save(reservationRecord);
-
-
         return Result.success(reservationRecord1);
     }
 
@@ -112,11 +97,25 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Override
     public Result deleteByDateAndIdAndUserMail(Date date, long id, String userMail) {
         //删除一条预约信息，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
-
         boolean cacheDelRes=cacheClient.deleteReservationRecord(date,id,userMail);
         reservationRecordRepository.deleteReservationRecordByDateAndIdAndUserMail
                 (date,id,userMail);
         return Result.success("已成功取消预约");
+    }
+    @Override
+    public Result CancelReservation(Date date, long id, String userMail) {
+        //取消预约，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
+        boolean cacheDelRes=cacheClient.cancelReservationRecord(date,id,userMail);
+        ReservationRecord reservationRecord=reservationRecordRepository.findById(id).orElse(null);
+        if(reservationRecord==null){
+            return Result.fail("找不到该预约记录");
+        }else {
+            reservationRecord.setState(ReservationState.Canceled);
+            reservationRecordRepository.save(reservationRecord);
+            //现在给用户发消息，告知其预约已被取消
+            return Result.success("已成功取消预约");
+        }
+
     }
     @Override
     public Result deleteById(long id) {
