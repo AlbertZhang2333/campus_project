@@ -28,6 +28,7 @@ public class ReservationRecordController {
     @Autowired
     private RoomService roomService;
 
+    //用户创建预约
     @PostMapping("/reservationAdd")
     public Result addOne(@RequestParam String roomName,
                                     @RequestParam Time startTime,
@@ -49,17 +50,17 @@ public class ReservationRecordController {
     }
 
 
-    //该方法有问题，需要后续修改
     @GetMapping("/UserCheckSelfHistoryReservation")
     public List<ReservationRecord>selfHistoryReservation(){
         return
                 reservationRecordService.findRecordsByUserMail
-                        (SecurityContextHolder.getContext().getAuthentication().getName());
+                        (LoginUserInfo.getAccount().getUserMail());
     }
+
     @GetMapping("/UserCheckDateSelfReservation")
     public List<ReservationRecord>selfDateReservation(@RequestParam Date date){
         List<ReservationRecord>list=reservationRecordService.findRecordsByUserMail
-                (SecurityContextHolder.getContext().getAuthentication().getName());
+                (LoginUserInfo.getAccount().getUserMail());
         List<ReservationRecord>resultList=new ArrayList<>();
         for (ReservationRecord reservationRecord : list) {
             int check = reservationRecord.getDate().compareTo(date);
@@ -70,14 +71,14 @@ public class ReservationRecordController {
         return resultList;
     }
 
-
-    // 查询某个具体用户的预约记录
-    @GetMapping("/reservationRecordsByUserMail")
-    public Result getRecordsByUserMail(@RequestParam String userMail) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail);
-        Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
-    }
+//
+//    // 查询某个具体用户的预约记录
+//    @GetMapping("/reservationRecordsByUserMail")
+//    public Result getRecordsByUserMail(@RequestParam String userMail) {
+//        List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail);
+//        Long tot = (long) list.size();
+//        return Result.success(tot, SplitPage.splitList(list, PAGE_SIZE));
+//    }
 
 
     // 查询某天的全部预约记录

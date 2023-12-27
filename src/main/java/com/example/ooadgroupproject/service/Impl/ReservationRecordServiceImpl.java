@@ -13,6 +13,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -119,6 +120,18 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
                 (date,id,userMail);
         return Result.success("已成功取消预约");
     }
+    @Override
+    public Result deleteById(long id) {
+        //删除一条预约信息，需要解决的问题有：这条预约是什么时候的？我需要先检查缓存，然后检查数据库。
+        ReservationRecord reservationRecord=reservationRecordRepository.findById(id).orElse(null);
+        if(reservationRecord==null){
+            return Result.fail("找不到该预约记录");
+        }
+        boolean cacheDelRes=cacheClient.deleteReservationRecord(reservationRecord.getDate(),id,reservationRecord.getUserMail());
+        reservationRecordRepository.deleteReservationRecordByDateAndIdAndUserMail
+                (reservationRecord.getDate(),id,reservationRecord.getUserMail());
+        return Result.success("已成功取消预约");
+    }
 
     @Override
     public void deleteAll(){
@@ -137,4 +150,10 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
             return cacheClient.getReservationRecordList(roomName,date);
         }
     }
+
+    @Override
+    public Optional<ReservationRecord> findRecordsById(long id) {
+        return reservationRecordRepository.findById(id);
+    }
+
 }
