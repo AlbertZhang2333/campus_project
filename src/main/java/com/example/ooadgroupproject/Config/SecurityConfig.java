@@ -9,6 +9,7 @@ import com.example.ooadgroupproject.handler.LoginFailureHandler;
 import com.example.ooadgroupproject.handler.LoginSuccessHandler;
 import com.example.ooadgroupproject.handler.LogoutSuccessHandler;
 import com.example.ooadgroupproject.service.AccountService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import java.util.List;
 
@@ -109,4 +113,24 @@ public class SecurityConfig  {
         return http.build();
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(){
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.addAllowedOrigin("http://localhost:8080");
+                corsConfiguration.addAllowedHeader("Content-Type");
+                corsConfiguration.addAllowedHeader("Authorization");
+                corsConfiguration.addAllowedMethod("GET");
+                corsConfiguration.addAllowedHeader("POST");
+                corsConfiguration.addAllowedHeader("PUT");
+                corsConfiguration.addAllowedHeader("DELETE");
+                return corsConfiguration;
+            }
+        };
+    }
+
 }
+
+
