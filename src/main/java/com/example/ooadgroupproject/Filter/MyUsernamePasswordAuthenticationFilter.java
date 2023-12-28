@@ -53,8 +53,7 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
         String userMail=obtainUserMail(request);
         Account account=accountService.findByUserMailAndPassword(userMail,password);
         if(account==null){
-            LoginFailureHandler loginFailureHandler1=new LoginFailureHandler();
-            loginFailureHandler1.onAuthenticationFailure(request,response,new LoginFailedException("请检查账号密码或是否尚未注册账号"));
+            loginFailureHandler.onAuthenticationFailure(request,response,new LoginFailedException("请检查账号密码或是否尚未注册账号"));
 //            throw new LoginFailedException("请检查账号密码或是否尚未注册账号");
             return null;
         }
