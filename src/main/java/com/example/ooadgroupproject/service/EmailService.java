@@ -6,7 +6,7 @@ import java.sql.Date;
 
 public interface EmailService {
     Result sendVerifyCodeEmail(String userMail);
-    boolean verifyCode(String code);
+    boolean verifyForgetPasswordCode(String userMail, String code);
 
     Result sendReservationCanceledEmail(String userMail, String roomName, Date date);
 }

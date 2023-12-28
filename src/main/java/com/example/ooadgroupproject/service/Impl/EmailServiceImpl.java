@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.service.Impl;
 
 import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +17,13 @@ import java.util.Random;
 public class EmailServiceImpl implements EmailService {
     @Autowired
     JavaMailSender javaMailSender;
+    @Autowired
+    private CacheClient cacheClient;
 
     @Value("${spring.mail.username}")
     private String sender;
 
+    private static final String ForgetPassword = "forgetPassword";
     private static String generateVerificationCode() {
         String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerCaseLetters = upperCaseLetters.toLowerCase();
@@ -50,13 +54,18 @@ public class EmailServiceImpl implements EmailService {
         } catch (MailException e) {
             return Result.fail("发送给"+userMail+"的验证码未能发送成功");
         }
+        cacheClient.addVerifyCode(userMail,ForgetPassword,userVerificationCode);
         return Result.success("发送给"+userMail+"的验证码"+userVerificationCode+"发送成功");
     }
-
     @Override
-    public boolean verifyCode(String code) {
-        return this.userVerificationCode.equals(code);
+    public boolean verifyForgetPasswordCode(String userMail,String code) {
+        return cacheClient.checkVerifyCode(userMail,ForgetPassword,code);
     }
+
+//    @Override
+//    public boolean verifyCode(String code) {
+//        return this.userVerificationCode.equals(code);
+//    }
 
     @Override
     public Result sendReservationCanceledEmail(String userMail, String roomName, Date date) {

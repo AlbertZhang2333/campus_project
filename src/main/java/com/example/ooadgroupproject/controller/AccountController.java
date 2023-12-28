@@ -11,14 +11,12 @@ import com.example.ooadgroupproject.IdentityLevel;
 
 @RestController
 @RequestMapping("/login")
-
 public class AccountController {
     @Autowired
     //jpa会自动依照规范的命名确定出所需求的简单功能，并直接将之实现和实例化
     private AccountService accountService;//=new AccountServiceImpl();new部分可写可不写
 
     @Autowired
-
     JwtUtils jwtUtils;
     @Autowired private EmailService emailService;
 
@@ -51,18 +49,18 @@ public class AccountController {
 //    }
 
     //登录：
-    @Deprecated
-    @PostMapping("/login/loginCheck")
-    public Result login(@RequestParam String userMail,
-                        @RequestParam String password){
-        Account account=accountService.AccountExistCheck(userMail,password);
-        if(account!=null){
-            String token=jwtUtils.generateToken(userMail,account.getUsername(),account.getIdentity());
-            return Result.success(token);
-        }else {
-            return Result.fail("账号或密码错误");
-        }
-    }
+//    @Deprecated
+//    @PostMapping("/login/loginCheck")
+//    public Result login(@RequestParam String userMail,
+//                        @RequestParam String password){
+//        Account account=accountService.AccountExistCheck(userMail,password);
+//        if(account!=null){
+//            String token=jwtUtils.generateToken(userMail,account.getUsername(),account.getIdentity());
+//            return Result.success(token);
+//        }else {
+//            return Result.fail("账号或密码错误");
+//        }
+//    }
 
 
     //和前端配合，让用户页面进行跳转到登录用户界面
@@ -74,8 +72,8 @@ public class AccountController {
         return emailService.sendVerifyCodeEmail(userMail);
     }
     @PostMapping("/verificationEmail")
-    public String verifyMailAndChangePassword(String code,String userMail,String password) {
-        if (emailService.verifyCode(code)) {
+    public String verifyForgetPassword(String code,String userMail,String password) {
+        if (emailService.verifyForgetPasswordCode(userMail,code)) {
             Account account = accountService.findAccountByUserMail(userMail);
             account.setPassword(password);
             accountService.save(account);

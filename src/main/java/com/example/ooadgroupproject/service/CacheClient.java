@@ -1,11 +1,9 @@
 package com.example.ooadgroupproject.service;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.JSONObject;
 import com.example.ooadgroupproject.common.CartForm;
 import com.example.ooadgroupproject.entity.Item;
-import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,7 @@ public class CacheClient {
 
     public static final String ItemsShoppingCart="ItemsShoppingCart:";
     public static final String Item_Info_Key="Item_Info_Key:";
+    public static final String ForgetPasswordVerifyCode_Key="forgetPasswordVerifyCode_Key:";
 
     @Autowired
     RedisTemplate<Object,Object>redisTemplate;
@@ -157,6 +156,27 @@ public class CacheClient {
         String value= (String) redisTemplate.opsForValue().get(key);
         return value;
     }
+
+    public String getVerifyCode_Key(String userMail, String aim){
+        return ForgetPasswordVerifyCode_Key+aim+":"+userMail;
+    }
+
+    public String addVerifyCode(String userMail,String aim, String verifyCode){
+        String key= getVerifyCode_Key(userMail,aim);
+        redisTemplate.opsForValue().set(key,verifyCode,10L,TimeUnit.MINUTES);
+        return key;
+    }
+    public boolean checkVerifyCode(String userMail,String aim,String verifyCode){
+        String key=getVerifyCode_Key(userMail,aim);
+        String value= (String) redisTemplate.opsForValue().get(key);
+        if(value==null){
+            return false;
+        }
+        return value.equals(verifyCode);
+    }
+
+
+
 
 
 
