@@ -11,3 +11,20 @@
 2023-12-27 19:45:30  [ http-nio-8081-exec-5:3025 ] - [ WARN ]  {"alipay_trade_query_response":{"msg":"Service Currently Unavailable","code":"20000","sub_msg":"系统异常","sub_code":"aop.ACQ.SYSTEM_ERROR","receipt_amount":"0.00","point_amount":"0.00","buyer_pay_amount":"0.00","invoice_amount":"0.00"},"sign":"A5T7UnGZyocZu7UbmpMd5ikL2GthZeUCtpEO6+0gs0Dzd51fghZrkAcHMBwrdkCmfLGhC+VQRZTS+UTu2ZZR9kclvAjRCtwQ9FpYGUIksmDA0vnctssc3wYyic/M9CIJb0d+5hRrOvx0P6Q/tFjaslziEOPGsPeU/hH1tmAHOvXL8lxoumbObBAPGbCQE8ovU83wnNo+A3kci3FJHofsh55himJaFMXh5yeJaLFhHZ1y7q9qGiTRXLGpgES8OH7/Ax1e8wsmbWq62mlS/gCbAg5WVzsfhs9wJDURP7Xz81snz/3lT2PLSAc1MvoBep3FbyRfxLcCQs8z6UbGawxc+Q=="}
 2023-12-27 19:45:30  [ http-nio-8081-exec-5:3026 ] - [ INFO ]  
 2023-12-27 19:45:30  [ http-nio-8081-exec-5:3026 ] - [ ERROR ]  Cannot invoke "String.equals(Object)" because "payInfo" is null 1703706323156296 
+2023-12-28 19:12:15  [ http-nio-8081-exec-1:0 ] - [ INFO ]  WAIT_BUYER_PAY
+2023-12-28 19:12:15  [ http-nio-8081-exec-1:2 ] - [ INFO ]  1703790719822249等待支付WAIT_BUYER_PAY
+2023-12-28 19:12:17  [ http-nio-8081-exec-4:2610 ] - [ INFO ]  TRADE_SUCCESS
+2023-12-28 19:12:17  [ http-nio-8081-exec-4:2613 ] - [ INFO ]  支付成功！TRADE_SUCCESS
+2023-12-28 19:26:15  [ http-nio-8081-exec-6:0 ] - [ INFO ]  同步验证通过
+2023-12-28 20:12:08  [ http-nio-8081-exec-9:0 ] - [ INFO ]  同步验证通过
+2023-12-28 20:17:38  [ http-nio-8081-exec-8:329888 ] - [ INFO ]  同步验证通过
+2023-12-28 20:20:16  [ http-nio-8081-exec-4:0 ] - [ INFO ]  同步验证通过
+2023-12-28 20:21:40  [ http-nio-8081-exec-5:0 ] - [ INFO ]  同步验证通过
+2023-12-28 20:23:14  [ http-nio-8081-exec-5:93953 ] - [ ERROR ]  订单信息不一致！
+2023-12-28 20:25:11  [ http-nio-8081-exec-4:0 ] - [ INFO ]  同步验证通过
+2023-12-28 20:30:23  [ http-nio-8081-exec-4:311918 ] - [ ERROR ]  订单信息不一致！
+2023-12-28 20:30:23  [ http-nio-8081-exec-5:312385 ] - [ INFO ]  同步验证通过
+2023-12-28 20:30:24  [ http-nio-8081-exec-5:312937 ] - [ ERROR ]  订单信息不一致！
+2023-12-28 20:32:31  [ http-nio-8081-exec-7:0 ] - [ INFO ]  同步验证通过
+2023-12-28 20:34:26  [ http-nio-8081-exec-8:115455 ] - [ INFO ]  同步验证通过
+2023-12-28 20:35:52  [ http-nio-8081-exec-2:200923 ] - [ INFO ]  同步验证通过

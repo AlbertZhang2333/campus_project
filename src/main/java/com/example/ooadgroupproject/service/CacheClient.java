@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.json.JSONObject;
 import com.example.ooadgroupproject.common.CartForm;
 import com.example.ooadgroupproject.entity.Item;
+import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class CacheClient {
     public static final String ItemsShoppingCart="ItemsShoppingCart:";
     public static final String Item_Info_Key="Item_Info_Key:";
     public static final String ForgetPasswordVerifyCode_Key="forgetPasswordVerifyCode_Key:";
+    public static final String Item_shopping_record_key="Item_shopping_record_key:";
 
     @Autowired
     RedisTemplate<Object,Object>redisTemplate;
@@ -174,6 +176,28 @@ public class CacheClient {
         }
         return value.equals(verifyCode);
     }
+
+    public String getItemShoppingRecordKey(long item_shoppingId){
+        return Item_shopping_record_key+item_shoppingId;
+    }
+    public String addItemShoppingRecord(ItemsShoppingRecord itemsShoppingRecord){
+        String key=getItemShoppingRecordKey(itemsShoppingRecord.getId());
+        Random random=new Random();
+        long r=random.nextLong(5000);
+        redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(itemsShoppingRecord),15*60*1000L+r,TimeUnit.MILLISECONDS);
+        return key;
+    }
+    public String getItemShoppingRecord(long id){
+        String key=getItemShoppingRecordKey(id);
+        String value= (String) redisTemplate.opsForValue().get(key);
+        long random=new Random().nextLong(10000);
+        if(value==null){
+            //创建null保护信息:
+            redisTemplate.opsForValue().set(key,"",60000L+random,TimeUnit.MILLISECONDS);
+        }
+        return value;
+    }
+
 
 
 

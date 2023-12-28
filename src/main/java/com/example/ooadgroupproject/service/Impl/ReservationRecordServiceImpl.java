@@ -9,6 +9,7 @@ import com.example.ooadgroupproject.entity.ReservationState;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.EmailService;
 import com.example.ooadgroupproject.service.ReservationRecordService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
+@Transactional
 @Service
 public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Autowired

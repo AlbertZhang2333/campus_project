@@ -4,6 +4,8 @@ import com.alipay.api.AlipayApiException;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.sql.Date;
 import java.util.List;
@@ -21,4 +23,10 @@ public interface ItemsShoppingRecordService {
     String queryAlipayStatus(long tradeNo) throws AlipayApiException;
 
     String queryBillData(Date date)throws AlipayApiException;
+
+    ItemsShoppingRecord getItemShoppingRecord(long id);
+
+    Result checkPayStatus(String itemShoppingRecordId);
+
+    Result alipayReturn(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

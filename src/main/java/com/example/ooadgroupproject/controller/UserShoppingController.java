@@ -2,22 +2,26 @@ package com.example.ooadgroupproject.controller;
 
 import cn.hutool.json.JSONObject;
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayConfig;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.example.ooadgroupproject.common.CartForm;
 import com.example.ooadgroupproject.common.LoginUserInfo;
+import com.example.ooadgroupproject.common.PayTool;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.PrintWriter;
+import java.util.*;
 
 @RestController
 @RequestMapping("/UserShopping")
@@ -41,6 +45,7 @@ public class UserShoppingController {
                 return Result.fail(new String[]{"不存在该商品！可能是系统故障或管理员临时进行了调整"});
             }
             ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,num,account.getUserMail());
+
             String res=itemsShoppingRecordService.callAlipayToPurchase(itemsShoppingRecord);
             //接下来同步通知调用，询问支付宝用户是否已经支付
             if(res!=null){
@@ -54,43 +59,22 @@ public class UserShoppingController {
     }
     @GetMapping("/checkIfUserHasPay")
     public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
-
-        long recordId=-1;
-        try {
-            recordId = Long.parseLong(itemShoppingRecordId);
-        }catch (Exception e){
-            return Result.fail("参数错误！");
-        }
-        ItemsShoppingRecord itemsShoppingRecord=itemsShoppingRecordService.findById(recordId).orElse(null);
-        if(itemsShoppingRecord==null){
-            return Result.fail("不存在该商品！如您确定已支付，请立刻联系管理员协助解决问题！");
-        }
-        if(Objects.equals(itemsShoppingRecord.getStatus(), ItemsShoppingRecord.Initial_State)){
-            try {
-                String payInfo = itemsShoppingRecordService.queryAlipayStatus(recordId);
-                logger.info(payInfo);
-                if(payInfo.equals("TRADE_SUCCESS")||
-                        payInfo.equals("TRADE_FINISHED")){
-                    itemsShoppingRecord.setStatus(ItemsShoppingRecord.Purchased_State);
-                    itemsShoppingRecordService.save(itemsShoppingRecord);
-                    logger.info("支付成功！"+payInfo);
-                    return Result.success(itemShoppingRecordId+"支付成功！");
-                }else if(payInfo.equals("TRADE_CLOSED")){
-                    logger.info(itemShoppingRecordId+"支付超时"+payInfo);
-                    return Result.fail("支付超时！");
-                }else if(payInfo.equals("WAIT_BUYER_PAY")||payInfo.equals("ACQ.TRADE_NOT_EXIST")){
-                    logger.info(itemShoppingRecordId+"等待支付"+payInfo);
-                    return Result.success("等待支付");
-                }
-            }catch (Exception e){
-                logger.error(e.getMessage()+" "+itemShoppingRecordId+" ");
-                return Result.fail("支付宝支付故障，请核对你的资金并与联系管理员解决！");
-            }
-        }else{
-            return Result.fail("用户已购买该商品，无需此处再次查询！");
-        }
-        return Result.fail("未知原因导致失败，请联系管理员！");
+        return Result.success("等待支付");
+//        return itemsShoppingRecordService.checkPayStatus(itemShoppingRecordId);
     }
+
+    @GetMapping("/AliPayReturn")
+    public Result returnUrl(HttpServletRequest request, HttpServletResponse response){
+        try {
+            return itemsShoppingRecordService.alipayReturn(request, response);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.fail("支付宝支付故障，请核对你的资金并与联系管理员解决！");
+        }
+    }
+
+
+
 
     @GetMapping("/checkItemCart")
     public Result checkItemCart(){
