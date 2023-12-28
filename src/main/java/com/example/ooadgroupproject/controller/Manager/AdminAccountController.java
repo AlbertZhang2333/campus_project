@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -34,12 +35,12 @@ public class AdminAccountController {
             return Result.fail("所选文件为空或还未选择文件");
         }
         String uploadResult=uploadFileService.uploadFile(file);
-        Result result=ManageAccountUtil.batchAddAccount(uploadResult);
-        if(result!=null){
-            return result;
+        ArrayList<Account> result=ManageAccountUtil.batchAddAccount(uploadResult);
+        if(result==null){
+            return Result.fail("文件格式错误");
         }else {
-            for(int i=0;i<ManageAccountUtil.accountList.size();i++){
-                accountService.save(ManageAccountUtil.accountList.get(i));
+            for(int i=0;i<result.size();i++){
+                Account account=accountService.save(result.get(i));
             }
             return Result.success("已成功将表内的用户创建");
         }
