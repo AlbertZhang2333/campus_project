@@ -123,9 +123,9 @@ public class SecurityConfig  {
                 corsConfiguration.addAllowedHeader("Content-Type");
                 corsConfiguration.addAllowedHeader("Authorization");
                 corsConfiguration.addAllowedMethod("GET");
-                corsConfiguration.addAllowedHeader("POST");
-                corsConfiguration.addAllowedHeader("PUT");
-                corsConfiguration.addAllowedHeader("DELETE");
+                corsConfiguration.addAllowedMethod("POST");
+                corsConfiguration.addAllowedMethod("PUT");
+                corsConfiguration.addAllowedMethod("DELETE");
                 return corsConfiguration;
             }
         };
