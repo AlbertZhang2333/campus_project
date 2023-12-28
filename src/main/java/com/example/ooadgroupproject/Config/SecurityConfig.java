@@ -86,6 +86,9 @@ public class SecurityConfig  {
 //                auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
                 auth.anyRequest().permitAll()
         );
+        http.cors(c->c
+               .configurationSource(corsConfigurationSource())
+        );
 
 
         http.formLogin(l->l
