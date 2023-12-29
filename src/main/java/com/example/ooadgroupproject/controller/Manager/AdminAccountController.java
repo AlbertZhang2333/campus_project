@@ -4,6 +4,7 @@ import com.example.ooadgroupproject.IdentityLevel;
 import com.example.ooadgroupproject.Utils.ManageAccountUtil;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
+import com.example.ooadgroupproject.dao.AccountRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
 import com.example.ooadgroupproject.service.CacheClient;
@@ -26,7 +27,6 @@ public class AdminAccountController {
     private UploadFileServiceImpl uploadFileService;
     @Autowired
     private CacheClient cacheClient;
-
 
     @PostMapping("/batchAddAccount")
     public Result batchAddAccount(MultipartFile file) throws IOException {
@@ -72,6 +72,7 @@ public class AdminAccountController {
     public Result releaseFromBlackList(@RequestParam  String userMail){
         Account account= accountService.findAccountByUserMail(userMail);
         account.setEnabled(true);
+        accountService.save(account);
         cacheClient.deleteAccountFromBlackList(account.getUserMail());
         return Result.success("已成功将"+userMail+"用户从黑名单内释放");
     }

@@ -5,6 +5,7 @@ import com.example.ooadgroupproject.dao.AccountRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,7 +61,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public List<Account> findAll() {
-        return accountRepository.findAll();
+        Sort sort=Sort.by(Sort.Direction.ASC,"username");
+        return accountRepository.findAll(sort);
     }
 
     @Override
