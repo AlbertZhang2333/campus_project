@@ -4,6 +4,7 @@ import com.alipay.api.AlipayApiException;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -24,9 +25,11 @@ public interface ItemsShoppingRecordService {
 
     String queryBillData(Date date)throws AlipayApiException;
 
-    ItemsShoppingRecord getItemShoppingRecord(long id);
+    ItemsShoppingRecord getItemShoppingRecord(long id) throws JsonProcessingException;
 
-    Result checkPayStatus(String itemShoppingRecordId);
+    Result checkPayStatus(String itemShoppingRecordId) throws JsonProcessingException;
 
     Result alipayReturn(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+    Result alipayNotify(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

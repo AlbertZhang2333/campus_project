@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         String jwt=null;
         if(cookies!=null) {
             for (int i = 0; i < cookies.length; i++) {
-                if (cookies[i].getName().equals("token") && cookies[i].getValue() != null &&
+                if (cookies[i].getName().equals("passToken") && cookies[i].getValue() != null &&
                         !cookies[i].getValue().equals("null")) {
                     jwt = cookies[i].getValue();
                     break;
@@ -65,10 +65,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
         Jws<Claims> jws= JwtUtils.parseClaim(jwt);
         if(jws==null){
-            throw new JwtException("token解析器返回为null");
+            throw new JwtException("passToken解析器返回为null");
         }
         if(jwtUtils.ExpiredCheck(jws.getPayload())){
-            throw new JwtException("token已过期");
+            throw new JwtException("passToken已过期");
         }
 
 
@@ -94,7 +94,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String newToken=jwtUtils.generateToken(userMail,username,identity);
             response.setHeader(JwtUtils.getHeader(), jwt);
             response.setStatus(200);
-            Cookie cookie=new Cookie("token",newToken);
+            Cookie cookie=new Cookie("passToken",newToken);
             cookie.setMaxAge((int) JwtUtils.expire);
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
