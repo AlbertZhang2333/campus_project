@@ -24,4 +24,8 @@ public interface RoomService {
     Result deleteRoomByRoomName(String roomName);
 
     List<String> checkLocations();
+
+    List<Room> searchByRoomName(String roomName);
+
+    List<Room> searchByRoomAndLocation(String roomName, String location);
 }

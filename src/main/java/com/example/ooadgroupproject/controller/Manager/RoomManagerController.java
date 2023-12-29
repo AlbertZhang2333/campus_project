@@ -3,9 +3,7 @@ package com.example.ooadgroupproject.controller.Manager;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class RoomManagerController {
     public Result findRoomByLocation(@RequestParam String location) {
         return Result.success(roomService.findRoomByLocation(location));
     }
-    @RequestMapping("/deleteRoomByRoomName")
+    @DeleteMapping("/deleteRoomByRoomName")
     public Result deleteRoomByRoomName(@RequestParam String roomName) {
         return roomService.deleteRoomByRoomName(roomName);
     }
@@ -48,5 +46,23 @@ public class RoomManagerController {
     public Result checkLocations() {
         List<String> locations= roomService.checkLocations();
         return Result.success(locations);
+    }
+
+    @GetMapping("/searchByRoomName")
+    public Result searchByRoomName(@RequestParam String roomName) {
+        try {
+            return Result.success(roomService.searchByRoomName(roomName));
+        } catch (Exception e) {
+            return Result.fail("查询失败");
+        }
+    }
+
+    @GetMapping("/searchByRoomAndLocation")
+    public Result searchByRoomAndLocation(@RequestParam String roomName, @RequestParam String location) {
+        try {
+            return Result.success(roomService.searchByRoomAndLocation(roomName, location));
+        } catch (Exception e) {
+            return Result.fail("查询失败");
+        }
     }
 }
