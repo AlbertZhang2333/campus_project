@@ -31,7 +31,7 @@ public class LogoutSuccessHandler implements org.springframework.security.web.au
         ServletOutputStream outputStream = response.getOutputStream();
         response.setHeader(JwtUtils.getHeader(), "");
 
-        Cookie cookie = new Cookie("token", "");
+        Cookie cookie = new Cookie("passToken", "");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         response.addCookie(cookie);

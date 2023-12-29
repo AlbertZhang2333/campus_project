@@ -51,7 +51,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             response.setHeader(JwtUtils.getHeader(), jwt);
             response.setStatus(200);
 
-            Cookie cookie =new Cookie("token",jwt);
+            Cookie cookie =new Cookie("passToken",jwt);
             cookie.setMaxAge((int) JwtUtils.expire);
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
