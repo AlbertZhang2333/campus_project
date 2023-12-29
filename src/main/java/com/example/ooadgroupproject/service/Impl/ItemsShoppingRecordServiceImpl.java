@@ -1,6 +1,5 @@
 package com.example.ooadgroupproject.service.Impl;
 
-import cn.hutool.json.JSONUtil;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
@@ -20,16 +19,17 @@ import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.*;
-
+@Transactional
 @Service
 public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordService {
     @Autowired
@@ -68,13 +68,15 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         itemsShoppingRecordRepository.save(itemsShoppingRecord);
     }
     @Override
-    public ItemsShoppingRecord getItemShoppingRecord(long id){
+    public ItemsShoppingRecord getItemShoppingRecord(long id) throws JsonProcessingException {
         String value=cacheClient.getItemShoppingRecord(id);
         if(value!=null){
             if(value.isEmpty()){
                 return null;
             }else {
-                ItemsShoppingRecord itemsShoppingRecord= ItemsShoppingRecord.getItemShoppingRecordFromJson(value);
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                ItemsShoppingRecord itemsShoppingRecord = objectMapper.readValue(value, ItemsShoppingRecord.class);
+                ItemsShoppingRecord itemsShoppingRecord=ItemsShoppingRecord.getItemShoppingRecordFromJson(value);
                 return itemsShoppingRecord;
             }
         }
@@ -100,6 +102,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         itemsService.reduceItem(itemsShoppingRecord.getItemName(),itemsShoppingRecord.getNum());
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setReturnUrl(PayTool.RETURN_URL);
+        request.setNotifyUrl(PayTool.NOTIFY_URL);
         //设置支付宝的请求参数
         AlipayTradePagePayModel model=payTool.getPurchaseModel(itemsShoppingRecord);
         request.setBizModel(model);
@@ -147,7 +150,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     }
 
     @Override
-    public Result checkPayStatus(String itemShoppingRecordId){
+    public Result checkPayStatus(String itemShoppingRecordId) throws JsonProcessingException {
         long recordId=-1;
         try {
             recordId = Long.parseLong(itemShoppingRecordId);
@@ -164,7 +167,7 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
                 logger.info(payInfo);
                 if(payInfo.equals("TRADE_SUCCESS")||
                         payInfo.equals("TRADE_FINISHED")){
-                    itemsShoppingRecord.setStatus(ItemsShoppingRecord.Purchased_State);
+                    itemsShoppingRecord.setStatus(ItemsShoppingRecord.Paid_State);
                     save(itemsShoppingRecord);
                     logger.info("支付成功！"+payInfo);
                     return Result.success(itemShoppingRecordId+"支付成功！");
@@ -187,7 +190,6 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
 
     @Override
     public Result alipayReturn(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        PrintWriter out=response.getWriter();
         Map<String,String> params=new HashMap<>();
         Map<String,String[]>requestParams = request.getParameterMap();
         for(Iterator<String>iter=requestParams.keySet().iterator();iter.hasNext();){
@@ -213,21 +215,70 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
                     getBytes("ISO-8859-1"),"UTF-8");
             //开始核对详细信息是否一致：若一致则更新交易记录
             ItemsShoppingRecord itemsShoppingRecord=getItemShoppingRecord(Long.parseLong(out_trade_no));
-            if(itemsShoppingRecord!=null&&itemsShoppingRecord.ifEquals(Long.parseLong(out_trade_no), Double.valueOf(total_amount))){
-                itemsShoppingRecord.setStatus(ItemsShoppingRecord.Purchased_State);
-                //更新交易记录
-                save(itemsShoppingRecord);
-            }else {
-                logger.error("订单信息不一致！");
+            if(!(itemsShoppingRecord!=null&&itemsShoppingRecord.ifEquals(Long.parseLong(out_trade_no), Double.valueOf(total_amount)))){
+                logger.error("同步通知订单信息不一致！");
                 return Result.fail("订单信息不一致！");
             }
             logger.info("订单："+itemsShoppingRecord.getId()+"同步验证通过");
-            return Result.success("trade_no:" + trade_no +
-                    "<br/>out_trade_no:" + out_trade_no + "<br/>total_amount:" + total_amount);
+            return Result.success();
         }else {
             logger.info("验签失败！");
             return Result.fail("验签失败");
         }
+    }
+
+
+
+
+    //TODO做异步通知
+    @Override
+    public Result alipayNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String,String> params=new HashMap<>();
+        Map<String,String[]>requestParams = request.getParameterMap();
+        for(Iterator<String>iter=requestParams.keySet().iterator();iter.hasNext();){
+            String name = (String) iter.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
+            }
+//            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            params.put(name, valueStr);
+        }
+        AlipayConfig alipayConfig= (new PayTool().getAliPayConfig());
+        boolean signVerified = AlipaySignature.rsaCheckV1(params,alipayConfig.getAlipayPublicKey(), alipayConfig.getCharset(), alipayConfig.getSignType());
+        if(signVerified){
+            String app_id=params.get("app_id");
+            if(!alipayConfig.getAppId().equals(app_id)){
+                logger.error("异步验签app_id错误");
+            }
+            String out_trade_no=new String(request.getParameter("out_trade_no").
+                    getBytes("ISO-8859-1"),"utf-8");
+            String trade_no = new String(request.getParameter("trade_no").
+                    getBytes("ISO-8859-1"),"UTF-8");
+            String total_amount=new String(request.getParameter("total_amount").
+                    getBytes("ISO-8859-1"),"UTF-8");
+            ItemsShoppingRecord itemsShoppingRecord=getItemShoppingRecord(Long.parseLong(out_trade_no));
+            if(!(itemsShoppingRecord!=null&&
+                    itemsShoppingRecord.ifEquals(Long.parseLong(out_trade_no), Double.valueOf(total_amount))
+            &&itemsShoppingRecord.getStatus()==ItemsShoppingRecord.Initial_State)){
+                logger.error("订单信息不符或已成交！");
+                return Result.fail("异步验签失败");
+            }
+            String tradeStatus=params.get("trade_status");
+            if(tradeStatus.equals("TRADE_SUCCESS")||tradeStatus.equals("TRADE_FINISHED")){
+                itemsShoppingRecord.setStatus(ItemsShoppingRecord.Paid_State);
+                save(itemsShoppingRecord);
+                logger.info("支付成功！已通过异步验签");
+                return Result.success("支付成功！");
+            }
+        }else {
+            logger.info("异步验签失败！");
+            return Result.fail("异步验签失败");
+        }
+        logger.error("异步通知签名验证未通过");
+        return Result.fail("异步通知签名验证未通过");
     }
 
 

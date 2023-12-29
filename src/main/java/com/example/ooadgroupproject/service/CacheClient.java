@@ -7,6 +7,8 @@ import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,14 @@ public class CacheClient {
         String key=CacheClient.getReservationRecordKey(reservationRecord);
         redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(reservationRecord),ttl,timeUnit);
     }
+
+//    public String addItemShoppingRecord(ItemsShoppingRecord itemsShoppingRecord){
+//        String key=getItemShoppingRecordKey(itemsShoppingRecord.getId());
+//        Random random=new Random();
+//        long r=random.nextLong(5000);
+//        redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(itemsShoppingRecord),15*60*1000L+r,TimeUnit.MILLISECONDS);
+//        return key;
+//    }
 //    public boolean deleteReservationRecord(Date date,long id,String userMail){
 //        String key=RESERVATION_RECORD_KEY+date.toString()+":"+userMail+id;
 //        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
@@ -187,7 +197,7 @@ public class CacheClient {
         redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(itemsShoppingRecord),15*60*1000L+r,TimeUnit.MILLISECONDS);
         return key;
     }
-    public String getItemShoppingRecord(long id){
+    public String getItemShoppingRecord(long id) throws JsonProcessingException {
         String key=getItemShoppingRecordKey(id);
         String value= (String) redisTemplate.opsForValue().get(key);
         long random=new Random().nextLong(10000);
@@ -195,6 +205,7 @@ public class CacheClient {
             //创建null保护信息:
             redisTemplate.opsForValue().set(key,"",60000L+random,TimeUnit.MILLISECONDS);
         }
+
         return value;
     }
 

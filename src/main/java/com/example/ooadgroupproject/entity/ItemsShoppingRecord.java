@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.entity;
 
 import cn.hutool.json.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -35,23 +36,26 @@ public class ItemsShoppingRecord {
     @NotNull
     @Getter
     @Setter
-    private Integer status;
+    private int status;
     @NotNull
     @Getter
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private Time createTime;
     @NotNull
     @Getter
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     @NotNull
     @Getter
     private String userMail;
 
     @Transient
-    public static Integer Initial_State=0;
+    public static final int Initial_State=0;
     @Transient
-    public static Integer Purchased_State=1;
+    public static final int Paid_State=1;
     @Transient
-    public static Integer Refund_State=2;
+    public static final int Refund_State=2;
+
 
     public ItemsShoppingRecord(Item item, Integer num,
                                String userMail) {
@@ -100,9 +104,9 @@ public class ItemsShoppingRecord {
         itemsShoppingRecord.num=jsonObject.getInt("num");
         itemsShoppingRecord.amount=jsonObject.getDouble("amount");
         itemsShoppingRecord.status=jsonObject.getInt("status");
-        itemsShoppingRecord.createTime= (Time) jsonObject.get("createTime");
+        itemsShoppingRecord.createTime= new Time(jsonObject.getLong("createTime"));
         itemsShoppingRecord.userMail=jsonObject.getStr("userMail");
-        itemsShoppingRecord.date= (Date) jsonObject.get("date");
+        itemsShoppingRecord.date= new Date(jsonObject.getLong("date"));
         return itemsShoppingRecord;
     }
 }

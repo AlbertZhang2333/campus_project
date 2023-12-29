@@ -59,19 +59,42 @@ public class UserShoppingController {
     }
     @GetMapping("/checkIfUserHasPay")
     public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
-        return Result.success("等待支付");
+        return Result.success("成功支付");
 //        return itemsShoppingRecordService.checkPayStatus(itemShoppingRecordId);
     }
 
     @GetMapping("/AliPayReturn")
-    public Result returnUrl(HttpServletRequest request, HttpServletResponse response){
+    public String returnUrl(HttpServletRequest request, HttpServletResponse response){
         try {
-            return itemsShoppingRecordService.alipayReturn(request, response);
+            Result result= itemsShoppingRecordService.alipayReturn(request, response);
+            if(result.isIfSuccess()){
+                return "success";
+            }else{
+                return "fail";
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return Result.fail("支付宝支付故障，请核对你的资金并与联系管理员解决！");
+            return "fail";
         }
     }
+    @PostMapping("/AlipayNotify")
+    public String notifyUrl(HttpServletRequest request,HttpServletResponse response){
+        try {
+            Result result=itemsShoppingRecordService.alipayNotify(request,response);
+            if(result.isIfSuccess()){
+                return "success";
+            }else {
+                return "fail";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return "fail";
+        }
+    }
+
+
+
+
 
 
 
