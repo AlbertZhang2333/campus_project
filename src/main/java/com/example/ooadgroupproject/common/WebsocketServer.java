@@ -1,18 +1,15 @@
-package com.example.ooadgroupproject.service;
+package com.example.ooadgroupproject.common;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.example.ooadgroupproject.Config.WebsocketConfig;
 import com.example.ooadgroupproject.IdentityLevel;
-import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.entity.Account;
 import jakarta.websocket.*;
-import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -75,7 +72,7 @@ public class WebsocketServer {
         logger.error(this.userMail+"用户遇到了故障:"+error.getMessage());
     }
 
-    public void sendMessage(String message){
+    private void sendMessage(String message){
         synchronized (this.session) {
             try {
                 session.getBasicRemote().sendText(message);
