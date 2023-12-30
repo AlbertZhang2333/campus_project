@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.service.Impl;
 
+import cn.hutool.json.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
@@ -13,6 +14,8 @@ import com.alipay.api.response.AlipayDataDataserviceBillDownloadurlQueryResponse
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
+import com.alipay.api.request.AlipayTradeRefundRequest;
+import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.example.ooadgroupproject.common.PayTool;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
@@ -143,7 +146,6 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
 
     @Override
     public Result queryBillData(Date date)throws AlipayApiException{
-        //TODO
         AlipayClient alipayClient=payTool.getAlipayClient();
         AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
         AlipayDataDataserviceBillDownloadurlQueryModel model = new AlipayDataDataserviceBillDownloadurlQueryModel();
@@ -152,6 +154,30 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         request.setBizModel(model);
         AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
         return Result.success(response.getBillDownloadUrl());
+    }
+    @Override
+    public Result alipayRefund(long id) throws AlipayApiException, JsonProcessingException {
+        ItemsShoppingRecord itemsShoppingRecord=getItemShoppingRecord(id);
+        if(itemsShoppingRecord==null){
+            logger.error("用户在查询"+id+"的订单时，未找到该订单！");
+            return Result.fail("不存在该商品！如您确定已支付，请立刻联系管理员协助解决问题！");
+        }
+        if(itemsShoppingRecord.getStatus()!=ItemsShoppingRecord.Paid_State){
+            return Result.fail("该订单未支付或已超过退款时间，无法退款！");
+        }
+        String out_trade_no=String.valueOf(itemsShoppingRecord.getId());
+        double refund_amount=itemsShoppingRecord.getAmount();
+        AlipayClient client=payTool.getAlipayClient();
+        AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
+        JSONObject bizContent=new JSONObject();
+        bizContent.put("out_trade_no",out_trade_no);
+        bizContent.put("refund_amount",refund_amount);
+        request.setBizContent(bizContent.toString());
+        AlipayTradeRefundResponse response = client.execute(request);
+        if(response.isSuccess()){
+            return Result.success("退款成功！");
+        }
+        return Result.fail("退款失败！请检查您的输入,如确认无误请联系管理员");
     }
 
     @Override

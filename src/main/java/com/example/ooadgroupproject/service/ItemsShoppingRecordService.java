@@ -29,6 +29,8 @@ public interface ItemsShoppingRecordService {
 
     ItemsShoppingRecord getItemShoppingRecord(long id) throws JsonProcessingException;
 
+    Result alipayRefund(long id) throws AlipayApiException, JsonProcessingException;
+
     Result checkPayStatus(String itemShoppingRecordId) throws JsonProcessingException;
 
     Result alipayReturn(HttpServletRequest request, HttpServletResponse response) throws Exception;

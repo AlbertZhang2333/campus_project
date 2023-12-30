@@ -13,6 +13,7 @@ import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -150,6 +151,17 @@ public class UserShoppingController {
     @GetMapping("/findAll")
     public Result findAll(){
         return Result.success(itemsService.findAll());
+    }
+
+    @PutMapping("/refund")
+    public Result refund(@RequestParam long id){
+        try {
+            return itemsShoppingRecordService.alipayRefund(id);
+        } catch (AlipayApiException e) {
+            return Result.fail("支付宝连接故障");
+        } catch (JsonProcessingException e) {
+            return Result.fail("退款信息有误");
+        }
     }
 
 
