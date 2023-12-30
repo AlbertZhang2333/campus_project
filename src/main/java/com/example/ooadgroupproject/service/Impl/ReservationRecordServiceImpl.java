@@ -11,6 +11,8 @@ import com.example.ooadgroupproject.service.EmailService;
 import com.example.ooadgroupproject.service.ReservationRecordService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -34,24 +36,29 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
 
 
     @Override
+    public Page<ReservationRecord> findRecordsByUserMail(String userMail, Pageable pageable) {
+        return reservationRecordRepository.findByUserMail(userMail,pageable);
+    }
+
+    @Override
     public List<ReservationRecord> findRecordsByUserMail(String userMail) {
         return reservationRecordRepository.findByUserMail(userMail);
     }
 
     @Override
-    public List<ReservationRecord> findRecordsByDate(Date date){
+    public Page<ReservationRecord> findRecordsByDate(Date date, Pageable pageable){
         int compareResultDate = date.compareTo(Date.valueOf(LocalDate.now()));
-        return reservationRecordRepository.findByDate(date);
+        return reservationRecordRepository.findByDate(date,pageable);
     }
 
     @Override
-    public List<ReservationRecord> findRecordsByLocation(String location) {
-        return reservationRecordRepository.findByLocation(location);
+    public Page<ReservationRecord> findRecordsByLocation(String location, Pageable pageable) {
+        return reservationRecordRepository.findByLocation(location,pageable);
     }
 
     @Override
-    public List<ReservationRecord> findRecordsByRoomName(String roomName) {
-        return reservationRecordRepository.findByRoomName(roomName);
+    public Page<ReservationRecord> findRecordsByRoomName(String roomName, Pageable pageable) {
+        return reservationRecordRepository.findByRoomName(roomName,pageable);
     }
 
     @Override
@@ -167,11 +174,11 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         reservationRecordRepository.deleteAll();
     }
     @Override
-    public List<ReservationRecord> findAll(){
-        return reservationRecordRepository.findAll();
+    public Page<ReservationRecord> findAll(Pageable pageable){
+        return reservationRecordRepository.findAll(pageable);
     }
     @Override
-    public List<ReservationRecord>findALLByRoomNameAndDate(String roomName, Date date){
+    public List<ReservationRecord> findALLByRoomNameAndDate(String roomName, Date date){
         if(date.compareTo(Date.valueOf(LocalDate.now()))<=0){
             return reservationRecordRepository.findByRoomNameAndDate(roomName,date);
         }else {

@@ -5,6 +5,9 @@ import com.example.ooadgroupproject.common.SplitPage;
 import com.example.ooadgroupproject.entity.*;
 import com.example.ooadgroupproject.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import com.example.ooadgroupproject.service.ReservationRecordService;
@@ -38,36 +41,52 @@ public class ManageReservationRecordController {
 
     //TODO
     @GetMapping("/reservationRecordsByLocation")
-    public Result getRecordsByLocation(@RequestParam String location,@RequestParam int pageSize,@RequestParam int currentPage) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByLocation(location);
-        Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+    public Result getRecordsByLocation(@RequestParam String location, @RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        Page<ReservationRecord> list = reservationRecordService.findRecordsByLocation(location, pageable);
+        Long tot = (long) list.getTotalElements();
+
+        return Result.success(tot, list.getContent());
     }
+
     //TODO
     @GetMapping("/reservationRecordsByUserMail")
-    public Result getRecordsByUserMail(@RequestParam String userMail,@RequestParam int pageSize,@RequestParam int currentPage) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail);
-        Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.getPage(list,pageSize,currentPage));
+    public Result getRecordsByUserMail(@RequestParam String userMail, @RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        Page<ReservationRecord> list = reservationRecordService.findRecordsByUserMail(userMail, pageable);
+        Long tot = (long) list.getTotalElements();
+
+        return Result.success(tot, list.getContent());
     }
+
     @DeleteMapping("/deleteAll")
-    public Result deleteAll(){
+    public Result deleteAll() {
         reservationRecordService.deleteAll();
         return Result.success("已成功删除所有预约！");
     }
+
     //TODO
     @GetMapping("/findAll")
-    public Result findAll(@RequestParam int pageSize,@RequestParam int currentPage){
-        List<ReservationRecord> list = reservationRecordService.findAll();
-        Long tot=(long)list.size();
-        return Result.success(tot, SplitPage.getPage(list,pageSize,currentPage));
+    public Result findAll(@RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        Page<ReservationRecord> list = reservationRecordService.findAll(pageable);
+        Long tot = (long) list.getTotalElements();
+
+        return Result.success(tot, list.getContent());
     }
+
     //TODO
     @GetMapping("/reservationRecordByDate")
-    public Result getRecordsByDate(@RequestParam Date date,@RequestParam int pageSize,@RequestParam int currentPage) {
-        List<ReservationRecord> list = reservationRecordService.findRecordsByDate(date);
-        Long tot = (long) list.size();
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+    public Result getRecordsByDate(@RequestParam Date date, @RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        Page<ReservationRecord> list = reservationRecordService.findRecordsByDate(date, pageable);
+        Long tot = (long) list.getTotalElements();
+
+        return Result.success(tot, list.getContent());
     }
 
 
@@ -96,9 +115,9 @@ public class ManageReservationRecordController {
 
     //TODO
     @DeleteMapping("/deleteById")
-    public Result deleteById(@RequestParam long id){
-        ReservationRecord reservationRecord=reservationRecordService.findRecordsById(id).orElse(null);
-        if(reservationRecord == null){
+    public Result deleteById(@RequestParam long id) {
+        ReservationRecord reservationRecord = reservationRecordService.findRecordsById(id).orElse(null);
+        if (reservationRecord == null) {
             return Result.fail("未找到该预约！");
         }
 
@@ -107,16 +126,15 @@ public class ManageReservationRecordController {
 
     //TODO
     @GetMapping("/findById")
-    public Result findById(@RequestParam long id,@RequestParam int pageSize,@RequestParam int currentPage){
+    public Result findById(@RequestParam long id, @RequestParam int pageSize, @RequestParam int currentPage) {
         ReservationRecord reservationRecord = reservationRecordService.findRecordsById(id).orElse(null);
         if (reservationRecord == null) {
             return Result.fail("未找到该预约！");
-        }else return Result.success(1L,reservationRecord);
+        } else return Result.success(1L, reservationRecord);
     }
 
 
-
-//    @Override
+    //    @Override
 //    public List<ReservationRecord>findALLByRoomNameAndDate(String roomName, Date date){
 //        if(date.compareTo(Date.valueOf(LocalDate.now()))<0){
 //            return reservationRecordRepository.findAll();

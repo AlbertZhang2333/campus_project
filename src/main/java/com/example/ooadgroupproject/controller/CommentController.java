@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.controller;
 
+import org.springframework.data.domain.Page;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
 import com.example.ooadgroupproject.entity.Comment;
@@ -7,6 +8,9 @@ import com.example.ooadgroupproject.entity.CommentManagementDepartment;
 import com.example.ooadgroupproject.entity.CommentType;
 import com.example.ooadgroupproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -24,48 +28,51 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/addComment")
-    public Comment addOne(@RequestBody Comment comment) {
+    public Result addOne(@RequestBody Comment comment) {
         System.out.println(comment.toString());
-        return commentService.save(comment);
+        return Result.success(1L, commentService.save(comment));
     }
 
     @PutMapping("/updateComment")
-    public Comment update(@RequestBody Comment comment) {
+    public Result update(@RequestBody Comment comment) {
         Comment newComment = new Comment();
 
         System.out.println(comment.toString());
 
-        return commentService.save(comment);
+        return Result.success(1L, commentService.save(comment));
     }
 
     // 用于用户获取不是回复和评价的评论
     @PostMapping("/allCommentsUser")
     public Result getCommentsUser(@RequestParam Integer belongDepartment,
-                              @RequestParam Integer type,
-                              @RequestParam int pageSize, @RequestParam int currentPage) {
-        List<Comment> list = commentService.findAllByBelongDepartmentAndStateAndType(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type));
-        Long tot = (long) list.size();
+                                  @RequestParam Integer type,
+                                  @RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        Page<Comment> list = commentService.findAllByBelongDepartmentAndStateAndType(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type), pageable);
+        Long tot = list.getTotalElements();
 
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+        return Result.success(tot, list.getContent());
     }
 
     @PostMapping("/allCommentsReplyUser")
     public Result getCommentReplyUser(@RequestParam Integer belongDepartment,
-                                  @RequestParam Integer type,
-                                  @RequestParam Long replyId,
-                                  @RequestParam int pageSize, @RequestParam int currentPage) {
-        List<Comment> list = commentService.findAllByBelongDepartmentAndStateAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type), replyId);
-        Long tot = (long) list.size();
+                                      @RequestParam Integer type,
+                                      @RequestParam Long replyId,
+                                      @RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        Page<Comment> list = commentService.findAllByBelongDepartmentAndStateAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type), replyId, pageable);
+        Long tot = list.getTotalElements();
 
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+        return Result.success(tot, list.getContent());
     }
 
     @PostMapping("/allCommentsAdmin")
     public Result getCommentsAdmin(@RequestParam int pageSize, @RequestParam int currentPage) {
-        List<Comment> list = commentService.findAll();
-        Long tot = (long) list.size();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        Page<Comment> list = commentService.findAll(pageable);
+        Long tot = list.getTotalElements();
 
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+        return Result.success(tot, list.getContent());
     }
 
     @PostMapping("/allReplyCommentsAdmin")
@@ -73,10 +80,11 @@ public class CommentController {
                                         @RequestParam Long replyId,
                                         @RequestParam Integer belongDepartment,
                                         @RequestParam int pageSize, @RequestParam int currentPage) {
-        List<Comment> list = commentService.findAllByBelongDepartmentAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type), replyId);
-        Long tot = (long) list.size();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        Page<Comment> list = commentService.findAllByBelongDepartmentAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type), replyId, pageable);
+        Long tot = list.getTotalElements();
 
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+        return Result.success(tot, list.getContent());
     }
 
     @GetMapping("/commentSearchAdmin")
@@ -86,13 +94,10 @@ public class CommentController {
                                  @RequestParam(required = false) Integer type,
                                  @RequestParam(required = false) int pageSize,
                                  @RequestParam(required = false) int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        Page<Comment> list = commentService.findByConditions(userMail, date, CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type), pageable);
+        Long tot = list.getTotalElements();
 
-        List<Comment> list = commentService.findByConditions(userMail, date, CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type));
-        Long tot = (long) list.size();
-
-        return Result.success(tot, SplitPage.getPage(list, pageSize, currentPage));
+        return Result.success(tot, list.getContent());
     }
-
-
-
 }
