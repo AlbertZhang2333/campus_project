@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -48,7 +49,8 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
 
     @Override
     public List<ItemsShoppingRecord> findAll() {
-        return itemsShoppingRecordRepository.findAll();
+        Sort sort=Sort.by(Sort.Direction.DESC,"id");
+        return itemsShoppingRecordRepository.findAll(sort);
     }
     @Deprecated
     @Override
