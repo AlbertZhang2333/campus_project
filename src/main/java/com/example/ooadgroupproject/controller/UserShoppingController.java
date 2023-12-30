@@ -139,6 +139,7 @@ public class UserShoppingController {
         return Result.success(item);
     }
 
+    @Deprecated
     @GetMapping("/checkShoppingRecords")
     public Result checkShoppingRecords(){
         Account account=LoginUserInfo.getAccount();
