@@ -9,6 +9,10 @@ import com.example.ooadgroupproject.entity.ReservationState;
 import com.example.ooadgroupproject.service.ReservationRecordService;
 import com.example.ooadgroupproject.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -32,44 +36,52 @@ public class ReservationRecordController {
     // TODO
     @PostMapping("/reservationAdd")
     public Result addOne(@RequestParam String roomName,
-                                    @RequestParam Time startTime,
-                                    @RequestParam Time endTime,
-                                    @RequestParam Date date,
-                                    @RequestParam String location){
-        Account account= LoginUserInfo.getAccount();
-        String userMail=account.getUserMail();
-        String username=account.getUsername();
+                         @RequestParam Time startTime,
+                         @RequestParam Time endTime,
+                         @RequestParam Date date,
+                         @RequestParam String location) {
+        Account account = LoginUserInfo.getAccount();
+        String userMail = account.getUserMail();
+        String username = account.getUsername();
         //检验确认该房间存在:
 //        if(roomService.findRoomByRoomName(roomName).isIfSuccess()){
 //            return Result.fail("该房间不存在");
 //        }
 
-        ReservationRecord reservationRecord=new ReservationRecord(username,userMail,roomName,
-                startTime,endTime, date,location);
+        ReservationRecord reservationRecord = new ReservationRecord(username, userMail, roomName,
+                startTime, endTime, date, location);
 
-        return reservationRecordService.validateReservationRecord(reservationRecord,userMail);
+        return reservationRecordService.validateReservationRecord(reservationRecord, userMail);
     }
 
 
     @GetMapping("/UserCheckSelfHistoryReservation")
-    public List<ReservationRecord>selfHistoryReservation(){
-        return
-                reservationRecordService.findRecordsByUserMail
-                        (LoginUserInfo.getAccount().getUserMail());
+    public Result selfHistoryReservation(@RequestParam int pageSize, @RequestParam int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        Page<ReservationRecord> list = reservationRecordService.findRecordsByUserMail
+                (LoginUserInfo.getAccount().getUserMail(), pageable);
+        Long tot = list.getTotalElements();
+
+        return Result.success(tot, list.getContent());
     }
 
     @GetMapping("/UserCheckDateSelfReservation")
-    public List<ReservationRecord>selfDateReservation(@RequestParam Date date){
-        List<ReservationRecord>list=reservationRecordService.findRecordsByUserMail
+    public Result selfDateReservation(@RequestParam Date date) {
+
+        List<ReservationRecord> list = reservationRecordService.findRecordsByUserMail
                 (LoginUserInfo.getAccount().getUserMail());
-        List<ReservationRecord>resultList=new ArrayList<>();
+        Long tot = (long) list.size();
+
+        List<ReservationRecord> resultList = new ArrayList<>();
         for (ReservationRecord reservationRecord : list) {
             int check = reservationRecord.getDate().compareTo(date);
             if (check == 0) {
                 resultList.add(reservationRecord);
             }
         }
-        return resultList;
+
+        return Result.success(resultList);
     }
 
 
@@ -78,7 +90,6 @@ public class ReservationRecordController {
         List<ReservationRecord> list = reservationRecordService.findALLByRoomNameAndDate(roomName, date);
         return Result.success(list);
     }
-
 
 
 //    // 查询某个场地的所有预约记录
@@ -91,7 +102,7 @@ public class ReservationRecordController {
 
     //取消预约
     @PutMapping("/reservationCancel")
-    public Result CancelReservation(@RequestParam long id){
+    public Result CancelReservation(@RequestParam long id) {
         return reservationRecordService.UserCancelReservation(id);
     }
 
