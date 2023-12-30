@@ -25,6 +25,8 @@ public interface ItemsShoppingRecordService {
 
     String queryBillData(Date date)throws AlipayApiException;
 
+    List<ItemsShoppingRecord>findByItemNameAndUserMail(String itemName, String userMail);
+
     ItemsShoppingRecord getItemShoppingRecord(long id) throws JsonProcessingException;
 
     Result checkPayStatus(String itemShoppingRecordId) throws JsonProcessingException;

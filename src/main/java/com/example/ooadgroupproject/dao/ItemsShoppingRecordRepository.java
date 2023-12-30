@@ -15,5 +15,7 @@ public interface ItemsShoppingRecordRepository extends JpaRepository<ItemsShoppi
     public List<ItemsShoppingRecord> findByUserMailAndItemName(String userMail, String itemName);
     public Optional<ItemsShoppingRecord> findById(long id);
 
+    public List<ItemsShoppingRecord>findByItemNameAndUserMail(String itemName,String userMail);
+
 
 }
