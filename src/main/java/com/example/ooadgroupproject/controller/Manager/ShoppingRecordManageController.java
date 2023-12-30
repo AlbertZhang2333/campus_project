@@ -57,4 +57,8 @@ public class ShoppingRecordManageController {
             return Result.fail("查询失败");
         }
     }
+    @GetMapping("/findAll")
+    public Result findAll(){
+        return Result.success(itemsShoppingRecordService.findAll());
+    }
 }
