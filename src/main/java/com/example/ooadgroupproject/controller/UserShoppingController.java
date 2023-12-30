@@ -57,11 +57,11 @@ public class UserShoppingController {
             return Result.fail(new String[]{"支付宝支付故障，请核对你的资金并与联系管理员解决！"});
         }
     }
-    @GetMapping("/checkIfUserHasPay")
-    public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
-        return Result.success("成功支付");
-//        return itemsShoppingRecordService.checkPayStatus(itemShoppingRecordId);
-    }
+//    @Deprecated
+//    @GetMapping("/checkIfUserHasPay")
+//    public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
+//        return Result.success("成功支付");
+//    }
 
     @GetMapping("/AliPayReturn")
     public String returnUrl(HttpServletRequest request, HttpServletResponse response){

@@ -2,10 +2,12 @@ package com.example.ooadgroupproject.controller.Manager;
 
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.service.ItemsShoppingRecordService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,9 +37,18 @@ public class ShoppingRecordManageController {
 
 
     //去支付宝查交易账单
-    @RequestMapping("/alipayDataBillAccountLogQuery")
+    @GetMapping("/alipayDataBillAccountLogQuery")
     public Result alipayDataBillAccountLogQuery(String tradeNo){
         return Result.success();
     }
 
+
+    @GetMapping("/checkAliRecord")
+    public Result checkIfUserHasPay(@RequestParam String itemShoppingRecordId){
+        try {
+            return itemsShoppingRecordService.checkPayStatus(itemShoppingRecordId);
+        }catch (Exception e){
+            return Result.fail("查询失败");
+        }
+    }
 }
