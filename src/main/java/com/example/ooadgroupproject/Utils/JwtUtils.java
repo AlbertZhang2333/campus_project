@@ -63,7 +63,7 @@ public class JwtUtils {
         }
     }
     public static String getHeader(){
-        return "ooad_project";
+        return "passToken";
     }
 
 

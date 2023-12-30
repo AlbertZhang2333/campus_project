@@ -48,17 +48,17 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
-        Cookie[]cookies =request.getCookies();
-        String jwt=null;
-        if(cookies!=null) {
-            for (int i = 0; i < cookies.length; i++) {
-                if (cookies[i].getName().equals("passToken") && cookies[i].getValue() != null &&
-                        !cookies[i].getValue().equals("null")) {
-                    jwt = cookies[i].getValue();
-                    break;
-                }
-            }
-        }
+//        Cookie[]cookies =request.getCookies();
+        String jwt=request.getHeader(JwtUtils.getHeader());
+//        if(cookies!=null) {
+//            for (int i = 0; i < cookies.length; i++) {
+//                if (cookies[i].getName().equals("passToken") && cookies[i].getValue() != null &&
+//                        !cookies[i].getValue().equals("null")) {
+//                    jwt = cookies[i].getValue();
+//                    break;
+//                }
+//            }
+//        }
 
 
         if(StrUtil.isBlankOrUndefined(jwt)){
@@ -94,12 +94,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         //截至到此处，用户已经通过了所有的验证，是可以正常使用的了，我来给他刷新一次token
         if(jwtUtils.IfNeedFlush(jws.getPayload())){
             String newToken=jwtUtils.generateToken(userMail,username,identity);
-            response.setHeader(JwtUtils.getHeader(), jwt);
+            response.setHeader(JwtUtils.getHeader(), newToken);
             response.setStatus(200);
-            Cookie cookie=new Cookie("passToken",newToken);
-            cookie.setMaxAge((int) JwtUtils.expire);
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie);
+//            Cookie cookie=new Cookie("passToken",newToken);
+//            cookie.setMaxAge((int) JwtUtils.expire);
+//            cookie.setHttpOnly(true);
+//            response.addCookie(cookie);
         }
         //令牌通过了验证
         Authentication authentication=authenticationManager.authenticate(token);
