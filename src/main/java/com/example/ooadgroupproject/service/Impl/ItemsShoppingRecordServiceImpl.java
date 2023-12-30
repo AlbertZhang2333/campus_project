@@ -177,6 +177,8 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         request.setBizContent(bizContent.toString());
         AlipayTradeRefundResponse response = client.execute(request);
         if(response.isSuccess()){
+            itemsShoppingRecord.setStatus(ItemsShoppingRecord.Refund_State);
+            save(itemsShoppingRecord);
             return Result.success("退款成功！");
         }
         return Result.fail("退款失败！请检查您的输入,如确认无误请联系管理员");
