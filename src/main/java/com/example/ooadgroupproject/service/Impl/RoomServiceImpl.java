@@ -4,11 +4,13 @@ import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.RoomRepository;
 import com.example.ooadgroupproject.entity.Room;
 import com.example.ooadgroupproject.service.RoomService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class RoomServiceImpl implements RoomService {
     @Autowired
@@ -82,6 +84,16 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<String>checkLocations(){
         return roomRepository.findAll().stream().map(Room::getLocation).toList();
+    }
+
+    @Override
+    public List<Room> searchByRoomName(String roomName){
+        return roomRepository.searchByRoomName(roomName);
+    }
+
+    @Override
+    public List<Room> searchByRoomAndLocation(String roomName, String location){
+        return roomRepository.searchByRoomAndLocation(roomName, location);
     }
 
 }
