@@ -68,6 +68,10 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         itemsShoppingRecordRepository.save(itemsShoppingRecord);
     }
     @Override
+    public List<ItemsShoppingRecord>findByItemNameAndUserMail(String itemName,String userMail){
+        return itemsShoppingRecordRepository.findByItemNameAndUserMail(itemName,userMail);
+    }
+    @Override
     public ItemsShoppingRecord getItemShoppingRecord(long id) throws JsonProcessingException {
         String value=cacheClient.getItemShoppingRecord(id);
         if(value!=null){
@@ -141,10 +145,6 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         //TODO
         AlipayClient alipayClient=payTool.getAlipayClient();
         AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
-        // model.setBillDate("2016-04-05");
-//        AlipayDataDataserviceBillDownloadurlQueryModel model = payTool.getBillModel();
-//        request.setBizModel(model);
-
         AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
         return "";
     }
@@ -161,31 +161,13 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         if(itemsShoppingRecord==null){
             return Result.fail("不存在该商品！如您确定已支付，请立刻联系管理员协助解决问题！");
         }
-        if(Objects.equals(itemsShoppingRecord.getStatus(), ItemsShoppingRecord.Initial_State)){
-            try {
-                String payInfo = queryAlipayStatus(recordId);
-                logger.info(payInfo);
-                if(payInfo.equals("TRADE_SUCCESS")||
-                        payInfo.equals("TRADE_FINISHED")){
-                    itemsShoppingRecord.setStatus(ItemsShoppingRecord.Paid_State);
-                    save(itemsShoppingRecord);
-                    logger.info("支付成功！"+payInfo);
-                    return Result.success(itemShoppingRecordId+"支付成功！");
-                }else if(payInfo.equals("TRADE_CLOSED")){
-                    logger.info(itemShoppingRecordId+"支付超时"+payInfo);
-                    return Result.fail("支付超时！");
-                }else if(payInfo.equals("WAIT_BUYER_PAY")||payInfo.equals("ACQ.TRADE_NOT_EXIST")){
-                    logger.info(itemShoppingRecordId+"等待支付"+payInfo);
-                    return Result.success("等待支付");
-                }
-            }catch (Exception e){
-                logger.error(e.getMessage()+" "+itemShoppingRecordId+" ");
-                return Result.fail("支付宝支付故障，请核对你的资金并与联系管理员解决！");
-            }
-        }else{
-            return Result.fail("用户已购买该商品，无需此处再次查询！");
+        try {
+            String payInfo = queryAlipayStatus(recordId);
+            return Result.success(payInfo);
+        }catch (Exception e){
+            logger.error(e.getMessage()+" "+itemShoppingRecordId+" ");
+            return Result.fail("支付宝访问异常");
         }
-        return Result.fail("未知原因导致失败，请联系管理员！");
     }
 
     @Override

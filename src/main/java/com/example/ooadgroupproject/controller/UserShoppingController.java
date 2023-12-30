@@ -93,12 +93,6 @@ public class UserShoppingController {
     }
 
 
-
-
-
-
-
-
     @GetMapping("/checkItemCart")
     public Result checkItemCart(){
         Account account=LoginUserInfo.getAccount();
