@@ -59,6 +59,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 }
             }
         }
+
+
         if(StrUtil.isBlankOrUndefined(jwt)){
             chain.doFilter(request,response);
             return;

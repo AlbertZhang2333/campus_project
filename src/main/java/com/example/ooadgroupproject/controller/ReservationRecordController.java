@@ -43,16 +43,12 @@ public class ReservationRecordController {
         Account account = LoginUserInfo.getAccount();
         String userMail = account.getUserMail();
         String username = account.getUsername();
-        //检验确认该房间存在:
-//        if(roomService.findRoomByRoomName(roomName).isIfSuccess()){
-//            return Result.fail("该房间不存在");
-//        }
-
         ReservationRecord reservationRecord = new ReservationRecord(username, userMail, roomName,
                 startTime, endTime, date, location);
 
         return reservationRecordService.validateReservationRecord(reservationRecord, userMail);
     }
+
 
 
     @GetMapping("/UserCheckSelfHistoryReservation")
