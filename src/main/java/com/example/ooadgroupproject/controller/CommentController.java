@@ -47,7 +47,7 @@ public class CommentController {
     public Result getCommentsUser(@RequestParam Integer belongDepartment,
                                   @RequestParam Integer type,
                                   @RequestParam int pageSize, @RequestParam int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Comment> list = commentService.findAllByBelongDepartmentAndStateAndType(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type), pageable);
         Long tot = list.getTotalElements();
 
@@ -59,7 +59,7 @@ public class CommentController {
                                       @RequestParam Integer type,
                                       @RequestParam Long replyId,
                                       @RequestParam int pageSize, @RequestParam int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Comment> list = commentService.findAllByBelongDepartmentAndStateAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type), replyId, pageable);
         Long tot = list.getTotalElements();
 
@@ -68,7 +68,7 @@ public class CommentController {
 
     @PostMapping("/allCommentsAdmin")
     public Result getCommentsAdmin(@RequestParam int pageSize, @RequestParam int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Comment> list = commentService.findAll(pageable);
         Long tot = list.getTotalElements();
 
@@ -80,7 +80,7 @@ public class CommentController {
                                         @RequestParam Long replyId,
                                         @RequestParam Integer belongDepartment,
                                         @RequestParam int pageSize, @RequestParam int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Comment> list = commentService.findAllByBelongDepartmentAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type), replyId, pageable);
         Long tot = list.getTotalElements();
 
@@ -94,7 +94,7 @@ public class CommentController {
                                  @RequestParam(required = false) Integer type,
                                  @RequestParam(required = false) int pageSize,
                                  @RequestParam(required = false) int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("date").descending());
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Comment> list = commentService.findByConditions(userMail, date, CommentManagementDepartment.getByCode(belongDepartment), CommentType.getByCode(type), pageable);
         Long tot = list.getTotalElements();
 
