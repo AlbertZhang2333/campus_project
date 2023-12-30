@@ -17,6 +17,7 @@ public class UserCheckShoppingRecordController {
     @Autowired
     private ItemsShoppingRecordService itemsShoppingRecordService;
 
+
     private final Logger logger=Logger.getLogger(this.getClass());
     @GetMapping("/UserCheckSelfShoppingRecord")
     public Result selfShoppingRecord(){
@@ -48,5 +49,6 @@ public class UserCheckShoppingRecordController {
             return Result.fail("查询异常");
         }
     }
+
 
 }
