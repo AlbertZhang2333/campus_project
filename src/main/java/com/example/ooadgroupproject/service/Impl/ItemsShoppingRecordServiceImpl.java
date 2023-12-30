@@ -3,6 +3,7 @@ package com.example.ooadgroupproject.service.Impl;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
+import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.internal.util.AlipaySignature;
@@ -141,12 +142,16 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
     }
 
     @Override
-    public String queryBillData(Date date)throws AlipayApiException{
+    public Result queryBillData(Date date)throws AlipayApiException{
         //TODO
         AlipayClient alipayClient=payTool.getAlipayClient();
         AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
+        AlipayDataDataserviceBillDownloadurlQueryModel model = new AlipayDataDataserviceBillDownloadurlQueryModel();
+        model.setBillDate(date.toString());
+        model.setBillType("trade");
+        request.setBizModel(model);
         AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
-        return "";
+        return Result.success(response.getBillDownloadUrl());
     }
 
     @Override

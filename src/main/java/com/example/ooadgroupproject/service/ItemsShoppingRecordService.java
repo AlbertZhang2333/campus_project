@@ -23,7 +23,7 @@ public interface ItemsShoppingRecordService {
     public void save(ItemsShoppingRecord itemsShoppingRecord);
     String queryAlipayStatus(long tradeNo) throws AlipayApiException;
 
-    String queryBillData(Date date)throws AlipayApiException;
+    Result queryBillData(Date date)throws AlipayApiException;
 
     List<ItemsShoppingRecord>findByItemNameAndUserMail(String itemName, String userMail);
 

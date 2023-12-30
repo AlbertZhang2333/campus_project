@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Date;
+
 @RestController
 @RequestMapping("/ManageShoppingRecord")
 public class ShoppingRecordManageController {
@@ -37,9 +39,13 @@ public class ShoppingRecordManageController {
 
 
     //去支付宝查交易账单
-    @GetMapping("/alipayDataBillAccountLogQuery")
-    public Result alipayDataBillAccountLogQuery(String tradeNo){
-        return Result.success();
+    @GetMapping("/alipayDataBillQuery")
+    public Result alipayDataBillAccountLogQuery(@RequestParam Date date){
+        try {
+            return itemsShoppingRecordService.queryBillData(date);
+        }catch (Exception e){
+            return Result.fail("支付宝连接有误或日期输入错误");
+        }
     }
 
 
