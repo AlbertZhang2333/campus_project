@@ -74,7 +74,7 @@ public class ManageAccountUtil {
                 row.getCell(infoPos.get("password")).setCellType(CellType.STRING);
                 String password = row.getCell(infoPos.get("password")).getStringCellValue();
                 int identity = (int) row.getCell(infoPos.get("identity")).getNumericCellValue();
-                Account account = new Account(username, userMail, password, identity);
+                Account account = new Account(0,username, userMail, password, identity);
                 accountList.add(account);
             }
 

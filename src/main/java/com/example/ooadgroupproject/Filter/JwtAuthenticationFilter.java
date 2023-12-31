@@ -79,9 +79,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         String userMail = (String) jws.getPayload().get("userMail");
         String username = (String) jws.getPayload().get("username");
         int identity = (int) jws.getPayload().get("identity");
+        int userIcon = (int) jws.getPayload().get("userIcon");
         Account authenticationAccount=new Account();
         authenticationAccount.setUserMail(userMail);
         authenticationAccount.setUsername(username);
+        authenticationAccount.setIdentity(identity);
+        authenticationAccount.setUserIcon(userIcon);
  //       authenticationAccount.setId(id);
         if(checkIfAccountInBlackList(userMail)){
             //踢下线后，删除对应cookie，缓存中也不用再费劲的存被拉黑的人了
@@ -90,12 +93,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         //截至到此处，用户已经通过了所有的验证，是可以正常使用的了
-        authenticationAccount.setIdentity(identity);
+
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(authenticationAccount, null, authenticationAccount.getAuthorities());
         //截至到此处，用户已经通过了所有的验证，是可以正常使用的了，我来给他刷新一次token
         if(jwtUtils.IfNeedFlush(jws.getPayload())){
-            String newToken=jwtUtils.generateToken(userMail,username,identity);
+            String newToken=jwtUtils.generateToken(userMail,username,identity,userIcon);
             response.setHeader(JwtUtils.getHeader(), newToken);
             response.setStatus(200);
 //            Cookie cookie=new Cookie("passToken",newToken);

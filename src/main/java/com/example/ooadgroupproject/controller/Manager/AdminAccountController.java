@@ -2,6 +2,7 @@ package com.example.ooadgroupproject.controller.Manager;
 
 import com.example.ooadgroupproject.IdentityLevel;
 import com.example.ooadgroupproject.Utils.ManageAccountUtil;
+import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
 import com.example.ooadgroupproject.dao.AccountRepository;
@@ -124,19 +125,33 @@ public class AdminAccountController {
 //        }
 //    }
     @PostMapping("/createANewAccount")
-    public Result createANewAccount(@RequestParam String userName,@RequestParam String userMail, @RequestParam String password,
+    public Result createANewAccount(@RequestParam int UserIcon,@RequestParam String userName,@RequestParam String userMail, @RequestParam String password,
                                     @RequestParam int identity){
         if(identity!=IdentityLevel.NORMAL_USER&&identity!=IdentityLevel.ACCOUNT_ADMIN){
             return Result.fail("身份指定错误");
         }
-        Account account=new Account(userName,userMail,password,identity);
+        Account account=new Account(UserIcon,userName,userMail,password,identity);
         Account res=accountService.save(account);
         if(res!=null) {
             return Result.success("用户创建成功" + userName);
         }else {
             return Result.fail("邮箱重复！，注册失败");
         }
+    }
 
+    @PostMapping("/setUserIcon")
+    public Result setUserIcon(@RequestParam int UserIcon){
+        Account account= LoginUserInfo.getAccount();
+        if(account==null||account.getIdentity()==IdentityLevel.VISITOR){
+            return Result.fail("用户未登录");
+        }
+        if(account==null){
+            return Result.fail("用户未登录");
+        }else {
+            account.setUserIcon(UserIcon);
+            accountService.save(account);
+            return Result.success("已成功将用户的头像设置为"+UserIcon);
+        }
     }
 
 

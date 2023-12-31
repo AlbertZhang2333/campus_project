@@ -62,6 +62,7 @@ public class MyUsernamePasswordAuthenticationFilter extends AbstractAuthenticati
         authenticationAccount.setUsername(account.getUsername());
         authenticationAccount.setUserMail(account.getUserMail());
         authenticationAccount.setIdentity(account.getIdentity());
+        authenticationAccount.setUserIcon(account.getUserIcon());
         if(account!=null&&account.isEnabled()) {
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(authenticationAccount,null, account.getAuthorities());

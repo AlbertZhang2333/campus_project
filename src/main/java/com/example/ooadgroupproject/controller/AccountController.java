@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.controller;
 
 import com.example.ooadgroupproject.Utils.JwtUtils;
+import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.AccountService;
@@ -24,11 +25,12 @@ public class AccountController {
     public Result addNewAccount(@RequestParam String username,
                                  @RequestParam String userMail,
                                  @RequestParam String password,
-                                @RequestParam String code){
+                                @RequestParam String code,
+                                @RequestParam int UserIcon){
         if(!emailService.verifyEmailCode(userMail,code)){
             return Result.fail("验证码错误！");
         }
-        Account account=new Account(username,userMail,password,IdentityLevel.NORMAL_USER);
+        Account account=new Account(UserIcon,username,userMail,password,IdentityLevel.NORMAL_USER);
         Account res=accountService.save(account);
         if(res!=null) {
             return Result.success("用户创建成功，欢迎您！" + username);
@@ -89,5 +91,15 @@ public class AccountController {
         } else {
             throw new Error("邮箱验证码输入错误");
         }
+    }
+
+    @PutMapping("/changeUserIcon")
+    public Result changeUserIcon(@RequestParam int UserIcon){
+        Account account=LoginUserInfo.getAccount();
+        account.setUserIcon(UserIcon);
+        accountService.save(account);
+        //刷新用户的令牌，重新发放令牌
+        String token=jwtUtils.generateToken(account.getUserMail(),account.getUsername(),account.getIdentity(),account.getUserIcon());
+        return Result.success(token);
     }
 }

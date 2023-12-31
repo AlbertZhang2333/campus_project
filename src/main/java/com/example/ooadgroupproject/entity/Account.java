@@ -1,18 +1,14 @@
 package com.example.ooadgroupproject.entity;
 import com.example.ooadgroupproject.IdentityLevel;
-import com.example.ooadgroupproject.service.Impl.AccountServiceImpl;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 import com.example.ooadgroupproject.Encryption;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 
 @Getter
@@ -36,9 +32,14 @@ public class Account implements UserDetails {
     @Setter
     private int identity;
 
+    @Getter
+    @Setter
+    private int userIcon;
+
     @Setter
     @NotNull
     private boolean enabled;
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -79,12 +80,13 @@ public class Account implements UserDetails {
                 + "identity:" + this.identity + "}";
     }
 
-    public Account(String username,String userMail,String password,int level){
+    public Account(int userIcon, String username, String userMail, String password, int level){
         this.setIdentity(level);
         this.setPassword(password);
         this.setUserMail(userMail);
         this.setUsername(username);
         this.enabled=true;
+        this.userIcon= userIcon;
 
     }
     public Account() {
