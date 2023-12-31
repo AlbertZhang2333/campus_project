@@ -102,4 +102,9 @@ public class AccountController {
         String token=jwtUtils.generateToken(account.getUserMail(),account.getUsername(),account.getIdentity(),account.getUserIcon());
         return Result.success(token);
     }
+    @GetMapping("/getAccountInfo")
+    public Result getAccountInfo(){
+        Account account=LoginUserInfo.getAccount();
+        return Result.success(account);
+    }
 }
