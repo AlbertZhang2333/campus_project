@@ -147,6 +147,7 @@ public class SecurityConfig  {
                 corsConfiguration.addAllowedOrigin("http://localhost:8080");
                 corsConfiguration.addAllowedHeader("Content-Type");
                 corsConfiguration.addAllowedHeader("Authorization");
+                corsConfiguration.addAllowedHeader("passToken");
                 corsConfiguration.addAllowedMethod("GET");
                 corsConfiguration.addAllowedMethod("POST");
                 corsConfiguration.addAllowedMethod("PUT");
