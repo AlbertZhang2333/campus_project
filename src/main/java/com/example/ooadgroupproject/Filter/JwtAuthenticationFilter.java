@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         //截至到此处，用户已经通过了所有的验证，是可以正常使用的了
         authenticationAccount.setIdentity(identity);
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(authenticationAccount, null, Account.getAuthorities(identity));
+                new UsernamePasswordAuthenticationToken(authenticationAccount, null, authenticationAccount.getAuthorities());
         //截至到此处，用户已经通过了所有的验证，是可以正常使用的了，我来给他刷新一次token
         if(jwtUtils.IfNeedFlush(jws.getPayload())){
             String newToken=jwtUtils.generateToken(userMail,username,identity);

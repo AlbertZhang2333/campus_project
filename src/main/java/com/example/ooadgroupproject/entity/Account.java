@@ -62,24 +62,7 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.identity== IdentityLevel.NORMAL_USER){
-            return new ArrayList<>();
-        }else if(this.identity==IdentityLevel.ACCOUNT_ADMIN){
-            return new ArrayList<>();
-        }else {
-            return null;
-        }
-
-    }
-    public static Collection<? extends GrantedAuthority> getAuthorities(int identity){
-        if(identity== IdentityLevel.NORMAL_USER){
-            return new ArrayList<>();
-        }else if(identity==IdentityLevel.ACCOUNT_ADMIN){
-            return new ArrayList<>();
-        }else {
-            return null;
-        }
-
+        return IdentityLevel.getAuthorities(this.identity);
     }
 
     //对设定密码进行密码加密
