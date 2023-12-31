@@ -69,10 +69,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
         Jws<Claims> jws= JwtUtils.parseClaim(jwt);
         if(jws==null){
-            throw new JwtException("passToken解析器返回为null");
+            chain.doFilter(request,response);
+            return;
         }
         if(jwtUtils.ExpiredCheck(jws.getPayload())){
-            throw new JwtException("passToken已过期");
+            chain.doFilter(request,response);
+            return;
         }
 
 
