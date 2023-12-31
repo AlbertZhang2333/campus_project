@@ -35,7 +35,7 @@ public class RoomController {
         List<String> locations = roomService.checkLocations();
         return Result.success(locations);
     }
-    @GetMapping("/getAllLoaction")
+    @GetMapping("/getAllLocation")
     public Result getAllLocation() {
         List<String> locations = roomService.findAllLocations();
         return Result.success(locations);
