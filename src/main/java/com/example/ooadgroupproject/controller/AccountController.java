@@ -23,7 +23,11 @@ public class AccountController {
     @PostMapping("/register")
     public Result addNewAccount(@RequestParam String username,
                                  @RequestParam String userMail,
-                                 @RequestParam String password){
+                                 @RequestParam String password,
+                                @RequestParam String code){
+        if(!emailService.verifyEmailCode(userMail,code)){
+            return Result.fail("验证码错误！");
+        }
         Account account=new Account(username,userMail,password,IdentityLevel.NORMAL_USER);
         Account res=accountService.save(account);
         if(res!=null) {
@@ -31,6 +35,10 @@ public class AccountController {
         }else {
             return Result.fail("邮箱重复！，注册失败");
         }
+    }
+    @GetMapping("/registerVerifyCode")
+    public Result sendRegisterVerifyCode(@RequestParam String userMail){
+        return emailService.sendVerifyCodeEmail(userMail);
     }
 
 //    @PutMapping("/ModifyingInformation")
@@ -73,7 +81,7 @@ public class AccountController {
     }
     @PostMapping("/verificationEmail")
     public String verifyForgetPassword(String code,String userMail,String password) {
-        if (emailService.verifyForgetPasswordCode(userMail,code)) {
+        if (emailService.verifyEmailCode(userMail,code)) {
             Account account = accountService.findAccountByUserMail(userMail);
             account.setPassword(password);
             accountService.save(account);

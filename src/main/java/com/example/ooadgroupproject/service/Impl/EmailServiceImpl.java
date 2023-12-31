@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
         return Result.success("发送给"+userMail+"的验证码"+userVerificationCode+"发送成功");
     }
     @Override
-    public boolean verifyForgetPasswordCode(String userMail,String code) {
+    public boolean verifyEmailCode(String userMail, String code) {
         return cacheClient.checkVerifyCode(userMail,ForgetPassword,code);
     }
 
