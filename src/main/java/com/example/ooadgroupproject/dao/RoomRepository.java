@@ -21,4 +21,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("select room from Room room where room.roomName like %?1% and room.location = ?2")
     public List<Room> searchByRoomAndLocation(String roomName, String location);
 
+    @Query("select distinct room.location from Room room")
+    public List<String> findAllLocations();
+
 }

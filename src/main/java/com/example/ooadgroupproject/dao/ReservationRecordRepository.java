@@ -43,4 +43,6 @@ public interface ReservationRecordRepository extends JpaRepository<ReservationRe
 
     @Query("select distinct reservation_record.location from ReservationRecord reservation_record")
     public List<String> findLocation();
+
+
 }

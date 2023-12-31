@@ -28,4 +28,7 @@ public interface RoomService {
     List<Room> searchByRoomName(String roomName);
 
     List<Room> searchByRoomAndLocation(String roomName, String location);
+
+
+    List<String> findAllLocations();
 }

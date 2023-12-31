@@ -96,7 +96,10 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.searchByRoomAndLocation(roomName, location);
     }
 
-//    @Override
-//    public
+    @Override
+    public List<String> findAllLocations(){
+        return roomRepository.findAllLocations();
+    }
+
 
 }
