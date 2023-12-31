@@ -10,11 +10,11 @@ import java.util.Collection;
 public class IdentityLevel {
     public String LevelCheck(int identity){
         if(identity==VISITOR){
-            return "VISITOR";
+            return roleVisitor;
         }else if(identity==NORMAL_USER){
-            return "NORMAL_USER";
+            return roleNormalUser;
         }else if(identity==ACCOUNT_ADMIN){
-            return "ACCOUNT_ADMIN";
+            return roleAccountAdmin;
         }else {
             return "ERROR";
         }
@@ -33,5 +33,6 @@ public class IdentityLevel {
         }
         return authorities;
     }
+
 
 }

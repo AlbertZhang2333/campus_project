@@ -74,6 +74,7 @@ public class SecurityConfig  {
     }
     @Bean
     public MyUsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter()throws Exception{
+
         return new MyUsernamePasswordAuthenticationFilter(authenticationManager());
     }
 
@@ -83,8 +84,10 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
         http.csrf(csrf-> csrf.disable());
         http.authorizeHttpRequests(auth->
-//                auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
-                auth.anyRequest().permitAll()
+                auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
+//                auth.anyRequest().access((authentication,object)->{
+//
+//                })
         );
         http.cors(c->c
                .configurationSource(corsConfigurationSource())
