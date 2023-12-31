@@ -1,7 +1,6 @@
 package com.example.ooadgroupproject.controller;
 
 import com.example.ooadgroupproject.common.Result;
-import com.example.ooadgroupproject.entity.Room;
 import com.example.ooadgroupproject.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +36,7 @@ public class RoomController {
         return Result.success(locations);
     }
     @GetMapping("/getAllLoaction")
-    public Result getAllLoaction() {
+    public Result getAllLocation() {
         List<String> locations = roomService.findAllLocations();
         return Result.success(locations);
     }

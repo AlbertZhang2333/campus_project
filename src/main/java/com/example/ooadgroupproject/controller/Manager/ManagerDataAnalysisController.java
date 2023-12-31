@@ -50,5 +50,4 @@ public class ManagerDataAnalysisController {
         NumCountObject[]countObjects=reservationRecordService.findEveryRoomReservationNum(date);
         return Result.success(countObjects);
     }
-
 }
