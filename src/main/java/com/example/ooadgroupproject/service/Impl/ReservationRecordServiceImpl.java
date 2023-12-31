@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +87,11 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         if (compareResult > 0) {
             return Result.fail("预约开始时间不能大于预约结束时间");
         }
+        LocalTime localStartTime = reservationRecord.getStartTime().toLocalTime();
+        LocalTime localEndTime = reservationRecord.getEndTime().toLocalTime();
+        if (ChronoUnit.MINUTES.between(localStartTime, localEndTime) > 120) {
+            return Result.fail("预约时间要在2小时以内");
+        }
 
         List<ReservationRecord> records = cacheClient.getReservationRecordList(
                 reservationRecord.getRoomName(),
@@ -95,13 +101,9 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         if (records != null) {
                 for (ReservationRecord record : records) {
                     if(record.getState()== ReservationState.Canceled){continue;}
-                    boolean isConflict1 = false;
-                    isConflict1 = (record.getStartTime().compareTo(reservationRecord.getStartTime()) <= 0
-                            && record.getEndTime().compareTo(reservationRecord.getStartTime()) >= 0);
-                    boolean isConflict2 = false;
-                    isConflict2 = (record.getStartTime().compareTo(reservationRecord.getEndTime()) <= 0)
-                            && (record.getEndTime().compareTo(reservationRecord.getEndTime()) >= 0);
-                    if (isConflict1 || isConflict2) {
+                    LocalTime curLocalStartTime = record.getStartTime().toLocalTime();
+                    LocalTime curLocalEndTime = record.getEndTime().toLocalTime();
+                    if (!(ChronoUnit.MINUTES.between(curLocalEndTime, localStartTime) >= 0 || ChronoUnit.MINUTES.between(curLocalStartTime, localEndTime) <= 0)) {
                         return Result.fail("预约时间冲突");
                     }
                 }
