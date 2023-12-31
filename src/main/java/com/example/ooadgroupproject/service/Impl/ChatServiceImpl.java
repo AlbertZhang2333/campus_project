@@ -1,6 +1,6 @@
 package com.example.ooadgroupproject.service.Impl;
 
-import com.example.ooadgroupproject.controller.WebsocketServer;
+import com.example.ooadgroupproject.controller.ChatController;
 import com.example.ooadgroupproject.service.ChatService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void sendMessageToUser(String message, String toUserMAil){
         try{
-            WebsocketServer.sendInfo(message,toUserMAil);
+            ChatController.sendInfo(message,toUserMAil);
         } catch (Exception e) {
             logger.error(e);
         }
@@ -20,7 +20,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void sendMessageToAdmin(String message){
         try{
-            WebsocketServer.sendInfo(message,ADMIN_MAIL);
+            ChatController.sendInfo(message,ADMIN_MAIL);
         } catch (Exception e) {
             logger.error(e);
         }
