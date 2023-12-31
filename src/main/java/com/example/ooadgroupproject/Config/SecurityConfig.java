@@ -1,6 +1,7 @@
 package com.example.ooadgroupproject.Config;
 
 import com.example.ooadgroupproject.Filter.MyUsernamePasswordAuthenticationFilter;
+import com.example.ooadgroupproject.IdentityLevel;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.handler.JwtAccessDeniedHandler;
 import com.example.ooadgroupproject.handler.JwtAuthenticationEntryPoint;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,6 +36,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import java.util.Collection;
 import java.util.List;
 
 @Configuration
@@ -84,10 +87,26 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
         http.csrf(csrf-> csrf.disable());
         http.authorizeHttpRequests(auth->
-                auth.requestMatchers(new AntPathRequestMatcher("/login/**")).permitAll()
-//                auth.anyRequest().access((authentication,object)->{
-//
-//                })
+                auth.anyRequest().access((authentication,object)->{
+                    boolean isMatched=false;
+                    String requestUrl=object.getRequest().getRequestURI();
+                    Collection<? extends GrantedAuthority> authorities=
+                            authentication.get().getAuthorities();
+                    for(GrantedAuthority authority:authorities){
+                        if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
+                            isMatched=true;
+                            break;
+                        }else if(authority.getAuthority().equals(IdentityLevel.roleNormalUser)){
+                            isMatched=true;
+                            break;
+                        }else if(authority.getAuthority().equals(IdentityLevel.roleVisitor)){
+                            isMatched=true;
+                            break;
+                        }
+                    }
+                    return new AuthorizationDecision(isMatched);
+                }
+                )
         );
         http.cors(c->c
                .configurationSource(corsConfigurationSource())

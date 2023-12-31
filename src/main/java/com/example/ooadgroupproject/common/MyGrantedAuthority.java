@@ -8,14 +8,14 @@ public final class MyGrantedAuthority implements GrantedAuthority {
     public MyGrantedAuthority(int identity){
         switch (identity){
             case IdentityLevel.NORMAL_USER:
-                role="ROLE_USER";
+                role=IdentityLevel.roleNormalUser;
                 break;
             case IdentityLevel.ACCOUNT_ADMIN:
-                role="ROLE_ADMIN";
+                role=IdentityLevel.roleAccountAdmin;
                 break;
             case IdentityLevel.VISITOR:
             default:
-                role="ROLE_VISITOR";
+                role=IdentityLevel.roleVisitor;
                 break;
         }
     }
