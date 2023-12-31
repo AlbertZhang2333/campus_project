@@ -16,6 +16,7 @@ public interface ReservationRecordService {
     public List<ReservationRecord> findRecordsByUserMail(String userMail);
 
     public Page<ReservationRecord> findRecordsByDate(Date date, Pageable pageable);
+    public List<ReservationRecord> findRecordsByDate(Date date);
 
     public Page<ReservationRecord> findRecordsByLocation(String location, Pageable pageable);
 
@@ -40,4 +41,6 @@ public interface ReservationRecordService {
     List<ReservationRecord>findALLByRoomNameAndDate(String roomName, Date date);
 
     Optional<ReservationRecord> findRecordsById(long id);
+
+    List<String> findLocation();
 }

@@ -50,6 +50,10 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         int compareResultDate = date.compareTo(Date.valueOf(LocalDate.now()));
         return reservationRecordRepository.findByDate(date,pageable);
     }
+    @Override
+    public List<ReservationRecord> findRecordsByDate(Date date) {
+        return reservationRecordRepository.findByDate(date);
+    }
 
     @Override
     public Page<ReservationRecord> findRecordsByLocation(String location, Pageable pageable) {
@@ -189,6 +193,11 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Override
     public Optional<ReservationRecord> findRecordsById(long id) {
         return reservationRecordRepository.findById(id);
+    }
+
+    @Override
+    public List<String> findLocation(){
+        return reservationRecordRepository.findLocation();
     }
 
 }

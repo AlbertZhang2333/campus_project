@@ -102,5 +102,12 @@ public class ReservationRecordController {
         return reservationRecordService.UserCancelReservation(id);
     }
 
+    @GetMapping("/findLocationList")
+    public Result findLocationList() {
+        List<String> list = reservationRecordService.findLocation();
+        return Result.success(list);
+    }
+
+
 
 }
