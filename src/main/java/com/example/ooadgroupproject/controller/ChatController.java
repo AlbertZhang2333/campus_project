@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint(value = "/ws/{passToken}",configurator = WebsocketConfig.class)
+@ServerEndpoint(value = "/ws/{userMail}",configurator = WebsocketConfig.class)
 @RestController
 public class ChatController {
     private static int onlineCount=0;
@@ -27,7 +27,7 @@ public class ChatController {
 
     //连接成功后调用下列方法：
     @OnOpen
-    public void onOpen(Session session){
+    public void onOpen(@PathParam("userMail")String userMail, Session session){
         Account account= LoginUserInfo.getAccount();
         //游客无权限做此操作
         if(account.getIdentity()== IdentityLevel.VISITOR){
@@ -65,7 +65,7 @@ public class ChatController {
         if(!message.isEmpty()&&message!=null){
             try {
                 JSONObject jsonObject= JSONUtil.parseObj(message);
-                jsonObject.put("formUserMail",this.userMail);
+                jsonObject.put("fromUserMail",this.userMail);
                 String toUserMail=jsonObject.getStr("toUserMail");
                 websocketMap.get(toUserMail).sendMessage(JSONUtil.toJsonStr(jsonObject));
             }catch (Exception e){
