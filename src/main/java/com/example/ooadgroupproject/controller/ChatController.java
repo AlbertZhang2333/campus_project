@@ -65,7 +65,7 @@ public class ChatController {
         if(!message.isEmpty()&&message!=null){
             try {
                 JSONObject jsonObject= JSONUtil.parseObj(message);
-                jsonObject.put("formUserMail",this.userMail);
+                jsonObject.put("fromUserMail",this.userMail);
                 String toUserMail=jsonObject.getStr("toUserMail");
                 websocketMap.get(toUserMail).sendMessage(JSONUtil.toJsonStr(jsonObject));
             }catch (Exception e){
