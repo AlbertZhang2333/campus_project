@@ -7,9 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoginUserInfo {
-   private static Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
    public static Account getAccount(){
-       Object auth=authentication;
+       Object auth=SecurityContextHolder.getContext().getAuthentication();
        //判断是否为匿名登录,此处在实际启动权限管理后将删除，仅为方便测试而存在
        if(auth instanceof AnonymousAuthenticationToken){
            Account anonymousAccount=new Account();
@@ -19,7 +18,7 @@ public class LoginUserInfo {
            anonymousAccount.setUserIcon(0);
            return anonymousAccount;
        }
-
+        Authentication authentication=(Authentication) auth;
        return (Account) authentication.getPrincipal();
    }
 }
