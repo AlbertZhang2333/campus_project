@@ -1,6 +1,6 @@
 package com.example.ooadgroupproject.service.Impl;
 
-import com.example.ooadgroupproject.common.WebsocketServer;
+import com.example.ooadgroupproject.controller.WebsocketServer;
 import com.example.ooadgroupproject.service.ChatService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
