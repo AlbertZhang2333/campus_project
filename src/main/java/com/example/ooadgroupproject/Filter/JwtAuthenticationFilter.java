@@ -60,7 +60,9 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 //            }
 //        }
 
-
+        if(jwt==null){
+            jwt=request.getParameter(JwtUtils.getHeader());
+        }
         if(StrUtil.isBlankOrUndefined(jwt)){
             chain.doFilter(request,response);
             return;
