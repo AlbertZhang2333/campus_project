@@ -1,6 +1,8 @@
 package com.example.ooadgroupproject.controller.Manager;
 
+import com.example.ooadgroupproject.common.NumCountObject;
 import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.Room;
 import com.example.ooadgroupproject.service.AccountService;
 import com.example.ooadgroupproject.service.ReservationRecordService;
@@ -43,9 +45,10 @@ public class ManagerDataAnalysisController {
     public Result reservationNum(@RequestParam Date date){
         return Result.success(reservationRecordService.findRecordsByDate(date).size());
     }
-//    @GetMapping("/getEveryRoomReservationNum")
-//    public Result getEveryRoomReservationNum(@RequestParam Date date){
-//
-//    }
+    @GetMapping("/getEveryRoomReservationNum")
+    public Result getEveryRoomReservationNum(@RequestParam Date date){
+        NumCountObject[]countObjects=reservationRecordService.findEveryRoomReservationNum(date);
+        return Result.success(countObjects);
+    }
 
 }

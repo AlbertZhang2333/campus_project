@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.service;
 
+import com.example.ooadgroupproject.common.NumCountObject;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,6 @@ public interface ReservationRecordService {
 
     Result validateReservationRecord(ReservationRecord reservationRecord, String userMail);
 
-    //TODO
     Result deleteByRoomNameAndDateAndIdAndUserMail(String roomName, Date date, long id, String userMail);
     Result AdminCancelReservation(long id);
     Result UserCancelReservation(long id);
@@ -43,4 +43,6 @@ public interface ReservationRecordService {
     Optional<ReservationRecord> findRecordsById(long id);
 
     List<String> findLocation();
+
+    NumCountObject[] findEveryRoomReservationNum(Date date);
 }

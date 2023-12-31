@@ -1,14 +1,17 @@
 package com.example.ooadgroupproject.service.Impl;
 
 import com.example.ooadgroupproject.common.LoginUserInfo;
+import com.example.ooadgroupproject.common.NumCountObject;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ReservationRecordRepository;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
+import com.example.ooadgroupproject.entity.Room;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.EmailService;
 import com.example.ooadgroupproject.service.ReservationRecordService;
+import com.example.ooadgroupproject.service.RoomService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -29,6 +33,8 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Autowired
     private ReservationRecordRepository reservationRecordRepository;
 
+    @Autowired
+    private RoomService roomService;
     @Autowired
     private CacheClient cacheClient;
     @Autowired
@@ -198,6 +204,20 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Override
     public List<String> findLocation(){
         return reservationRecordRepository.findLocation();
+    }
+
+    @Override
+    public NumCountObject[] findEveryRoomReservationNum(Date date){
+        List<Room>roomList=roomService.findAll();
+        NumCountObject[]countObjects=new NumCountObject[roomList.size()];
+        for(int i=0;i<roomList.size();i++){
+            List<ReservationRecord> recordList
+                    =findALLByRoomNameAndDate(roomList.get(i).getRoomName(),date);
+            countObjects[i]=new NumCountObject(roomList.get(i).getRoomName(),recordList.size());
+        }
+        Arrays.sort(countObjects);
+        return countObjects;
+
     }
 
 }
