@@ -226,7 +226,7 @@ public class CacheClient {
         return key;
     }
     public List<String> getInstantItem()throws JsonProcessingException{
-        String key=String.valueOf(Instant_Item_key.toCharArray(),0,Item_Info_Key.length()-1);
+        String key=String.valueOf(Instant_Item_key.toCharArray(),0,Instant_Item_key.length()-1);
         key=key+"*";
         Set<Object> keys=redisTemplate.keys(key);
         ArrayList<String>res=new ArrayList<>();
