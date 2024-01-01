@@ -217,7 +217,6 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
                     =findALLByRoomNameAndDate(roomList.get(i).getRoomName(),date);
             countObjects[i]=new NumCountObject(roomList.get(i).getRoomName(),recordList.size());
         }
-        Arrays.sort(countObjects);
         return countObjects;
 
     }
