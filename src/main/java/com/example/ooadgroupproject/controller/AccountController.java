@@ -94,9 +94,10 @@ public class AccountController {
     }
 
     @PutMapping("/changeUserIcon")
-    public Result changeUserIcon(@RequestParam int UserIcon){
+    public Result changeUserIcon(@RequestParam int UserIcon,@RequestParam String userMail){
         Account account=LoginUserInfo.getAccount();
         account.setUserIcon(UserIcon);
+        account.setUserMail(userMail);
         accountService.save(account);
         //刷新用户的令牌，重新发放令牌
         String token=jwtUtils.generateToken(account.getUserMail(),account.getUsername(),account.getIdentity(),account.getUserIcon());
@@ -107,4 +108,6 @@ public class AccountController {
         Account account=LoginUserInfo.getAccount();
         return Result.success(account);
     }
+
+
 }
