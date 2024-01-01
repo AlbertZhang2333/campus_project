@@ -11,6 +11,9 @@ public interface AccountService {
 public Account getUserById(long id);
 //保存一个用户信息
  public Account save(Account account);
+
+
+
  //依据id删除一名用户的所有信息
  public void deleteById(long id);
  //利用三个信息获得一名用户的账户信息，如果返回Account内容不为空，说明存在这一用户的信息，如果返回null，说明不存在这一用户，登录失败

@@ -31,12 +31,13 @@ public class AccountController {
             return Result.fail("验证码错误！");
         }
         Account account=new Account(UserIcon,username,userMail,password,IdentityLevel.NORMAL_USER);
-        Account res=accountService.save(account);
-        if(res!=null) {
-            return Result.success("用户创建成功，欢迎您！" + username);
-        }else {
-            return Result.fail("邮箱重复！，注册失败");
+        Account account1=accountService.findAccountByUserMail(userMail);
+        if(account1!=null){
+            return Result.fail("邮箱重复，注册失败");
         }
+        Account res=accountService.save(account);
+        return Result.success("用户创建成功，欢迎您！" + username);
+
     }
     @GetMapping("/registerVerifyCode")
     public Result sendRegisterVerifyCode(@RequestParam String userMail){
@@ -95,7 +96,8 @@ public class AccountController {
 
     @PutMapping("/changeUserIconAndUsername")
     public Result changeUserIconAndUsername(@RequestParam int UserIcon,@RequestParam String username){
-        Account account=LoginUserInfo.getAccount();
+        Account account_copy=LoginUserInfo.getAccount();
+        Account account=accountService.findAccountByUserMail(account_copy.getUserMail());
         account.setUserIcon(UserIcon);
         account.setUsername(username);
         accountService.save(account);
