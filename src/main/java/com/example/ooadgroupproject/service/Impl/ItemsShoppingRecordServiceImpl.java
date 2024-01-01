@@ -16,9 +16,12 @@ import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.PayTool;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.dao.ItemsShoppingRecordRepository;
+import com.example.ooadgroupproject.entity.Account;
+import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
@@ -296,6 +299,25 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         }
         logger.error("异步通知签名验证未通过");
         return Result.fail("异步通知签名验证未通过");
+    }
+
+
+    @Override
+    public synchronized Result userCatchInstantItem(String itemName) throws Exception {
+        Item item=itemsService.getInstantItem(itemName);
+        if(item==null){
+            return Result.fail("该物品不存在！");
+        }
+        if(item.getNum()<=0){
+            return Result.fail("该物品已售罄！");
+        }
+        Account account= LoginUserInfo.getAccount();
+        item.setNum(item.getNum()-1);
+        cacheClient.setInstantItem(item);
+        ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,1,account.getUserMail());
+        itemsShoppingRecord.setStatus(ItemsShoppingRecord.Finish_State);
+        save(itemsShoppingRecord);
+        return Result.success(itemsShoppingRecord);
     }
 
 

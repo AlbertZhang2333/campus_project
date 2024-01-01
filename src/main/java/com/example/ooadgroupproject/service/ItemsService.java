@@ -2,6 +2,7 @@ package com.example.ooadgroupproject.service;
 
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Item;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +22,12 @@ public interface ItemsService {
 
 
     Result deleteItem(String name);
+
+    Result setInstantItem(String itemName, int num, long days);
+
+    Result getInstantItem() throws Exception;
+
+    Item getInstantItem(String itemName);
+
+    boolean deleteInstantItem(String itemName);
 }

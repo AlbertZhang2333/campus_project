@@ -55,6 +55,8 @@ public class ItemsShoppingRecord {
     public static final int Paid_State=1;
     @Transient
     public static final int Refund_State=2;
+    @Transient
+    public static final int Finish_State=3;
 
 
     public ItemsShoppingRecord(Item item, Integer num,

@@ -5,10 +5,13 @@ import com.example.ooadgroupproject.dao.ItemsRepository;
 import com.example.ooadgroupproject.entity.Item;
 import com.example.ooadgroupproject.service.CacheClient;
 import com.example.ooadgroupproject.service.ItemsService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ItemServiceImpl implements ItemsService {
@@ -20,6 +23,7 @@ public class ItemServiceImpl implements ItemsService {
     public List<Item> findAll(){
         return itemsRepository.findAll();
     }
+    private final Logger logger=Logger.getLogger(ItemServiceImpl.class);
     @Override
     public Item findByName(String name) {
         //说明该商品最近被人查询过，存在被多次查询的可能，现在对其添加缓存多级管理
@@ -109,6 +113,52 @@ public class ItemServiceImpl implements ItemsService {
         itemsRepository.delete(item);
         cacheClient.deleteItems(item);
         return Result.success("商品已删除");
+    }
+
+    @Override
+    public Result setInstantItem(String itemName, int num, long days){
+        if(!reduceItem(String.valueOf(itemName),num)){
+            return Result.fail("商品不存在或库存不足！");
+        }
+        Item item=findByName(itemName);
+        item.setNum(num);
+        cacheClient.setInstantItem(item,days, TimeUnit.DAYS);
+        return Result.success("商品已设置");
+    }
+    @Override
+    public Result getInstantItem() throws Exception {
+        List<String>itemList=cacheClient.getInstantItem();
+        if(itemList==null||itemList.isEmpty()){
+            return Result.fail("暂无商品");
+        }
+        ArrayList<Item>items=new ArrayList<>();
+        for(int i=0;i<itemList.size();i++){
+            try {
+                if (itemList.get(i) != null && !itemList.get(i).isEmpty()) {
+                    items.add(Item.generateNewItems(itemList.get(i)));
+                }
+            }catch (Exception e){
+                logger.error("存在秒杀商品读取异常:"+e.getMessage());
+            }
+        }
+        return Result.success(items);
+    }
+    @Override
+    public Item getInstantItem(String itemName){
+        String itemJson=cacheClient.getInstantItem(itemName);
+        if(itemJson!=null){
+            try {
+                return Item.generateNewItems(itemJson);
+            }catch (Exception e){
+                return null;
+            }
+        }else {
+            return null;
+        }
+    }
+    @Override
+    public boolean deleteInstantItem(String itemName){
+        return cacheClient.deleteInstantItem(itemName);
     }
 
 

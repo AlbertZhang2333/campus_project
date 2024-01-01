@@ -36,4 +36,7 @@ public interface ItemsShoppingRecordService {
     Result alipayReturn(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     Result alipayNotify(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+
+    Result userCatchInstantItem(String itemName) throws Exception;
 }

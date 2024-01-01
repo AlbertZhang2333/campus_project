@@ -8,7 +8,6 @@ import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.ReservationState;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,7 @@ public class CacheClient {
     public static final String Item_Info_Key="Item_Info_Key:";
     public static final String ForgetPasswordVerifyCode_Key="forgetPasswordVerifyCode_Key:";
     public static final String Item_shopping_record_key="Item_shopping_record_key:";
+    public static final String Instant_Item_key="Item_shopping_instant_Item:";
 
     @Autowired
     RedisTemplate<Object,Object>redisTemplate;
@@ -208,6 +208,52 @@ public class CacheClient {
 
         return value;
     }
+    public String getInstant_Item_key(Item item){
+        return Instant_Item_key+item.getName();
+    }
+    public String getInstant_Item_key(String itemName){
+        return Instant_Item_key+itemName;
+    }
+    public String setInstantItem(Item item, long ttl, TimeUnit timeUnit){
+        String key=getInstant_Item_key(item);
+        redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(item),ttl,timeUnit);
+        return key;
+    }
+    public String setInstantItem(Item item){
+        String key=getInstant_Item_key(item.getName());
+        Long ttl=redisTemplate.getExpire(key,TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(key,JSONUtil.toJsonStr(item),ttl,TimeUnit.MILLISECONDS);
+        return key;
+    }
+    public List<String> getInstantItem()throws JsonProcessingException{
+        String key=String.valueOf(Instant_Item_key.toCharArray(),0,Item_Info_Key.length()-1);
+        key=key+"*";
+        Set<Object> keys=redisTemplate.keys(key);
+        ArrayList<String>res=new ArrayList<>();
+        if (keys==null||keys.size()==0){
+            return res;
+        }
+        for(Object key1:keys){
+            String key2=(String) key1;
+            String value= (String) redisTemplate.opsForValue().get(key2);
+            res.add(value);
+        }
+        return res;
+    }
+    public String getInstantItem(String itemName){
+        String key=getInstant_Item_key(itemName);
+        return (String) redisTemplate.opsForValue().get(key);
+    }
+    public boolean deleteInstantItem(String itemName){
+        String key=getInstant_Item_key(itemName);
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().getOperations().delete(key));
+    }
+
+
+
+
+
+
 
 
 

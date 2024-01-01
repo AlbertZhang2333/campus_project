@@ -164,6 +164,23 @@ public class UserShoppingController {
             return Result.fail("退款信息有误");
         }
     }
+    @GetMapping("/getInstantItems")
+    public Result getInstantItems(){
+        try {
+            return itemsService.getInstantItem();
+        } catch (Exception e) {
+            return Result.fail("获取实时商品信息失败");
+        }
+    }
+    @PutMapping("/UserCatchInstantItem")
+    public Result userCatchInstantItem(@RequestParam String itemName){
+        try {
+            return itemsShoppingRecordService.userCatchInstantItem(itemName);
+        }catch (Exception e){
+            logger.error(e+"用户在查询销售记录"+itemName+"时发生异常");
+            return Result.fail("查询异常");
+        }
+    }
 
 
 }
