@@ -82,14 +82,14 @@ public class AccountController {
         return emailService.sendVerifyCodeEmail(userMail);
     }
     @PostMapping("/verificationEmail")
-    public String verifyForgetPassword(String code,String userMail,String password) {
+    public Result verifyForgetPassword(String code,String userMail,String password) {
         if (emailService.verifyEmailCode(userMail,code)) {
             Account account = accountService.findAccountByUserMail(userMail);
             account.setPassword(password);
             accountService.save(account);
-            return password;
+            return Result.success("密码修改成功！");
         } else {
-            throw new Error("邮箱验证码输入错误");
+            return Result.fail("验证码输入错误！");
         }
     }
 
