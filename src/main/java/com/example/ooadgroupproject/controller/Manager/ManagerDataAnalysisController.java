@@ -2,11 +2,11 @@ package com.example.ooadgroupproject.controller.Manager;
 
 import com.example.ooadgroupproject.common.NumCountObject;
 import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.entity.Item;
+import com.example.ooadgroupproject.entity.ItemsShoppingRecord;
 import com.example.ooadgroupproject.entity.ReservationRecord;
 import com.example.ooadgroupproject.entity.Room;
-import com.example.ooadgroupproject.service.AccountService;
-import com.example.ooadgroupproject.service.ReservationRecordService;
-import com.example.ooadgroupproject.service.RoomService;
+import com.example.ooadgroupproject.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +25,10 @@ public class ManagerDataAnalysisController {
     AccountService accountService;
     @Autowired
     RoomService roomService;
+    @Autowired
+    ItemsService itemsService;
+    @Autowired
+    ItemsShoppingRecordService itemsShoppingRecordService;
 
     @Autowired
     ReservationRecordService reservationRecordService;
@@ -98,6 +103,31 @@ public class ManagerDataAnalysisController {
             return Result.success(tenObjects);
         }
         Arrays.sort(countObjects);
+        return Result.success(countObjects);
+    }
+    @GetMapping("/getShoopingData")
+    public Result getShoopingData(){
+        List<Item>itemList=itemsService.findAll();
+        NumCountObject[]countObjects=new NumCountObject[itemList.size()];
+        for(int i=0;i<itemList.size();i++){
+            countObjects[i]=new NumCountObject(itemList.get(i).getName(),0);
+        }
+        List<ItemsShoppingRecord>itemsShoppingRecords=new ArrayList<>();
+        for(int i=0;i<itemList.size();i++){
+            itemsShoppingRecords=itemsShoppingRecordService.findByItemName(itemList.get(i).getName());
+            for(int j=0;j<itemsShoppingRecords.size();j++){
+                countObjects[i].num+=itemsShoppingRecords.get(j).getNum();
+            }
+        }
+        Arrays.sort(countObjects);
+        NumCountObject[]tenObjects=new NumCountObject[10];
+        if(countObjects.length>10){
+            for(int i=0;i<10;i++){
+                tenObjects[i]=countObjects[i];
+            }
+            Arrays.sort(tenObjects);
+            return Result.success(tenObjects);
+        }
         return Result.success(countObjects);
     }
 }
