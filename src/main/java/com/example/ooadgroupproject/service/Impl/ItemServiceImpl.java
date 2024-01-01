@@ -64,8 +64,8 @@ public class ItemServiceImpl implements ItemsService {
         Item item = itemsRepository.findByName(name).orElse(null);
         if (item != null) {
             item.addNum(addNum);
-            itemsRepository.save(item);
             cacheClient.setItemInfo(item.getName(),item);
+            itemsRepository.save(item);
         }
         return false;
     }
@@ -79,8 +79,8 @@ public class ItemServiceImpl implements ItemsService {
         }
         boolean res=item.shoppingItem(num);
         if(res) {
-            itemsRepository.save(item);
             cacheClient.setItemInfo(item.getName(),item);
+            itemsRepository.save(item);
         }
         return res;
     }
