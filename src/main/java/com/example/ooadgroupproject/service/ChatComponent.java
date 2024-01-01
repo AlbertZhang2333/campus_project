@@ -1,11 +1,15 @@
 package com.example.ooadgroupproject.service;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.example.ooadgroupproject.Config.WebsocketConfig;
 import com.example.ooadgroupproject.IdentityLevel;
+import com.example.ooadgroupproject.Utils.JwtUtils;
 import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.entity.Account;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
@@ -16,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint(value = "/ws/{userMail}",configurator = WebsocketConfig.class)
+@ServerEndpoint(value = "/ws/{passToken}",configurator = WebsocketConfig.class)
 @Component
 public class ChatComponent {
     private static int onlineCount=0;
@@ -27,20 +31,18 @@ public class ChatComponent {
 
     //连接成功后调用下列方法：
     @OnOpen
-    public void onOpen(@PathParam("userMail")String userMail, Session session){
-//        Account account= LoginUserInfo.getAccount();
-//        //游客无权限做此操作
-//        if(account==null){
-//            return;
-//        }
-//        if(account.getIdentity()== IdentityLevel.VISITOR){
-//            return;
-//        }
-//        //登录用户与连接的用户不一致
-//        if(!userMail.equals(account.getUserMail())){
-//            logger.error("用户与连接不一致");
-//            return;
-//        }
+    public void onOpen(@PathParam("passToken")String passToken, Session session){
+        if(passToken==null||StrUtil.isBlankOrUndefined(passToken)){
+            logger.error("连接失败");
+            return;
+        }
+        Jws<Claims> jws= JwtUtils.parseClaim(passToken);
+        if(jws==null){
+            logger.error("连接失败");
+            return;
+        }
+
+        String userMail = (String) jws.getPayload().get("userMail");
         this.session=session;
         session.setMaxIdleTimeout(3600000);
         this.userMail=userMail;
