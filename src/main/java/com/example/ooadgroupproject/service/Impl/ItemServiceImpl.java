@@ -129,7 +129,7 @@ public class ItemServiceImpl implements ItemsService {
     public Result getInstantItem() throws Exception {
         List<String>itemList=cacheClient.getInstantItem();
         if(itemList==null||itemList.isEmpty()){
-            return Result.fail("暂无商品");
+            return Result.success(new ArrayList<Item>());
         }
         ArrayList<Item>items=new ArrayList<>();
         for(int i=0;i<itemList.size();i++){
