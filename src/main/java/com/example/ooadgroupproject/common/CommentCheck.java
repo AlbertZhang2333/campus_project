@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Component
 public class CommentCheck {
     private static final String  ForbiddenWords =
             "(大傻子|笨蛋|蠢货|伏地魔|穷鬼|奥泽)";
