@@ -94,6 +94,7 @@ public class SecurityConfig  {
                             authentication.get().getAuthorities();
                     for(GrantedAuthority authority:authorities){
                         if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
+
                             isMatched=true;
                             break;
                         }else if(authority.getAuthority().equals(IdentityLevel.roleNormalUser)){
