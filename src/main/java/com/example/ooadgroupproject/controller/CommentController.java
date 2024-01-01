@@ -1,5 +1,7 @@
 package com.example.ooadgroupproject.controller;
 
+import com.example.ooadgroupproject.common.LoginUserInfo;
+import com.example.ooadgroupproject.entity.Account;
 import org.springframework.data.domain.Page;
 import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.common.SplitPage;
@@ -29,13 +31,22 @@ public class CommentController {
 
     @PostMapping("/addComment")
     public Result addOne(@RequestBody Comment comment) {
-        System.out.println(comment.toString());
+        Account account = LoginUserInfo.getAccount();
+        String userMail = account.getUserMail();
+        String username = account.getUsername();
+        comment.setUserName(username);
+        comment.setUserMail(userMail);
+
         return Result.success(1L, commentService.save(comment));
     }
 
     @PutMapping("/updateComment")
     public Result update(@RequestBody Comment comment) {
-        Comment newComment = new Comment();
+        Account account = LoginUserInfo.getAccount();
+        String userMail = account.getUserMail();
+        String username = account.getUsername();
+        comment.setUserName(username);
+        comment.setUserMail(userMail);
 
         System.out.println(comment.toString());
 

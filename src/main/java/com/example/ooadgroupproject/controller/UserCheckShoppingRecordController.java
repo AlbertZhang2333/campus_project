@@ -20,6 +20,7 @@ public class UserCheckShoppingRecordController {
     @GetMapping("/UserCheckSelfShoppingRecord")
     public Result selfShoppingRecord(){
         Account account= LoginUserInfo.getAccount();
+        System.out.println(account);
         return Result.success(itemsShoppingRecordService.findByUserMail(account.getUserMail()));
     }
 

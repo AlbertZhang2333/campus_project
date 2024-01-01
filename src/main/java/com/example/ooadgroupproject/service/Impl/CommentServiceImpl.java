@@ -5,6 +5,7 @@ import com.example.ooadgroupproject.entity.Comment;
 import com.example.ooadgroupproject.entity.CommentManagementDepartment;
 import com.example.ooadgroupproject.entity.CommentType;
 import com.example.ooadgroupproject.service.CommentService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.List;
 
+@Transactional
 @Service
 public class CommentServiceImpl implements CommentService {
     @Autowired

@@ -52,7 +52,7 @@ public class ChatComponent {
         //加锁了，所以是线程安全的
         addOnlineCount();
         logger.info("当前连接人数为"+getOnlineCount());
-        sendMessage(JSONUtil.toJsonStr("连接成功"));
+//        sendMessage(JSONUtil.toJsonStr("连接成功"));
     }
 
     @OnClose

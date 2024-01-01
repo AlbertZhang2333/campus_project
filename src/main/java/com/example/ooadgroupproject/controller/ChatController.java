@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/ChatController")
 public class ChatController {
     private final Logger logger=Logger.getLogger(this.getClass());
-    private final String ADMIN_MAIL="3077161150@qq.com";
+    private final String ADMIN_MAIL="3344767250@qq.com";
     @Autowired
     private ChatComponent chatComponent;
 
