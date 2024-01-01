@@ -28,19 +28,19 @@ public class ChatComponent {
     //连接成功后调用下列方法：
     @OnOpen
     public void onOpen(@PathParam("userMail")String userMail, Session session){
-        Account account= LoginUserInfo.getAccount();
-        //游客无权限做此操作
-        if(account==null){
-            return;
-        }
-        if(account.getIdentity()== IdentityLevel.VISITOR){
-            return;
-        }
-        //登录用户与连接的用户不一致
-        if(!userMail.equals(account.getUserMail())){
-            logger.error("用户与连接不一致");
-            return;
-        }
+//        Account account= LoginUserInfo.getAccount();
+//        //游客无权限做此操作
+//        if(account==null){
+//            return;
+//        }
+//        if(account.getIdentity()== IdentityLevel.VISITOR){
+//            return;
+//        }
+//        //登录用户与连接的用户不一致
+//        if(!userMail.equals(account.getUserMail())){
+//            logger.error("用户与连接不一致");
+//            return;
+//        }
         this.session=session;
         session.setMaxIdleTimeout(3600000);
         this.userMail=userMail;
