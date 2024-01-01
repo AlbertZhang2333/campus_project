@@ -48,6 +48,13 @@ public class ManagerDataAnalysisController {
     @GetMapping("/getEveryRoomReservationNum")
     public Result getEveryRoomReservationNum(@RequestParam Date date){
         NumCountObject[]countObjects=reservationRecordService.findEveryRoomReservationNum(date);
+        NumCountObject[]tenObjects=new NumCountObject[10];
+        if(countObjects.length>10){
+            for(int i=0;i<10;i++){
+                tenObjects[i]=countObjects[i];
+            }
+            return Result.success(tenObjects);
+        }
         return Result.success(countObjects);
     }
 }
