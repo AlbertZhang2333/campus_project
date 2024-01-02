@@ -103,19 +103,18 @@ public class ManageAccountUtil {
                 Cell cell = headerRow.getCell(i);
                 header[i] = cell.getStringCellValue();
             }
-            Map<String, Integer> infoPos = new HashMap<>();
             if(header.length!=1){
                 logger.error("Excel file format error");
                 return null;
             }
-            if(header[0].equals("userMail")){
+            if(!header[0].equals("userMail")){
                 logger.error("Excel file format error");
                 return null;
             }
             for(int i=1;i<=sheet.getLastRowNum();i++){
                 Row row = sheet.getRow(i);
-                row.getCell(infoPos.get("userMail")).setCellType(CellType.STRING);
-                String userMail = row.getCell(infoPos.get("userMail")).getStringCellValue();
+                row.getCell(0).setCellType(CellType.STRING);
+                String userMail = row.getCell(0).getStringCellValue();
                 userMailList.add(userMail);
             }
             workbook.close();
