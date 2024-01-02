@@ -22,14 +22,14 @@ public class BusLineController {
         }
     }
 
-    @GetMapping("/searchId/{id}")
-    public Result findById(@PathVariable Integer id){
-        try {
-            return Result.success(busLineService.findById(id));
-        } catch (Exception e) {
-            return Result.fail("查找失败");
-        }
-    }
+//    @GetMapping("/searchId/{id}")
+//    public Result findById(@PathVariable Integer id){
+//        try {
+//            return Result.success(busLineService.findById(id));
+//        } catch (Exception e) {
+//            return Result.fail("查找失败");
+//        }
+//    }
 
     @GetMapping("/searchLineId/{lineId}")
     public Result findByLineId(@PathVariable Integer lineId){

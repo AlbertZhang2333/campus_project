@@ -2,6 +2,7 @@ package com.example.ooadgroupproject.Config;
 
 import com.example.ooadgroupproject.Filter.MyUsernamePasswordAuthenticationFilter;
 import com.example.ooadgroupproject.IdentityLevel;
+import com.example.ooadgroupproject.common.RoleUrl;
 import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.handler.JwtAccessDeniedHandler;
 import com.example.ooadgroupproject.handler.JwtAuthenticationEntryPoint;
@@ -92,17 +93,26 @@ public class SecurityConfig  {
                     String requestUrl=object.getRequest().getRequestURI();
                     Collection<? extends GrantedAuthority> authorities=
                             authentication.get().getAuthorities();
+                    if(requestUrl.equals("/error")){
+                        isMatched=true;
+                        return new AuthorizationDecision(isMatched);
+                    }
                     for(GrantedAuthority authority:authorities){
-                        if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
-
-                            isMatched=true;
-                            break;
+                        if(authority.getAuthority().equals(IdentityLevel.roleVisitor)){
+                            if(RoleUrl.checkAnonymousRole(requestUrl)) {
+                                isMatched = true;
+                                break;
+                            }
                         }else if(authority.getAuthority().equals(IdentityLevel.roleNormalUser)){
-                            isMatched=true;
-                            break;
-                        }else if(authority.getAuthority().equals(IdentityLevel.roleVisitor)){
-                            isMatched=true;
-                            break;
+                            if(RoleUrl.checkUserRole(requestUrl)) {
+                                isMatched = true;
+                                break;
+                            }
+                        }else if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
+                            if(RoleUrl.checkAdminRole(requestUrl)) {
+                                isMatched = true;
+                                break;
+                            }
                         }
                     }
                     return new AuthorizationDecision(isMatched);

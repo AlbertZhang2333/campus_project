@@ -67,7 +67,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request,response);
             return;
         }
-        Jws<Claims> jws= JwtUtils.parseClaim(jwt);
+        Jws<Claims> jws;
+        try {
+            jws = JwtUtils.parseClaim(jwt);
+        }catch (Exception e){
+            chain.doFilter(request,response);
+            return;
+        }
         if(jws==null){
             chain.doFilter(request,response);
             return;
