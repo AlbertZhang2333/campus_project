@@ -1,9 +1,7 @@
 package com.example.ooadgroupproject.Utils;
 
-import com.example.ooadgroupproject.common.Result;
 import com.example.ooadgroupproject.entity.Account;
 import org.apache.log4j.Logger;
-import org.apache.poi.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -87,4 +85,47 @@ public class ManageAccountUtil {
             return null;
         }
     }
+    public static ArrayList<String> batchSetAccountToBlacklist(String localFilePath) throws IOException {
+        ArrayList<String> userMailList =new ArrayList<>();
+        try {
+            userMailList = new ArrayList<>();
+            if (localFilePath == null) {
+                return null;
+            }
+            File localFile = new File(localFilePath);
+            FileInputStream fis = new FileInputStream(localFile);
+            XSSFWorkbook workbook = new XSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            Row headerRow = sheet.getRow(0);
+            String[] header = new String[headerRow.getLastCellNum()];
+            for (int i = 0; i < headerRow.getLastCellNum(); i++) {
+                Cell cell = headerRow.getCell(i);
+                header[i] = cell.getStringCellValue();
+            }
+            Map<String, Integer> infoPos = new HashMap<>();
+            if(header.length!=1){
+                logger.error("Excel file format error");
+                return null;
+            }
+            if(header[0].equals("userMail")){
+                logger.error("Excel file format error");
+                return null;
+            }
+            for(int i=1;i<=sheet.getLastRowNum();i++){
+                Row row = sheet.getRow(i);
+                row.getCell(infoPos.get("userMail")).setCellType(CellType.STRING);
+                String userMail = row.getCell(infoPos.get("userMail")).getStringCellValue();
+                userMailList.add(userMail);
+            }
+            workbook.close();
+            fis.close();
+
+            return userMailList;
+        }catch (Exception e){
+            logger.error("Excel file format error");
+            return null;
+        }
+    }
 }
+

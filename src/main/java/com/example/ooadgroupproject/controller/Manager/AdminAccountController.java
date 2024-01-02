@@ -31,7 +31,6 @@ public class AdminAccountController {
 
     @PostMapping("/batchAddAccount")
     public Result batchAddAccount(MultipartFile file) throws IOException {
-
         if(file==null || file.isEmpty()){
             return Result.fail("所选文件为空或还未选择文件");
         }
@@ -45,6 +44,31 @@ public class AdminAccountController {
             }
             return Result.success("已成功将表内的用户创建");
         }
+    }
+    @PostMapping("/batchSetAccountToBlackList")
+    public Result batchSetAccountToBlackList(MultipartFile file)throws IOException{
+        if(file==null||file.isEmpty()){
+            return Result.fail("所选文件为空或还未选择文件");
+        }
+        String uploadResult=uploadFileService.uploadFile(file);
+        ArrayList<String>result=ManageAccountUtil.batchSetAccountToBlacklist(uploadResult);
+        int count=0;
+        if(result==null){
+            return Result.fail("文件格式错误");
+        }else {
+            for(int i=0;i<result.size();i++){
+                Account account=accountService.findAccountByUserMail(result.get(i));
+                if(account!=null) {
+                    count++;
+                    account.setEnabled(false);
+                    accountService.save(account);
+                    cacheClient.addAccountIntoBlackList(result.get(i));
+                }
+            }
+
+        }
+        return Result.success("已成功将"+count+"名用户拉入黑名单！");
+
     }
     @GetMapping("/checkAllAccount")
     public Result findAllAccount(@RequestParam int pageSize,@RequestParam int currentPage){
