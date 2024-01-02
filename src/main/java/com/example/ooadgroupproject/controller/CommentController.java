@@ -32,6 +32,9 @@ public class CommentController {
         String username = account.getUsername();
         comment.setUserName(username);
         comment.setUserMail(userMail);
+
+        System.out.println(comment);
+
         if(commentCheck.ForbiddenWordsCheck(comment.getComment())){
             return Result.fail("评论内容含有禁止词");
         }
@@ -74,6 +77,13 @@ public class CommentController {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Comment> list = commentService.findAllByBelongDepartmentAndStateAndTypeAndReplyId(CommentManagementDepartment.getByCode(belongDepartment), 1, CommentType.getByCode(type), replyId, pageable);
         Long tot = list.getTotalElements();
+
+        System.out.println(belongDepartment);
+        System.out.println(type);
+        System.out.println(replyId);
+        System.out.println(CommentManagementDepartment.getByCode(belongDepartment));
+        System.out.println(CommentType.getByCode(type));
+        System.out.println(list);
 
         return Result.success(tot, list.getContent());
     }
