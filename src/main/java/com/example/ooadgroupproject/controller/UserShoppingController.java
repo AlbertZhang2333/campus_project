@@ -181,6 +181,4 @@ public class UserShoppingController {
             return Result.fail("查询异常");
         }
     }
-
-
 }

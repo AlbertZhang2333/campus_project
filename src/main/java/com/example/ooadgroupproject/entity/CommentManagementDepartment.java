@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum CommentManagementDepartment {
-    Store(0);
+    Store(0),
+    Building(1);
 
 
     private final int department;

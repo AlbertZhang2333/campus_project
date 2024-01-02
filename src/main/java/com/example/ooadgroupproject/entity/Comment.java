@@ -38,6 +38,7 @@ public class Comment {
     @NotNull
     private CommentManagementDepartment belongDepartment;
 
+    @NotNull
     private Long replyId;
 
     @NotNull
