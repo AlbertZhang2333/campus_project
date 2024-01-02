@@ -6,10 +6,7 @@ import lombok.Getter;
 public enum CommentType {
 
     Comment(0),
-    Reply(1),
-    ProductReview(2),
-    BuildingReview(3);
-
+    Reply(1);
 
     private final int type;
 
