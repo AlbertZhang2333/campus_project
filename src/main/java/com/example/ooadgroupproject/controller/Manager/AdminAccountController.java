@@ -34,7 +34,8 @@ public class AdminAccountController {
         if(file==null || file.isEmpty()){
             return Result.fail("所选文件为空或还未选择文件");
         }
-        String uploadResult=uploadFileService.uploadFile(file);
+        String path="AddAccount";
+        String uploadResult=uploadFileService.uploadFile(file,path);
         ArrayList<Account> result=ManageAccountUtil.batchAddAccount(uploadResult);
         if(result==null){
             return Result.fail("文件格式错误");
@@ -50,7 +51,8 @@ public class AdminAccountController {
         if(file==null||file.isEmpty()){
             return Result.fail("所选文件为空或还未选择文件");
         }
-        String uploadResult=uploadFileService.uploadFile(file);
+        String path="SetAccountToBlackList";
+        String uploadResult=uploadFileService.uploadFile(file,path);
         ArrayList<String>result=ManageAccountUtil.batchSetAccountToBlacklist(uploadResult);
         int count=0;
         if(result==null){

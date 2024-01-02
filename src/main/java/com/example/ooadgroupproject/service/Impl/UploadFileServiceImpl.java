@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 
 @Service
 public class UploadFileServiceImpl implements UploadFileService {
-    String localFilePlace = "LocalFilePlace/";
 
-    public String uploadFile(MultipartFile file) throws IOException {
+
+    public String uploadFile(MultipartFile file,String path) throws IOException {
         InputStream inputStream=null;
         BufferedInputStream reader=null;
         FileOutputStream outputStream=null;
@@ -22,7 +22,7 @@ public class UploadFileServiceImpl implements UploadFileService {
             inputStream = file.getInputStream();
             reader=new BufferedInputStream(inputStream);
             long time = System.currentTimeMillis();
-            File localFile=new File(localFilePlace+time+"_" + file.getOriginalFilename());
+            File localFile=new File(path+"/"+time+"_" + file.getOriginalFilename());
             localFile.createNewFile();
             outputStream = new FileOutputStream(localFile);
             writer=new BufferedOutputStream(outputStream);
