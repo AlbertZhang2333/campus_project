@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
  //       authenticationAccount.setId(id);
         if(checkIfAccountInBlackList(userMail)){
             //踢下线后，删除对应cookie，缓存中也不用再费劲的存被拉黑的人了
-            cacheClient.deleteAccountFromBlackList(userMail);
+//            cacheClient.deleteAccountFromBlackList(userMail);
             throw new JwtException("该用户已被拉黑");
         }
 

@@ -84,7 +84,13 @@ public class ReservationRecordController {
     @GetMapping("/reservationRecordByRoomNameAndDate")
     public Result getRecordsByRoomNameAndDate(@RequestParam String roomName, @RequestParam Date date) {
         List<ReservationRecord> list = reservationRecordService.findALLByRoomNameAndDate(roomName, date);
-        return Result.success(list);
+        List<ReservationRecord>recordList=new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getState()==ReservationState.NotChecked){
+                recordList.add(list.get(i));
+            }
+        }
+        return Result.success(recordList);
     }
 
 
