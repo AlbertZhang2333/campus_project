@@ -1,6 +1,8 @@
 package com.example.ooadgroupproject.service.Impl;
 
+import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.Result;
+import com.example.ooadgroupproject.entity.Account;
 import com.example.ooadgroupproject.service.UploadFileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +24,9 @@ public class UploadFileServiceImpl implements UploadFileService {
             inputStream = file.getInputStream();
             reader=new BufferedInputStream(inputStream);
             long time = System.currentTimeMillis();
-            File localFile=new File(path+"/"+time+"_" + file.getOriginalFilename());
+            String account_UserMail= LoginUserInfo.getAccount().getUserMail();
+
+            File localFile=new File(path+"/"+time+"_" + account_UserMail);
             localFile.createNewFile();
             outputStream = new FileOutputStream(localFile);
             writer=new BufferedOutputStream(outputStream);
