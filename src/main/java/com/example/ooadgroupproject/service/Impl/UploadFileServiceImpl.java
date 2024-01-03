@@ -24,9 +24,9 @@ public class UploadFileServiceImpl implements UploadFileService {
             inputStream = file.getInputStream();
             reader=new BufferedInputStream(inputStream);
             long time = System.currentTimeMillis();
-            String account_UserMail= LoginUserInfo.getAccount().getUserMail();
+            String account_Username= LoginUserInfo.getAccount().getUsername();
 
-            File localFile=new File(path+"/"+time+"_" + account_UserMail);
+            File localFile=new File(path+"/"+time+"_" + account_Username);
             localFile.createNewFile();
             outputStream = new FileOutputStream(localFile);
             writer=new BufferedOutputStream(outputStream);
