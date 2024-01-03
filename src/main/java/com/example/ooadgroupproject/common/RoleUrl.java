@@ -11,7 +11,7 @@ public class RoleUrl {
             "|/nearbyStop|/searchingBusStop|/uploadImage/image)";
     private static final String ROLE_USER = "(/login|/UserShopping|/UserCheckShoppingRecord|/Reservation|" +
             "/Comment/addComment|/Comment/updateComment|/ChatController/userSendMessageToAdmin)";
-    private static final String ROLE_ADMIN ="(/manageAccount|/ManageItems|/ManageDataAnalysis|/ManageReservationRecord" +
+    private static final String ROLE_ADMIN ="(/allRelation|/manageAccount|/ManageItems|/ManageDataAnalysis|/ManageReservationRecord" +
             "|/ManageRoom|/ManageShoppingRecord|/Tool|/addBuilding|/updateBuilding|/deleteBuilding/|/updateLine|/addLine" +
             "|/deleteLine/|/Comment/allReplyCommentsAdmin|/Comment/commentSearchAdmin|" +
             "/Comment/allCommentsAdmin|/ChatController/AdminSendMessageToUser|/addStop|/updateStop|/deleteStop)";
