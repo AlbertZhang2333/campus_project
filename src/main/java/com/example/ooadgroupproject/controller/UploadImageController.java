@@ -23,15 +23,15 @@ public class UploadImageController {
     private UploadFileServiceImpl uploadFileService;
 
     @PostMapping("/image")
-    public Result batchAddAccount(@RequestParam("file") MultipartFile file) throws IOException {
+    public Result batchAddAccount(@RequestParam("file") MultipartFile file, @RequestParam("path") String path) throws IOException {
         if (file == null || file.isEmpty()) {
             return Result.fail("所选文件为空或还未选择文件");
         }
-        String path = "D:\\csw\\Desk\\ooad\\Project\\ooadgroupproject\\Front-End\\src\\assets\\comments\\pic";
         System.out.println(file);
+        System.out.println(path);
         String uploadResult = uploadFileService.uploadFile(file, path);
 
-        String[] s = uploadResult.split("\\\\");
+        String[] s = uploadResult.split("/");
 
 //        System.out.println(666);
 
@@ -40,6 +40,6 @@ public class UploadImageController {
 //        System.out.println(Arrays.toString(s));
 //        System.out.println(uploadResult);
 
-        return Result.success(s[11]);
+        return Result.success(s[s.length - 1]);
     }
 }
