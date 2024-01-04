@@ -109,10 +109,8 @@ public class SecurityConfig  {
                                 break;
                             }
                         }else if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
-                            if(RoleUrl.checkAdminRole(requestUrl)) {
-                                isMatched = true;
-                                break;
-                            }
+                            isMatched=true;
+                            break;
                         }
                     }
                     return new AuthorizationDecision(isMatched);
