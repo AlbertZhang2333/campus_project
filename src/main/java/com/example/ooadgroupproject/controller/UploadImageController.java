@@ -29,7 +29,8 @@ public class UploadImageController {
         }
         System.out.println(file);
         System.out.println(path);
-        path = "D:/csw/Desk/ooad/Project/ooadgroupproject/Front-End/" + path;
+        path = "E:/ooad/campus_front/" + path;
+
         String uploadResult = uploadFileService.uploadFile(file, path);
 
         String[] s = uploadResult.split("\\\\");

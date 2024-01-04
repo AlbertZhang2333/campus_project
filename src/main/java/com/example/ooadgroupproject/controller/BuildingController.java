@@ -6,6 +6,7 @@ import com.example.ooadgroupproject.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -78,4 +79,21 @@ public class BuildingController {
             return Result.fail("查找失败");
         }
     }
+
+    @GetMapping("/allShowBuilding")
+    public Result allShowBuilding(){
+        try {
+            List<Building> all = buildingService.findAll();
+            List<Building> result = new ArrayList<>();
+            for(Building b:all){
+                if(b.getPhotoPath() != null && !b.getPhotoPath().equals("undefined") && b.getPhotoPath().length() > 0){
+                    result.add(b);
+                }
+            }
+            return Result.success(result);
+        } catch (Exception e) {
+            return Result.fail("查找失败");
+        }
+    }
+
 }
