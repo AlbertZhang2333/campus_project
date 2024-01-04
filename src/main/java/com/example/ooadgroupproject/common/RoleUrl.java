@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RoleUrl {
-    private static final String ROLE_ANONYMOUS = "(login//getAccountInfo|/login/logout|/login/loginCheck|/login/register|" +
+    private static final String ROLE_ANONYMOUS = "(/AlipayNotify|/UserShopping/AliPayReturn|login/getAccountInfo|/login/logout|/login/loginCheck|/login/register|" +
             "/login/registerVerifyCode|/allBuilding|/searchBuildingName/|" +
             "/searchingBuilding/|/allLine|/searchLineId/|/UserShopping/findAll|/UserShopping/getInstantItems|/Room|" +
             "/TheLoginUserInfo/getLoginUserMail|/Comment/allCommentsUser|/Comment/allCommentsReplyUser|/allStop|/searchStopName/" +
@@ -15,7 +15,7 @@ public class RoleUrl {
             "|/ManageRoom|/ManageShoppingRecord|/Tool|/addBuilding|/updateBuilding|/deleteBuilding/|/updateLine|/addLine" +
             "|/deleteLine/|/Comment/allReplyCommentsAdmin|/Comment/commentSearchAdmin|" +
             "/Comment/allCommentsAdmin|/ChatController/AdminSendMessageToUser|/addStop|/updateStop|/deleteStop|/addRelation|/updateRelation" +
-            "|/deleteRelation/|)";
+            "|/deleteRelation/)";
     private static final Pattern pattern_Anonymous = Pattern.compile(ROLE_ANONYMOUS, Pattern.CASE_INSENSITIVE);
     private static final Pattern pattern_User = Pattern.compile(ROLE_USER, Pattern.CASE_INSENSITIVE);
     private static final Pattern pattern_Admin = Pattern.compile(ROLE_ADMIN, Pattern.CASE_INSENSITIVE);
