@@ -8,9 +8,9 @@ public class RoleUrl {
             "/login/registerVerifyCode|/allBuilding|/searchBuildingName/|" +
             "/searchingBuilding/|/allLine|/searchLineId/|/UserShopping/findAll|/UserShopping/getInstantItems|/Room|" +
             "/TheLoginUserInfo/getLoginUserMail|/Comment/allCommentsUser|/Comment/allCommentsReplyUser|/allStop|/searchStopName/" +
-            "|/nearbyStop|/searchingBusStop|/uploadImage/image|/allRelation|/startEndRelation/|/searchByStartOrEnd/)";
+            "|/nearbyStop|/searchingBusStop|/allRelation|/startEndRelation/|/searchByStartOrEnd/)";
     private static final String ROLE_USER = "(/login|/UserShopping|/UserCheckShoppingRecord|/Reservation|" +
-            "/Comment/addComment|/Comment/updateComment|/ChatController/userSendMessageToAdmin)";
+            "/Comment/addComment|/Comment/updateComment|/ChatController/userSendMessageToAdmin|/uploadImage/image)";
     private static final String ROLE_ADMIN ="(/manageAccount|/ManageItems|/ManageDataAnalysis|/ManageReservationRecord" +
             "|/ManageRoom|/ManageShoppingRecord|/Tool|/addBuilding|/updateBuilding|/deleteBuilding/|/updateLine|/addLine" +
             "|/deleteLine/|/Comment/allReplyCommentsAdmin|/Comment/commentSearchAdmin|" +
