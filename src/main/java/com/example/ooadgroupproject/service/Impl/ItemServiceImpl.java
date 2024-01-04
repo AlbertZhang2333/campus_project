@@ -26,7 +26,7 @@ public class ItemServiceImpl implements ItemsService {
     private final Logger logger=Logger.getLogger(ItemServiceImpl.class);
     @Override
     public Item findByName(String name) {
-        //说明该商品最近被人查询过，存在被多次查询的可能，现在对其添加缓存多级管理
+        //说明该商品最近被人查询过，存在被多次查询的可能，现在对其添加缓存
         String itemJSON=cacheClient.getItemInfo(name);
         Item item=null;
         if(itemJSON!=null){

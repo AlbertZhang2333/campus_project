@@ -103,7 +103,8 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
                     if(record.getState()== ReservationState.Canceled){continue;}
                     LocalTime curLocalStartTime = record.getStartTime().toLocalTime();
                     LocalTime curLocalEndTime = record.getEndTime().toLocalTime();
-                    if (!(ChronoUnit.MINUTES.between(curLocalEndTime, localStartTime) >= 0 || ChronoUnit.MINUTES.between(curLocalStartTime, localEndTime) <= 0)) {
+                    if (!(ChronoUnit.MINUTES.between(curLocalEndTime, localStartTime) >= 0 ||
+                            ChronoUnit.MINUTES.between(curLocalStartTime, localEndTime) <= 0)) {
                         return Result.fail("预约时间冲突");
                     }
                 }
