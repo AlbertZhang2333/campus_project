@@ -17,7 +17,7 @@ public class RoomManagerController {
         return roomService.createRoom(roomName, location, capacity);
     }
     @RequestMapping("/updateRoom")
-    public Result updateRoom(@RequestParam String roomName, @RequestParam String location, @RequestParam int capacity) {
+    public Result updateRoom(@RequestParam String roomName,@RequestParam String location, @RequestParam int capacity) {
         return roomService.updateRoom(roomName, location, capacity);
     }
 
