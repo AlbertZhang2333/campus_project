@@ -19,8 +19,8 @@ public class PayTool {
 
 //    public static String RETURN_URL="http://mhgnq3.natappfree.cc/UserShopping/AliPayReturn";
 //    public static String NOTIFY_URL="http://mhgnq3.natappfree.cc/UserShopping/AlipayNotify";
-    public static String RETURN_URL="http://mhgnq3.natappfree.cc/UserShopping/AliPayReturn";
-    public static String NOTIFY_URL="http://mhgnq3.natappfree.cc/UserShopping/AlipayNotify";
+    public static String RETURN_URL="http://f91556a061bd9a24.natapp.cc/UserShopping/AliPayReturn";
+    public static String NOTIFY_URL="http://f91556a061bd9a24.natapp.cc/UserShopping/AlipayNotify";
     public static String CHARSET = "utf-8";
     public static String SIGN_TYPE = "RSA2";
     public static String ALIPAY_PUBLIC_KEY ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoVdpo0TZWsLEBGh5aJQuh1eYi/6sxTcV9KEnXMq3N6TZpaM8acFhMrrx42VAhwbxICbk93vNOSkoBp30twovzUFe87oT2dw+kti/Kr+QN3mX7KXBLyfW3+6zf+dnzzWG+D9Q+5UdFh/JGpN2TWfR8UMgy/NGfwnS5QIEtKDPjCvrA90CXLLjBbuZpzk8saj8DwXpX8hSi5G5QBTqIRl924z/ITcTfggRTC2Eh4F6/8Khy3oC6XDP0HIxyZ7CvGfLgAVdlXZgrTTTre2/iuZFBdDZtTutrRsyviCxsHjDgo3IYP1DzZpZ8HND70k0S+wz47veDYahh05Cg0rKG06AfwIDAQAB";

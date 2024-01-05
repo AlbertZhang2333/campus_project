@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RoleUrl {
-    private static final String ROLE_ANONYMOUS = "(/UserShopping/AlipayNotify|/UserShopping/AliPayReturn|login/getAccountInfo|/login/logout|/login/loginCheck|/login/register|" +
+    private static final String ROLE_ANONYMOUS = "(/login|/UserShopping/AlipayNotify|/UserShopping/AliPayReturn|login/getAccountInfo|/login/logout|/login/loginCheck|/login/register|" +
             "/login/registerVerifyCode|/allBuilding|/searchBuildingName/|" +
             "/searchingBuilding/|/allLine|/searchLineId/|/UserShopping/findAll|/UserShopping/getInstantItems|/Room|" +
             "/TheLoginUserInfo/getLoginUserMail|/Comment/allCommentsUser|/Comment/allCommentsReplyUser|/allStop|/searchStopName/" +
