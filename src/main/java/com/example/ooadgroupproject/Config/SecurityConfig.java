@@ -98,21 +98,20 @@ public class SecurityConfig  {
                         return new AuthorizationDecision(isMatched);
                     }
                     for(GrantedAuthority authority:authorities){
-//                        if(authority.getAuthority().equals(IdentityLevel.roleVisitor)){
-//                            if(RoleUrl.checkAnonymousRole(requestUrl)) {
-//                                isMatched = true;
-//                                break;
-//                            }
-//                        }else if(authority.getAuthority().equals(IdentityLevel.roleNormalUser)){
-//                            if(RoleUrl.checkUserRole(requestUrl)) {
-//                                isMatched = true;
-//                                break;
-//                            }
-//                        }else if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
-//                            isMatched=true;
-//                            break;
-//                        }
-                        isMatched=true;
+                        if(authority.getAuthority().equals(IdentityLevel.roleVisitor)){
+                            if(RoleUrl.checkAnonymousRole(requestUrl)) {
+                                isMatched = true;
+                                break;
+                            }
+                        }else if(authority.getAuthority().equals(IdentityLevel.roleNormalUser)){
+                            if(RoleUrl.checkUserRole(requestUrl)) {
+                                isMatched = true;
+                                break;
+                            }
+                        }else if(authority.getAuthority().equals(IdentityLevel.roleAccountAdmin)){
+                            isMatched=true;
+                            break;
+                        }
                     }
                     return new AuthorizationDecision(isMatched);
                 }
