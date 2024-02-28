@@ -16,6 +16,7 @@ import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.example.ooadgroupproject.RedisLock;
 import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.PayTool;
 import com.example.ooadgroupproject.common.Result;
@@ -36,7 +37,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
 @Transactional
 @Service
 public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordService {
@@ -303,7 +307,15 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
 
 
     @Override
-    public synchronized Result userCatchInstantItem(String itemName) throws Exception {
+    public Result userCatchInstantItem(String itemName) throws Exception {
+        RedisLock lock=new RedisLock(itemName,cacheClient.getRedisTemplate());
+        LocalTime now=LocalTime.now();
+        boolean res=false;
+        while(LocalTime.now().getSecond()-now.getSecond()<3000000){
+            res=lock.tryLock(1);
+            if(res)break;
+        }
+        if(!res)return Result.fail("业务繁忙，请等候一下");
         Item item=itemsService.getInstantItem(itemName);
         if(item==null){
             return Result.fail("该物品不存在！");
@@ -316,7 +328,9 @@ public class ItemsShoppingRecordServiceImpl implements ItemsShoppingRecordServic
         cacheClient.setInstantItem(item);
         ItemsShoppingRecord itemsShoppingRecord=new ItemsShoppingRecord(item,1,account.getUserMail());
         itemsShoppingRecord.setStatus(ItemsShoppingRecord.Finish_State);
-        save(itemsShoppingRecord);
+        CompletableFuture.runAsync(()->{
+            save(itemsShoppingRecord);
+        });
         return Result.success(itemsShoppingRecord);
     }
 

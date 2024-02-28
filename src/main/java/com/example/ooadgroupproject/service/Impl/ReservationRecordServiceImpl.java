@@ -1,5 +1,6 @@
 package com.example.ooadgroupproject.service.Impl;
 
+import com.example.ooadgroupproject.RedisLock;
 import com.example.ooadgroupproject.common.LoginUserInfo;
 import com.example.ooadgroupproject.common.NumCountObject;
 import com.example.ooadgroupproject.common.Result;
@@ -14,8 +15,11 @@ import com.example.ooadgroupproject.service.ReservationRecordService;
 import com.example.ooadgroupproject.service.RoomService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -27,13 +31,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 @Transactional
 @Service
 public class ReservationRecordServiceImpl implements ReservationRecordService {
     @Autowired
     private ReservationRecordRepository reservationRecordRepository;
-
     @Autowired
     private RoomService roomService;
     @Autowired
@@ -77,7 +81,16 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         return reservationRecordRepository.save(reservationRecord);
     }
     @Override
-    public synchronized Result validateReservationRecord(ReservationRecord reservationRecord,String userMail) {
+    public Result validateReservationRecord(ReservationRecord reservationRecord,String userMail) {
+        //尝试获取锁，如果不能获取到锁，则陷入等待：
+        RedisLock lock=new RedisLock(reservationRecord.getLocation()+reservationRecord.getRoomName(),cacheClient.getRedisTemplate());
+        LocalTime now = LocalTime.now();
+        boolean res = false;
+        while (LocalTime.now().getSecond() - now.getSecond() < 3000000) {
+            res = lock.tryLock(1);
+            if (res) break;
+        }
+        if(!res)return Result.fail("业务繁忙，请等候一下");
         int compareResultDate = reservationRecord.getDate().compareTo(Date.valueOf(LocalDate.now()));
         int compareResultTime = reservationRecord.getStartTime().compareTo(Time.valueOf(LocalTime.now()));
         if (compareResultDate < 0 || (compareResultDate == 0 && compareResultTime < 0)) {
@@ -116,8 +129,11 @@ public class ReservationRecordServiceImpl implements ReservationRecordService {
         //同步将该数据放入到缓存中
         cacheClient.setReservationRecord(reservationRecord, TTL + r,
                 TimeUnit.MILLISECONDS);
-        ReservationRecord reservationRecord1 = reservationRecordRepository.save(reservationRecord);
-        return Result.success(reservationRecord1);
+        //异步更新数据库
+        CompletableFuture.runAsync(()->{
+            reservationRecordRepository.save(reservationRecord);
+        });
+        return Result.success(reservationRecord);
     }
     @Override
     public Result deleteByRoomNameAndDateAndIdAndUserMail(String roomName, Date date, long id, String userMail) {

@@ -31,7 +31,10 @@ public class CacheClient {
     public static final String Instant_Item_key="Item_shopping_instant_Item:";
 
     @Autowired
-    RedisTemplate<Object,Object>redisTemplate;
+     RedisTemplate<Object,Object>redisTemplate;
+    public  RedisTemplate<Object,Object>getRedisTemplate(){
+        return redisTemplate;
+    }
 
     public static String getReservationRecordKey(ReservationRecord reservationRecord){
         String key=RESERVATION_RECORD_KEY+reservationRecord.getRoomName()+":"+reservationRecord.getDate().toString()
