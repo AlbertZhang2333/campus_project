@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/campus?characterEncoding=utf8&useSSL=false
+    username: root
     password: yaz307165
 
   servlet:
@@ -16,8 +16,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.PostgreSQL92Dialect
+      ddl-auto: create
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   show-sql: true
   properties:
     hibernate:
@@ -27,7 +27,7 @@ spring:
   mail:
     host: smtp.qq.com #发送邮件服务器
     username: 3077161150@qq.com
-    password: yzphbfbnpiogdfjb
+    password: ------------
     protocol: smtp
     properties:
       mail:
